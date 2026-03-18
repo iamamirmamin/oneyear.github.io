@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Archive</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+      display: block;
+    }
+
+    .back {
+      position: fixed;
+      top: 20px;
+      left: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<a href="index.html" class="back">← назад</a>
+
+<div class="grid">
+  <img src="1.jpg">
+  <img src="2.jpg">
+  <img src="3.jpg">
+</div>
+
+</body>
+</html>
