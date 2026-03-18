@@ -8,40 +8,34 @@
     body {
       margin: 0;
       background: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      text-align: center;
-      padding: 40px;
+      overflow: hidden;
     }
 
     img {
-      max-width: 80vw;
-      max-height: 80vh;
+      width: 100vw;
+      height: 100vh;
       object-fit: contain;
     }
 
-    .controls {
-      margin-top: 20px;
-      font-size: 14px;
-    }
-
-    a {
-      text-decoration: none;
+    .nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
       color: black;
-      margin: 0 10px;
+      text-decoration: none;
+      padding: 10px;
     }
 
-    a:hover {
-      opacity: 0.5;
+    .prev {
+      left: 20px;
     }
 
-    .archive-link {
+    .next {
+      right: 20px;
+    }
+
+    .archive {
       position: fixed;
       top: 20px;
       right: 30px;
@@ -50,7 +44,7 @@
       text-decoration: none;
     }
 
-    .archive-link:hover {
+    a:hover {
       opacity: 0.5;
     }
   </style>
@@ -58,18 +52,14 @@
 
 <body>
 
-<!-- кнопка архив -->
-<a href="archive.html" class="archive-link">архив</a>
+<img id="img">
 
-<div class="container">
-  <img id="img">
+<!-- стрелки -->
+<a href="#" id="prev" class="nav prev">←</a>
+<a href="#" id="next" class="nav next">→</a>
 
-  <div class="controls">
-    <a href="#" id="prev">← вчера</a>
-    <a href="#" id="next">завтра →</a>
-    <span id="date"></span>
-  </div>
-</div>
+<!-- архив -->
+<a href="archive.html" class="archive">архив</a>
 
 <script>
   const images = ["1.jpg","2.jpg","3.jpg"];
@@ -77,24 +67,12 @@
   const params = new URLSearchParams(window.location.search);
   let offset = parseInt(params.get("day")) || 0;
 
-  const today = new Date();
-  today.setHours(0,0,0,0); // важно!
-
-  const currentDate = new Date(today);
-  currentDate.setDate(currentDate.getDate() + offset);
-
-  const start = new Date(2026, 0, 1);
-  start.setHours(0,0,0,0);
-
-  const diffDays = Math.floor((currentDate - start) / (1000 * 60 * 60 * 24));
-  const index = ((diffDays % images.length) + images.length) % images.length;
+  // просто счётчик дней (без даты на экране)
+  const day = Math.floor(Date.now() / (1000*60*60*24)) + offset;
+  const index = ((day % images.length) + images.length) % images.length;
 
   document.getElementById("img").src = images[index];
 
-  // дата
-  document.getElementById("date").innerText = currentDate.toDateString();
-
-  // ссылки
   document.getElementById("prev").href = "?day=" + (offset - 1);
   document.getElementById("next").href = "?day=" + (offset + 1);
 </script>
