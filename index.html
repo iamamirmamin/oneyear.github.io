@@ -32,7 +32,7 @@
 
     .archive {
       position: fixed;
-      top: 20px;
+      top: 60px;
       right: 30px;
       font-size: 14px;
       color: white;
@@ -73,6 +73,19 @@
 
   document.getElementById("prev").href = "?day=" + (offset - 1);
   document.getElementById("next").href = "?day=" + (offset + 1);
+
+  document.addEventListener("keydown", function(e) {
+  if (e.key === "ArrowRight") {
+    offset++;
+  } else if (e.key === "ArrowLeft") {
+    offset--;
+  } else {
+    return;
+  }
+
+  const newUrl = "?day=" + offset;
+  window.location.href = newUrl;
+  });
 </script>
 
 </body>
