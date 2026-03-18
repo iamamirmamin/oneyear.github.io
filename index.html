@@ -3,19 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <title>Daily</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+
+    img {
+      max-width: 80vw;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    .controls {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+      margin: 0 10px;
+    }
+
+    a:hover {
+      opacity: 0.5;
+    }
+  </style>
 </head>
 
-<body style="margin:0; background:white; display:flex; justify-content:center; align-items:center; height:100vh;">
+<body>
 
-<img id="img" style="max-width:100%; max-height:100%;">
+<div class="container">
+  <img id="img">
+
+  <div class="controls">
+    <a href="#" id="prev">← вчера</a>
+    <span id="date"></span>
+  </div>
+</div>
 
 <script>
   const images = ["1.jpg","2.jpg","3.jpg"];
 
-  const day = Math.floor(Date.now() / (1000*60*60*24));
-  const index = day % images.length;
+  const params = new URLSearchParams(window.location.search);
+  let offset = parseInt(params.get("day")) || 0;
+
+  const today = new Date();
+  today.setDate(today.getDate() + offset);
+
+  const dayCount = Math.floor(today / (1000*60*60*24));
+  const index = dayCount % images.length;
 
   document.getElementById("img").src = images[index];
+
+  // дата
+  document.getElementById("date").innerText = today.toDateString();
+
+  // ссылка "вчера"
+  document.getElementById("prev").href = "?day=" + (offset - 1);
 </script>
 
 </body>
