@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Image</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body>
+
+<img id="image" src="">
+
+<script>
+  const images = [
+    "images/1.jpg",
+    "images/2.jpg",
+    "images/3.jpg"
+  ];
+
+  const start = new Date(2026, 0, 1);
+  const today = new Date();
+
+  const diffTime = today - start;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  const index = diffDays % images.length;
+
+  document.getElementById("image").src = images[index];
+</script>
+
+</body>
+</html>
