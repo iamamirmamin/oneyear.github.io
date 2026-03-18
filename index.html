@@ -6,7 +6,6 @@
 
   <style>
     body {
-      <a href="archive.html" class="archive-link">архив</a>
       margin: 0;
       background: white;
       display: flex;
@@ -41,23 +40,26 @@
     a:hover {
       opacity: 0.5;
     }
-    
+
     .archive-link {
-    position: fixed;
-    top: 20px;
-    right: 30px;
-    font-size: 14px;
-    color: black;
-    text-decoration: none;
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      font-size: 14px;
+      color: black;
+      text-decoration: none;
     }
 
     .archive-link:hover {
-    opacity: 0.5;
+      opacity: 0.5;
     }
   </style>
 </head>
 
 <body>
+
+<!-- кнопка архив -->
+<a href="archive.html" class="archive-link">архив</a>
 
 <div class="container">
   <img id="img">
@@ -76,18 +78,25 @@
   let offset = parseInt(params.get("day")) || 0;
 
   const today = new Date();
-  today.setDate(today.getDate() + offset);
+  today.setHours(0,0,0,0); // важно!
 
-  const dayCount = Math.floor(today / (1000*60*60*24));
-  const index = dayCount % images.length;
+  const currentDate = new Date(today);
+  currentDate.setDate(currentDate.getDate() + offset);
+
+  const start = new Date(2026, 0, 1);
+  start.setHours(0,0,0,0);
+
+  const diffDays = Math.floor((currentDate - start) / (1000 * 60 * 60 * 24));
+  const index = ((diffDays % images.length) + images.length) % images.length;
 
   document.getElementById("img").src = images[index];
 
   // дата
-  document.getElementById("date").innerText = today.toDateString();
+  document.getElementById("date").innerText = currentDate.toDateString();
 
-  // ссылка "вчера"
+  // ссылки
   document.getElementById("prev").href = "?day=" + (offset - 1);
+  document.getElementById("next").href = "?day=" + (offset + 1);
 </script>
 
 </body>
