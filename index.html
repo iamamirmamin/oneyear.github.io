@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -7,28 +6,30 @@
   <style>
     body {
       margin: 0;
-      background: white;
+      background: black;
       overflow: hidden;
     }
 
     img {
       width: 100vw;
       height: 100vh;
-      object-fit: contain;
+      object-fit: cover;
+      display: block;
     }
 
     .nav {
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 24px;
+      font-size: 28px;
       color: white;
       text-decoration: none;
       padding: 20px;
+      z-index: 10;
     }
 
-    .prev { left: 10px; }
-    .next { right: 10px; }
+    .prev { left: 20px; }
+    .next { right: 20px; }
 
     .archive {
       position: fixed;
@@ -37,6 +38,7 @@
       font-size: 14px;
       color: white;
       text-decoration: none;
+      z-index: 10;
     }
 
     a {
@@ -53,39 +55,67 @@
 
 <img id="img">
 
-<!-- стрелки -->
 <a href="#" id="prev" class="nav prev">←</a>
 <a href="#" id="next" class="nav next">→</a>
-
-<!-- архив -->
 <a href="archive.html" class="archive">архив</a>
 
 <script>
-  const images = ["1.jpg","2.jpg","3.jpg"];
+  const totalImages = 10; // ← укажи сколько у тебя файлов
+
+  const images = [];
+  for (let i = 1; i <= totalImages; i++) {
+  images.push(i + ".jpg");
+  }
 
   const params = new URLSearchParams(window.location.search);
   let offset = parseInt(params.get("day")) || 0;
 
-  const day = Math.floor(Date.now() / (1000*60*60*24)) + offset;
-  const index = ((day % images.length) + images.length) % images.length;
+  function updateImage() {
+    const day = Math.floor(Date.now() / (1000*60*60*24)) + offset;
+    const index = ((day % images.length) + images.length) % images.length;
 
-  document.getElementById("img").src = images[index];
+    document.getElementById("img").src = images[index];
 
-  document.getElementById("prev").href = "?day=" + (offset - 1);
-  document.getElementById("next").href = "?day=" + (offset + 1);
+    // обновляем URL без перезагрузки
+    history.replaceState({}, "", "?day=" + offset);
 
-  document.addEventListener("keydown", function(e) {
-  if (e.key === "ArrowRight") {
-    offset++;
-  } else if (e.key === "ArrowLeft") {
-    offset--;
-  } else {
-    return;
+    // обновляем ссылки (на всякий случай)
+    document.getElementById("prev").href = "?day=" + (offset - 1);
+    document.getElementById("next").href = "?day=" + (offset + 1);
   }
 
-  const newUrl = "?day=" + offset;
-  window.location.href = newUrl;
+  updateImage();
+
+  // кнопки
+  document.getElementById("prev").onclick = (e) => {
+    e.preventDefault();
+    offset--;
+    updateImage();
+  };
+
+  document.getElementById("next").onclick = (e) => {
+    e.preventDefault();
+    offset++;
+    updateImage();
+  };
+
+  // клавиатура
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      offset++;
+      updateImage();
+    }
+    if (e.key === "ArrowLeft") {
+      offset--;
+      updateImage();
+    }
   });
+
+  // клик по изображению → вперёд
+  document.getElementById("img").onclick = () => {
+    offset++;
+    updateImage();
+  };
 </script>
 
 </body>
