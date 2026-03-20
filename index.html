@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -6,76 +7,82 @@
   <style>
     body {
       margin: 0;
-      background: black;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       overflow: hidden;
     }
 
+    .viewer {
+      position: relative;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
     img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
-    .nav {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 28px;
-    color: white;
-    text-decoration: none;
-    padding: 10px 16px;
-    z-index: 10;
-    opacity: 0.8;
-    border: 1px solid white;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.15);
-    line-height: 1;
+    .nav, .archive {
+      position: absolute;
+      color: white;
+      text-decoration: none;
+      border: 1px solid white;
+      border-radius: 999px;
+      padding: 10px 16px;
+      backdrop-filter: blur(4px);
+      opacity: 0.7;
+      transition: all 0.2s ease;
     }
 
-    .prev { left: 20px; }
-    .next { right: 20px; }
+    .nav:hover, .archive:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .prev {
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+    }
+
+    .next {
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+    }
 
     .archive {
-    position: fixed;
-    top: 60px;
-    right: 30px;
-    font-size: 14px;
-    color: white;
-    text-decoration: none;
-    z-index: 10;
-    opacity: 0.8;
-    border: 1px solid white;
-    border-radius: 999px;
-    padding: 8px 14px;
-    background: rgba(0, 0, 0, 0.15);
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
     }
-
-    a:hover {
-    opacity: 1;
-    }
-
-    a {
-      opacity: 0.6;
-    }
-
   </style>
 </head>
 
 <body>
 
-<img id="img">
+<div class="viewer">
+  <img id="img">
 
-<a href="#" id="prev" class="nav prev">←</a>
-<a href="#" id="next" class="nav next">→</a>
-<a href="archive.html" class="archive">архив</a>
+  <a href="#" id="prev" class="nav prev">←</a>
+  <a href="#" id="next" class="nav next">→</a>
+  <a href="archive.html" class="archive">архив</a>
+</div>
 
 <script>
-  const totalImages = 10; // ← укажи сколько у тебя файлов
+  const totalImages = 10;
 
   const images = [];
   for (let i = 1; i <= totalImages; i++) {
-  images.push(i + ".jpg");
+    images.push(i + ".jpg");
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -87,17 +94,11 @@
 
     document.getElementById("img").src = images[index];
 
-    // обновляем URL без перезагрузки
     history.replaceState({}, "", "?day=" + offset);
-
-    // обновляем ссылки (на всякий случай)
-    document.getElementById("prev").href = "?day=" + (offset - 1);
-    document.getElementById("next").href = "?day=" + (offset + 1);
   }
 
   updateImage();
 
-  // кнопки
   document.getElementById("prev").onclick = (e) => {
     e.preventDefault();
     offset--;
@@ -110,7 +111,6 @@
     updateImage();
   };
 
-  // клавиатура
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") {
       offset++;
@@ -122,7 +122,6 @@
     }
   });
 
-  // клик по изображению → вперёд
   document.getElementById("img").onclick = () => {
     offset++;
     updateImage();
