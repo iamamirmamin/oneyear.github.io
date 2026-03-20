@@ -82,74 +82,74 @@
 <script>
   const totalImages = 16;
 
-  const images = [];
-  for (let i = 1; i <= totalImages; i++) {
-    images.push("images/" + i + ".jpg");
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  let offset = parseInt(params.get("day")) || 0;
-
-  function updateImage() {
-  const params = new URLSearchParams(window.location.search);
-
-  const imageParam = parseInt(params.get("image"));
-  const dayParam = parseInt(params.get("day")) || offset;
-
-  let index;
-
-  if (!isNaN(imageParam)) {
-    // режим "архив"
-    index = imageParam - 1;
-    offset = index; // синхронизируем
-  } else {
-    // режим "дни"
-    const day = Math.floor(Date.now() / (1000*60*60*24)) + dayParam;
-    index = ((day % images.length) + images.length) % images.length;
-    offset = dayParam;
-  }
-
-  document.getElementById("img").src = images[index];
-
-  history.replaceState({}, "", "?day=" + offset);
+const images = [];
+for (let i = 1; i <= totalImages; i++) {
+  images.push("images/" + i + ".jpg");
 }
+
+const params = new URLSearchParams(window.location.search);
+
+// текущий индекс
+let index = parseInt(params.get("image")) - 1;
+
+// если не задан → показываем "сегодня"
+if (isNaN(index)) {
+  const day = Math.floor(Date.now() / (1000*60*60*24));
+  index = day % images.length;
+}
+
+// откуда пришли (для кнопки назад)
+const from = params.get("from");
+
+// обновление изображения
+function updateImage() {
+  index = ((index % images.length) + images.length) % images.length;
+  document.getElementById("img").src = images[index];
+}
+
+// старт
+updateImage();
+
+// навигация
+function goNext() {
+  index++;
   updateImage();
+}
 
-  document.getElementById("prev").onclick = (e) => {
-    e.preventDefault();
-    offset--;
-    updateImage();
-  };
+function goPrev() {
+  index--;
+  updateImage();
+}
 
-  document.getElementById("next").onclick = (e) => {
-    e.preventDefault();
-    offset++;
-    updateImage();
-  };
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") {
-      offset++;
-      updateImage();
-    }
-    if (e.key === "ArrowLeft") {
-      offset--;
-      updateImage();
-    }
-  });
-
-  document.getElementById("img").onclick = () => {
-    offset++;
-    updateImage();
-  };
-  
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.addEventListener("dragstart", e => e.preventDefault());
-
-  document.getElementById("archiveLink").onclick = (e) => {
+// кнопки
+document.getElementById("next").onclick = (e) => {
   e.preventDefault();
-  window.location.href = "archive.html?day=" + offset;
-  };
+  goNext();
+};
+
+document.getElementById("prev").onclick = (e) => {
+  e.preventDefault();
+  goPrev();
+};
+
+// клавиатура
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") goNext();
+  if (e.key === "ArrowLeft") goPrev();
+});
+
+// клик по изображению
+document.getElementById("img").onclick = goNext;
+
+// архив
+document.getElementById("archiveLink").onclick = (e) => {
+  e.preventDefault();
+  window.location.href = "archive.html?from=" + index;
+};
+
+// защита
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
   
 </script>
 
