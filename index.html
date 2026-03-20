@@ -218,12 +218,13 @@ function updateImage() {
   index = ((index % images.length) + images.length) % images.length;
   const filename = images[index];
 
-document.getElementById("img").src = "images2/" + filename;
+document.getElementById("img").src = "images/" + filename;
 
 const dateStr = getDateFromFilename(filename);
 const label = formatDate(dateStr);
 
 document.getElementById("month").innerText = label;
+
 }
 
 // старт
@@ -281,12 +282,18 @@ document.addEventListener("dragstart", e => e.preventDefault());
   return "";
 }
   function getDateFromFilename(filename) {
-  // убираем номер в конце
-  const parts = filename.split(" ");
-  return parts[0]; // "2025-01-01"
+  // убираем расширение
+  const name = filename.replace(".jpg", "");
+
+  // разбиваем по "_"
+  const datePart = name.split("_")[0];
+
+  return datePart; // "2025-01-12"
 }
     function formatDate(dateStr) {
   const date = new Date(dateStr);
+
+  if (isNaN(date)) return ""; // защита от ошибки
 
   const month = date.toLocaleString("en", { month: "long" });
   const day = date.getDate();
