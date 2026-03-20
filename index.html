@@ -91,14 +91,28 @@
   let offset = parseInt(params.get("day")) || 0;
 
   function updateImage() {
-    const day = Math.floor(Date.now() / (1000*60*60*24)) + offset;
-    const index = ((day % images.length) + images.length) % images.length;
+  const params = new URLSearchParams(window.location.search);
 
-    document.getElementById("img").src = images[index];
+  const imageParam = parseInt(params.get("image"));
+  const dayParam = parseInt(params.get("day")) || offset;
 
-    history.replaceState({}, "", "?day=" + offset);
+  let index;
+
+  if (!isNaN(imageParam)) {
+    // режим "архив"
+    index = imageParam - 1;
+    offset = index; // синхронизируем
+  } else {
+    // режим "дни"
+    const day = Math.floor(Date.now() / (1000*60*60*24)) + dayParam;
+    index = ((day % images.length) + images.length) % images.length;
+    offset = dayParam;
   }
 
+  document.getElementById("img").src = images[index];
+
+  history.replaceState({}, "", "?day=" + offset);
+}
   updateImage();
 
   document.getElementById("prev").onclick = (e) => {
