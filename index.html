@@ -74,7 +74,7 @@
 
   <a href="#" id="prev" class="nav prev">←</a>
   <a href="#" id="next" class="nav next">→</a>
-  <a href="archive.html" class="archive">архив</a>
+  <a href="#" id="archiveLink" class="archive">архив</a>
 </div>
 
 <script>
@@ -129,6 +129,11 @@
   
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.addEventListener("dragstart", e => e.preventDefault());
+
+  document.getElementById("archiveLink").onclick = (e) => {
+  e.preventDefault();
+  window.location.href = "archive.html?day=" + offset;
+  };
   
 </script>
 
