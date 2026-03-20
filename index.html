@@ -66,6 +66,18 @@
       font-size: 14px;
       letter-spacing: 0.5px;
     }
+
+    #month {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 32px;
+    letter-spacing: 2px;
+    pointer-events: none;
+    opacity: 0.8;
+    }
   </style>
 </head>
 
@@ -73,7 +85,8 @@
 
 <div class="viewer">
   <img id="img">
-
+  <div id="month"></div>
+  
   <a href="#" id="prev" class="nav prev">←</a>
   <a href="#" id="next" class="nav next">→</a>
   <a href="#" id="archiveLink" class="archive">архив</a>
@@ -105,6 +118,7 @@ const from = params.get("from");
 function updateImage() {
   index = ((index % images.length) + images.length) % images.length;
   document.getElementById("img").src = images[index];
+  document.getElementById("month").innerText = getMonth(index);
 }
 
 // старт
@@ -150,7 +164,15 @@ document.getElementById("archiveLink").onclick = (e) => {
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
-  
+
+  function getMonth(index) {
+  const i = index + 1; // потому что у тебя картинки с 1
+
+  if (i >= 1 && i <= 39) return "January";
+  if (i >= 40 && i <= 100) return "February";
+
+  return "";
+}
 </script>
 
 </body>
