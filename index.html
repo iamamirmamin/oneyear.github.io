@@ -98,7 +98,7 @@
 
 const images = [];
 for (let i = 1; i <= totalImages; i++) {
-  images.push("images/" + i + ".jpg");
+  images.push("images2/" + i + ".jpg");
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -120,7 +120,7 @@ function updateImage() {
   index = ((index % images.length) + images.length) % images.length;
   const filename = images[index];
 
-document.getElementById("img").src = "images/" + filename;
+document.getElementById("img").src = "images2/" + filename;
 
 const dateStr = getDateFromFilename(filename);
 const label = formatDate(dateStr);
