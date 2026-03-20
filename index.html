@@ -118,8 +118,14 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
   index = ((index % images.length) + images.length) % images.length;
-  document.getElementById("img").src = images[index];
-  document.getElementById("month").innerText = getMonth(index);
+  const filename = images[index];
+
+document.getElementById("img").src = "images/" + filename;
+
+const dateStr = getDateFromFilename(filename);
+const label = formatDate(dateStr);
+
+document.getElementById("month").innerText = label;
 }
 
 // старт
@@ -175,6 +181,19 @@ document.addEventListener("dragstart", e => e.preventDefault());
   if (i >= 156 && i <= 200) return "March";
 
   return "";
+}
+  function getDateFromFilename(filename) {
+  // убираем номер в конце
+  const parts = filename.split(" ");
+  return parts[0]; // "2025-01-01"
+}
+    function formatDate(dateStr) {
+  const date = new Date(dateStr);
+
+  const month = date.toLocaleString("en", { month: "long" });
+  const day = date.getDate();
+
+  return (month + " " + day).toUpperCase();
 }
 </script>
 
