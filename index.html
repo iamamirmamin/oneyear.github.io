@@ -94,7 +94,7 @@
 </div>
 
 <script>
-  const totalImages = 150;
+  const totalImages = 200;
 
 const images = [];
 for (let i = 1; i <= totalImages; i++) {
@@ -170,7 +170,8 @@ document.addEventListener("dragstart", e => e.preventDefault());
   const i = index + 1; // потому что у тебя картинки с 1
 
   if (i >= 1 && i <= 39) return "January";
-  if (i >= 40 && i <= 150) return "February";
+  if (i >= 40 && i <= 155) return "February";
+  if (i >= 156 && i <= 200) return "March";
 
   return "";
 }
