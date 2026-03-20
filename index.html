@@ -116,10 +116,42 @@ if (isNaN(index)) {
 const from = params.get("from");
 
 // обновление изображения
+function findImagePosition(index) {
+  let count = 0;
+
+  for (let d = 0; d < days.length; d++) {
+    for (let i = 0; i < days[d].images.length; i++) {
+      if (count === index) {
+        return {
+          dayIndex: d,
+          imageIndex: i
+        };
+      }
+      count++;
+    }
+  }
+
+  return { dayIndex: 0, imageIndex: 0 };
+}
+
+function getGlobalIndex(dayIndex, imageIndex) {
+  let count = 0;
+
+  for (let d = 0; d < dayIndex; d++) {
+    count += days[d].images.length;
+  }
+
+  return count + imageIndex;
+}
+
 function updateImage() {
-  index = ((index % images.length) + images.length) % images.length;
-  document.getElementById("img").src = images[index];
-  document.getElementById("month").innerText = getMonth(index);
+  const pos = findImagePosition(index);
+
+  const day = days[pos.dayIndex];
+  const imageNumber = day.images[pos.imageIndex];
+
+  document.getElementById("img").src = "images/" + imageNumber + ".jpg";
+  document.getElementById("month").innerText = day.label;
 }
 
 // старт
@@ -130,7 +162,7 @@ function goNext() {
   index++;
   updateImage();
 }
-
+  
 function goPrev() {
   index--;
   updateImage();
@@ -166,15 +198,73 @@ document.getElementById("archiveLink").onclick = (e) => {
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
 
-  function getMonth(index) {
-  const i = index + 1; // потому что у тебя картинки с 1
- 
-  if (i >= 1 && i <= 39) return "January";
-  if (i >= 40 && i <= 155) return "February";
-  if (i >= 156 && i <= 200) return "March";
-
-  return "";
-}
+  const days = [
+  {
+    label: "January 12",
+    images: [1, 2, 3]
+  },
+  {
+    label: "January 13",
+    images: [4]
+  },
+  {
+    label: "January 18",
+    images: [5]
+  },
+  {
+    label: "January 19",
+    images: [6]
+  },
+    {
+    label: "January 20",
+    images: [7]
+  },
+    {
+    label: "January 21",
+    images: [8,9,10,11,12,13,14,15]
+  },
+    {
+    label: "January 22",
+    images: [16]
+  },
+    {
+    label: "January 23",
+    images: [17,18,19]
+  },
+    {
+    label: "January 24",
+    images: [20, 21,22]
+  },
+    {
+    label: "January 25",
+    images: [23,24]
+  },
+    {
+    label: "January 26",
+    images: [25,26]
+  },
+    {
+    label: "January 27",
+    images: [27,28]
+  },
+    {
+    label: "January 28",
+    images: [29,30]
+  },
+    {
+    label: "January 29",
+    images: [31,32]
+  },
+    {
+    label: "January 30",
+    images: [33,34,35]
+  },
+    {
+    label: "January 31",
+    images: [36,37,38,39]
+  }
+    
+];
 </script>
 
 </body>
