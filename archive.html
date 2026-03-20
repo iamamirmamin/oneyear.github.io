@@ -80,6 +80,10 @@
 <script>
   const totalImages = 200;
 
+  const images = [
+  // вставь сюда ТОТ ЖЕ массив, что и в index.html
+];
+
 const grid = document.getElementById("grid");
 
 const params = new URLSearchParams(window.location.search);
@@ -87,24 +91,22 @@ const from = parseInt(params.get("from")) || 0;
 
 let activeElement = null;
 
-// создаём сетку
-for (let i = 1; i <= totalImages; i++) {
+images.forEach((filename, index) => {
   const link = document.createElement("a");
-  link.href = "index.html?image=" + i + "&from=" + from;
+  link.href = "index.html?image=" + (index + 1) + "&from=" + from;
 
   const img = document.createElement("img");
-  img.src = "images/" + i + ".jpg";
+  img.src = "images2/" + filename;
   img.loading = "lazy";
 
-  // если это текущее изображение
-  if (i - 1 === from) {
+  if (index === from) {
     img.classList.add("active");
     activeElement = img;
   }
 
   link.appendChild(img);
   grid.appendChild(link);
-}
+});
 
 // кнопка назад
 document.getElementById("backLink").href = "index.html?image=" + (from + 1);
@@ -118,6 +120,8 @@ if (activeElement) {
     });
   }, 100);
 }
+
+
 
 </script>
 
