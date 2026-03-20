@@ -202,10 +202,11 @@ const images = [
 const params = new URLSearchParams(window.location.search);
 
 // текущий индекс
-let index = parseInt(params.get("image")) - 1;
-
+let indexParam = parseInt(params.get("image"));
+let index = isNaN(indexParam) ? null : indexParam - 1;
+  
 // если не задан → показываем "сегодня"
-if (isNaN(index)) {
+if (index === null) {
   const day = Math.floor(Date.now() / (1000*60*60*24));
   index = day % images.length;
 }
@@ -215,16 +216,18 @@ const from = params.get("from");
 
 // обновление изображения
 function updateImage() {
+  if (isNaN(index)) index = 0;
+
   index = ((index % images.length) + images.length) % images.length;
+
   const filename = images[index];
 
-document.getElementById("img").src = "images/" + filename;
+  document.getElementById("img").src = "images/" + filename;
 
-const dateStr = getDateFromFilename(filename);
-const label = formatDate(dateStr);
+  const dateStr = getDateFromFilename(filename);
+  const label = formatDate(dateStr);
 
-document.getElementById("month").innerText = label;
-
+  document.getElementById("month").innerText = label || "";
 }
 
 // старт
