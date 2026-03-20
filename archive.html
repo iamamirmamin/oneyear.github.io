@@ -65,23 +65,27 @@
 <script>
   const totalImages = 16;
 
-  const grid = document.getElementById("grid");
+const grid = document.getElementById("grid");
 
-  for (let i = 1; i <= totalImages; i++) {
-    const link = document.createElement("a");
-    link.href = "index.html?image=" + i;
+const params = new URLSearchParams(window.location.search);
+const from = parseInt(params.get("from")) || 0;
 
-    const img = document.createElement("img");
-    img.src = "images/" + i + ".jpg";
+// создаём сетку
+for (let i = 1; i <= totalImages; i++) {
+  const link = document.createElement("a");
 
-    link.appendChild(img);
-    grid.appendChild(link);
-  }
+  // передаём И image, И from
+  link.href = "index.html?image=" + i + "&from=" + from;
 
-  const params = new URLSearchParams(window.location.search);
-  const day = params.get("day") || 0;
+  const img = document.createElement("img");
+  img.src = "images/" + i + ".jpg";
 
-  document.getElementById("backLink").href = "index.html?day=" + day;
+  link.appendChild(img);
+  grid.appendChild(link);
+}
+
+// кнопка назад
+document.getElementById("backLink").href = "index.html?image=" + (from + 1);
 
 </script>
 
