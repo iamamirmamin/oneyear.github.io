@@ -68,6 +68,21 @@
     img:hover {
     opacity: 0.7;
     }
+
+    .item {
+      position: relative;
+    }
+    
+    .date {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      color: white;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.4);
+      padding: 2px 6px;
+    }
   </style>
 </head>
 
@@ -491,17 +506,38 @@ const from = parseInt(params.get("from")) || 0;
 let activeElement = null;
 
 images.forEach((filename, index) => {
-  const link = document.createElement("a");
-  link.href = "index.html?image=" + (index + 1) + "&from=" + from;
-
-  const img = document.createElement("img");
-  img.src = "images2/" + filename;
-  img.loading = "lazy";
-
-  if (index === from) {
-    img.classList.add("active");
-    activeElement = img;
-  }
+    const link = document.createElement("a");
+    link.href = "index.html?image=" + (index + 1) + "&from=" + from;
+    
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("item");
+    
+    const img = document.createElement("img");
+    img.src = "images2/" + filename;
+    img.loading = "lazy";
+    
+    // 👉 достаём дату из имени файла
+    const dateStr = filename.split("_")[0]; // 2025-01-12
+    
+    // 👉 форматируем в 01-01-2025
+    const parts = dateStr.split("-");
+    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+    
+    const date = document.createElement("div");
+    date.classList.add("date");
+    date.innerText = formattedDate;
+    
+    // собираем
+    wrapper.appendChild(img);
+    wrapper.appendChild(date);
+    link.appendChild(wrapper);
+    grid.appendChild(link);
+    
+    // активный элемент
+    if (index === from) {
+      img.classList.add("active");
+      activeElement = img;
+    }
 
   link.appendChild(img);
   grid.appendChild(link);
