@@ -98,13 +98,16 @@
     }
     
     .about-content {
-      background: white;
+      background: transparent;
       color: black;
       padding: 30px;
       max-width: 400px;
       font-size: 14px;
       line-height: 1.5;
     }
+    .about-open #month {
+  opacity: 0 !important;
+}
   </style>
 </head>
 
@@ -652,11 +655,13 @@ const aboutBox = document.getElementById("aboutBox");
 aboutLink.onclick = (e) => {
   e.preventDefault();
   aboutBox.style.display = "flex";
+  document.body.classList.add("about-open"); // 👈 добавили
 };
 
-// закрытие по клику вне текста
+// закрытие
 aboutBox.onclick = () => {
   aboutBox.style.display = "none";
+  document.body.classList.remove("about-open"); // 👈 убрали
 };
   
 </script>
