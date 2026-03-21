@@ -70,24 +70,26 @@
     }
 
     .item {
-      position: relative;
-    }
-    
-    .date {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 14px;
-      letter-spacing: 1px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      pointer-events: none;
-    }
-    
-    .item:hover .date {
-      opacity: 1;
+  position: relative;
+}
+
+.date {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  letter-spacing: 1px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.item:hover .date,
+.item:hover img + .date {
+  opacity: 1;
+}
     }
   </style>
 </head>
