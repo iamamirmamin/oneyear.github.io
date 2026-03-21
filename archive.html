@@ -90,7 +90,6 @@
 .item:hover img + .date {
   opacity: 1;
 }
-    }
   </style>
 </head>
 
@@ -546,10 +545,7 @@ images.forEach((filename, index) => {
       img.classList.add("active");
       activeElement = img;
     }
-
-  link.appendChild(img);
-  grid.appendChild(link);
-});
+    });
 
 // кнопка назад
 document.getElementById("backLink").href = "index.html?image=" + (from + 1);
