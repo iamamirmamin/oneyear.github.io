@@ -12,6 +12,15 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
+    body {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -845,8 +854,20 @@ images.forEach((filename, index) => {
     });
 
     // кнопка назад
-    document.getElementById("backLink").href = "index.html?image=" + (from + 1);
+    document.getElementById("backLink").onclick = (e) => {
+      e.preventDefault();
+    
+      document.body.classList.remove("loaded");
+    
+      setTimeout(() => {
+        window.location.href = "index.html?image=" + (from + 1);
+      }, 200);
+    };
 
+    window.addEventListener("load", () => {
+      document.body.classList.add("loaded");
+    });
+  
     // автоскролл
     if (activeElement) {
       setTimeout(() => {
