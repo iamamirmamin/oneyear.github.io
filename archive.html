@@ -98,6 +98,21 @@
     .item:hover .date {
       opacity: 1;
     }
+
+    #transitionOverlay {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    }
+    
+    #transitionOverlay.active {
+      opacity: 1;
+      backdrop-filter: blur(10px);
+    }
   </style>
 </head>
 
@@ -106,6 +121,8 @@
 <a href="#" id="backLink" class="back">← back</a>
 
 <div class="grid" id="grid"></div>
+
+  <div id="transitionOverlay" class="active"></div>
 
 <script>
 const images = [
@@ -899,8 +916,13 @@ document.getElementById("backLink").href =
 // плавное появление
 window.onload = () => {
   document.body.classList.add("loaded");
-};
 
+  const overlay = document.getElementById("transitionOverlay");
+
+  setTimeout(() => {
+    overlay.classList.remove("active");
+  }, 50);
+};
 
 </script>
 
