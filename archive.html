@@ -834,6 +834,9 @@ function loadBatch() {
   slice.forEach((filename, i) => {
     const index = currentIndex + i;
 
+    if (index === from) {
+      wrapper.classList.add("active");
+    }
     const link = document.createElement("a");
     link.href = "index.html?image=" + (index + 1) + "&from=" + from;
 
@@ -881,7 +884,11 @@ function loadInitial() {
 
 loadInitial();
 
-window.addEventListener("scroll", () => {
+  window.onload = () => {
+  document.body.classList.add("loaded");
+};
+
+  window.addEventListener("scroll", () => {
 
   // вниз
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
