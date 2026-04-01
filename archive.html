@@ -822,7 +822,7 @@ const from = isNaN(fromParam) ? 0 : fromParam;
 const batchSize = 40;
 
 // начинаем НЕ с нуля
-let currentIndex = Math.max(0, from - 20);
+let startIndex = Math.max(0, from - 20);
 let currentIndex = startIndex;
 
 // загрузка батча
@@ -856,11 +856,9 @@ function loadBatch() {
     wrapper.appendChild(date);
     link.appendChild(wrapper);
     grid.appendChild(link);
-
-    grid.prepend(link);
   });
 
-  startIndex = newStart;
+  currentIndex += batchSize;
 }
 
 // начальная загрузка (несколько батчей сразу)
@@ -894,7 +892,7 @@ window.addEventListener("scroll", () => {
   if (window.scrollY < 300) {
     const prevHeight = document.body.offsetHeight;
 
-    loadBatchUp();
+    //loadBatchUp();
 
     // сохраняем позицию
     const newHeight = document.body.offsetHeight;
