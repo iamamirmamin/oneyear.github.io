@@ -807,42 +807,52 @@ const from = isNaN(fromParam) ? 0 : fromParam;
 
 let activeElement = null;
 
-images.forEach((filename, index) => {
+const batchSize = 40;
+let currentIndex = 0;
+
+  function loadBatch() {
+  const slice = images.slice(currentIndex, currentIndex + batchSize);
+
+  slice.forEach((filename, i) => {
+    const index = currentIndex + i;
+
     const link = document.createElement("a");
     link.href = "index.html?image=" + (index + 1) + "&from=" + from;
-    
+
     const wrapper = document.createElement("div");
     wrapper.classList.add("item");
-    
+
     const img = document.createElement("img");
     img.src = "images2/" + filename;
-    img.loading = "lazy";
-    img.decoding = "async";
-    
-    // дата из имени файла
-    const dateStr = filename.split("_")[0]; // 2025-01-12
-    
-    // форматируем в 01-01-2025
+
+    // дата
+    const dateStr = filename.split("_")[0];
     const parts = dateStr.split("-");
     const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-    
+
     const date = document.createElement("div");
     date.classList.add("date");
     date.innerText = formattedDate;
-    
-    // собираем
+
     wrapper.appendChild(img);
     wrapper.appendChild(date);
     link.appendChild(wrapper);
     grid.appendChild(link);
-    
-    // активный элемент
+
     if (index === from) {
       img.classList.add("active");
-      activeElement = img;
+      img.scrollIntoView({ block: "center" });
     }
-    });
+  });
+    
+  currentIndex += batchSize;
+}
 
+  window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+    loadBatch();
+  }
+});
     // кнопка назад
     document.getElementById("backLink").href = "index.html?image=" + (from + 1);
   
