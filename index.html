@@ -128,6 +128,20 @@
       color: white;
       border-bottom: 1px solid white;
     }
+
+    #transitionOverlay {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    }
+    
+    #transitionOverlay.active {
+      opacity: 1;
+    }
   </style>
 </head>
 
@@ -161,6 +175,7 @@
     </p>
   </div>
 </div>
+  <div id="transitionOverlay"></div>
 
 <script>
 const images = [
@@ -934,14 +949,17 @@ document.addEventListener("keydown", (e) => {
 document.getElementById("img").onclick = goNext;
 
 // архив
+const overlay = document.getElementById("transitionOverlay");
+
 document.getElementById("archiveLink").onclick = (e) => {
   e.preventDefault();
 
   document.body.classList.add("zoom-out");
+  overlay.classList.add("active");
 
   setTimeout(() => {
     window.location.href = "archive.html?from=" + index;
-  }, 400);
+  }, 350);
 };
 
 // защита
