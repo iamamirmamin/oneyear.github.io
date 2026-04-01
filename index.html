@@ -925,7 +925,15 @@ document.addEventListener("keydown", (e) => {
 document.getElementById("img").onclick = goNext;
 
 // архив
-document.getElementById("archiveLink").href = "archive.html?from=" + index;
+document.getElementById("archiveLink").onclick = (e) => {
+  e.preventDefault();
+
+  document.body.classList.add("zoom-out");
+
+  setTimeout(() => {
+    window.location.href = "archive.html?from=" + index;
+  }, 400);
+};
 
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
