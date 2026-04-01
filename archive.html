@@ -834,15 +834,17 @@ function loadBatch() {
   slice.forEach((filename, i) => {
     const index = currentIndex + i;
 
-    if (index === from) {
-      wrapper.classList.add("active");
-    }
+    
     const link = document.createElement("a");
     link.href = "index.html?image=" + (index + 1) + "&from=" + from;
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("item");
 
+    if (index === from) {
+      wrapper.classList.add("active");
+    }
+    
     const img = document.createElement("img");
     img.src = "thumbs/" + filename;
 
