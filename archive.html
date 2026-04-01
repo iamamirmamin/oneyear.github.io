@@ -866,6 +866,48 @@ function loadBatch() {
   currentIndex += batchSize;
 }
 
+  function loadBatchUp() {
+  if (startIndex <= 0) return;
+
+  const newStart = Math.max(0, startIndex - batchSize);
+  const slice = images.slice(newStart, startIndex);
+
+  slice.reverse().forEach((filename, i) => {
+    const index = newStart + i;
+
+    const link = document.createElement("a");
+    link.href = "index.html?image=" + (index + 1) + "&from=" + from;
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("item");
+
+    if (index === from) {
+      wrapper.classList.add("active");
+    }
+
+    const img = document.createElement("img");
+    img.src = "thumbs/" + filename;
+
+    const dateStr = filename.split("_")[0];
+    const parts = dateStr.split("-");
+    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+
+    const date = document.createElement("div");
+    date.classList.add("date");
+    date.innerText = formattedDate;
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(date);
+    link.appendChild(wrapper);
+
+    // добавляем в начало
+    grid.prepend(link);
+  });
+
+  startIndex = newStart;
+}
+
+  
 // начальная загрузка (несколько батчей сразу)
 function loadInitial() {
   for (let i = 0; i < 3; i++) {
@@ -901,7 +943,7 @@ loadInitial();
   if (window.scrollY < 300) {
     const prevHeight = document.body.offsetHeight;
 
-    //loadBatchUp();
+    loadBatchUp();
 
     // сохраняем позицию
     const newHeight = document.body.offsetHeight;
