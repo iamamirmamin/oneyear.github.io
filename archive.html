@@ -941,14 +941,18 @@ loadInitial();
 
   // вверх
   if (window.scrollY < 300) {
-    const prevHeight = document.body.offsetHeight;
 
-    loadBatchUp();
+  const firstItem = grid.firstElementChild;
+  if (!firstItem) return;
 
-    // сохраняем позицию
-    const newHeight = document.body.offsetHeight;
-    window.scrollTo(0, newHeight - prevHeight + window.scrollY);
-  }
+  const prevTop = firstItem.getBoundingClientRect().top;
+
+  loadBatchUp();
+
+  const newTop = firstItem.getBoundingClientRect().top;
+
+  window.scrollBy(0, newTop - prevTop);
+}
 
 });
 
