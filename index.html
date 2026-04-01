@@ -80,6 +80,14 @@
     opacity: 0.5;
     }
 
+    body {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    body.loaded {
+      opacity: 1;
+    }
         .about {
       top: 90px;
       right: 10px;
@@ -875,7 +883,10 @@ function updateImage() {
   document.getElementById("month").innerText = label;
 }
 
-// старт
+  const nextImg = new Image();
+nextImg.src = "images2/" + images[(index + 1) % images.length];
+
+  // старт
 updateImage();
 
 // навигация
@@ -912,7 +923,10 @@ document.getElementById("img").onclick = goNext;
 // архив
 document.getElementById("archiveLink").onclick = (e) => {
   e.preventDefault();
+  document.body.classList.remove("loaded");
+  setTimeout(() => {
   window.location.href = "archive.html?from=" + index;
+  }, 200);
 };
 
 // защита
@@ -948,6 +962,10 @@ aboutLink.onclick = (e) => {
   document.body.classList.add("about-open");
 };
 
+  window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
+  
 // закрытие
 aboutBox.onclick = () => {
   aboutBox.style.display = "none";
