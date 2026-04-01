@@ -848,6 +848,14 @@ let currentIndex = 0;
   currentIndex += batchSize;
 }
 
+  function loadInitial() {
+  while (document.body.offsetHeight < window.innerHeight * 1.5) {
+    loadBatch();
+  }
+}
+
+loadInitial();
+  
   window.addEventListener("scroll", () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
     loadBatch();
