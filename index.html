@@ -142,8 +142,6 @@
 </div>
 
 <script>
-  const totalImages = 700;
-
 const images = [
   "2025-01-12_1.jpg",
   "2025-01-12_2.jpg",
@@ -864,7 +862,6 @@ const from = params.get("from");
 
 // обновление изображения
 function updateImage() {
-  if (isNaN(index)) index = 0;
 
   index = ((index % images.length) + images.length) % images.length;
 
@@ -875,7 +872,7 @@ function updateImage() {
   const dateStr = getDateFromFilename(filename);
   const label = formatDate(dateStr);
 
-  document.getElementById("month").innerText = label || "";
+  document.getElementById("month").innerText = label;
 }
 
 // старт
@@ -922,16 +919,6 @@ document.getElementById("archiveLink").onclick = (e) => {
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
 
-  function getMonth(index) {
-  const i = index + 1; // потому что у тебя картинки с 1
-
- 
-  if (i >= 1 && i <= 39) return "January";
-  if (i >= 40 && i <= 155) return "February";
-  if (i >= 156 && i <= 200) return "March";
-
-  return "";
-}
   function getDateFromFilename(filename) {
   // убираем расширение
   const name = filename.replace(".jpg", "");
