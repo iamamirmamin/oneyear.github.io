@@ -812,6 +812,7 @@ const batchSize = 40;
 
 // начинаем НЕ с нуля
 let currentIndex = Math.max(0, from - 20);
+let currentIndex = startIndex;
 
 // загрузка батча
 function loadBatch() {
@@ -845,13 +846,10 @@ function loadBatch() {
     link.appendChild(wrapper);
     grid.appendChild(link);
 
-    // активный элемент
-    if (index === from) {
-      img.classList.add("active");
-    }
+    grid.prepend(link);
   });
 
-  currentIndex += batchSize;
+  startIndex = newStart;
 }
 
 // начальная загрузка (несколько батчей сразу)
@@ -874,11 +872,24 @@ function loadInitial() {
 
 loadInitial();
 
-// догрузка при скролле вниз
 window.addEventListener("scroll", () => {
+
+  // вниз
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
     loadBatch();
   }
+
+  // вверх
+  if (window.scrollY < 300) {
+    const prevHeight = document.body.offsetHeight;
+
+    loadBatchUp();
+
+    // сохраняем позицию
+    const newHeight = document.body.offsetHeight;
+    window.scrollTo(0, newHeight - prevHeight + window.scrollY);
+  }
+
 });
 
 // кнопка назад
