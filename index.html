@@ -15,6 +15,17 @@
       overflow: hidden;
       font-family: Helvetica, Arial, sans-serif;
     }
+
+    body {
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    
+    body.loaded {
+      opacity: 1;
+      transform: scale(1);
+    }
     
     .viewer {
       position: relative;
