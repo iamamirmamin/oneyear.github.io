@@ -24,6 +24,7 @@
       height: auto;
       display: block;
       clip-path: inset(0 0 5px 0);
+      transition: opacity 0.2s ease;
     }
 
     a {
@@ -33,64 +34,59 @@
     }
 
     .back {
-    position: fixed;
-    top: 20px;
-    left: 30px;
-    font-size: 14px;
-    color: black;
-    text-decoration: none;
-    backdrop-filter: blur(4px);
-    letter-spacing: 0.5px;
+      position: fixed;
+      top: 20px;
+      left: 30px;
+      font-size: 14px;
+      color: black;
+      text-decoration: none;
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.5px;
+    
+      border: 1px solid black;
+      border-radius: 999px;
+      padding: 10px 16px;
   
-    border: 1px solid black;
-    border-radius: 999px;
-    padding: 10px 16px;
-
-    opacity: 0.7;
-    transition: all 0.2s ease;
+      opacity: 0.7;
+      transition: all 0.2s ease;
     }
 
     .back:hover {
-    opacity: 1;
-    background: rgba(0,0,0,0.05);
+      opacity: 1;
+      background: rgba(0,0,0,0.05);
     }
 
     .active {
-    outline: 2px solid black;
-    opacity: 0.7;
-    transform: scale(1.02);
-    outline-offset: 4px;
-    }
-
-    img {
-    transition: opacity 0.2s ease;
+      outline: 2px solid black;
+      opacity: 0.7;
+      transform: scale(1.02);
+      outline-offset: 4px;
     }
 
     img:hover {
-    opacity: 0.7;
+      opacity: 0.7;
     }
 
     .item {
-  position: relative;
-}
+      position: relative;
+    }
 
-.date {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 14px;
-  letter-spacing: 1px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
+    .date {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      letter-spacing: 1px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
 
-.item:hover .date,
-.item:hover img + .date {
-  opacity: 1;
-}
+    .item:hover .date {
+      opacity: 1;
+    }
   </style>
 </head>
 
@@ -101,8 +97,6 @@
 <div class="grid" id="grid"></div>
 
 <script>
-  const totalImages = 700;
-
   const images = [
   "2025-01-12_1.jpg",
   "2025-01-12_2.jpg",
@@ -809,7 +803,8 @@
 const grid = document.getElementById("grid");
 
 const params = new URLSearchParams(window.location.search);
-const from = parseInt(params.get("from")) || 0;
+const fromParam = parseInt(params.get("from"));
+const from = isNaN(fromParam) ? 0 : fromParam;
 
 let activeElement = null;
 
@@ -821,13 +816,14 @@ images.forEach((filename, index) => {
     wrapper.classList.add("item");
     
     const img = document.createElement("img");
-    img.src = "images2/" + filename;
+    img.src = "thumbs/" + filename;
     img.loading = "lazy";
+    img.decoding = "async";
     
-    // 👉 достаём дату из имени файла
+    // дата из имени файла
     const dateStr = filename.split("_")[0]; // 2025-01-12
     
-    // 👉 форматируем в 01-01-2025
+    // форматируем в 01-01-2025
     const parts = dateStr.split("-");
     const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     
@@ -848,18 +844,18 @@ images.forEach((filename, index) => {
     }
     });
 
-// кнопка назад
-document.getElementById("backLink").href = "index.html?image=" + (from + 1);
+    // кнопка назад
+    document.getElementById("backLink").href = "index.html?image=" + (from + 1);
 
-// автоскролл
-if (activeElement) {
-  setTimeout(() => {
-    activeElement.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-  }, 100);
-}
+    // автоскролл
+    if (activeElement) {
+      setTimeout(() => {
+        activeElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }, 100);
+    }
 
 </script>
 
