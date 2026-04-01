@@ -799,18 +799,24 @@ const images = [
   "2025-08-31_699.jpg",
   "2025-09-01_700.jpg"
 ];
-const grid = document.getElementById("grid");
 
+  const grid = document.getElementById("grid");
+
+// параметры
 const params = new URLSearchParams(window.location.search);
 const fromParam = parseInt(params.get("from"));
 const from = isNaN(fromParam) ? 0 : fromParam;
 
-let activeElement = null;
-
+// настройки
 const batchSize = 40;
-let currentIndex = 0;
 
-  function loadBatch() {
+// начинаем НЕ с нуля
+let currentIndex = Math.max(0, from - 20);
+
+// загрузка батча
+function loadBatch() {
+  if (currentIndex >= images.length) return;
+
   const slice = images.slice(currentIndex, currentIndex + batchSize);
 
   slice.forEach((filename, i) => {
@@ -839,38 +845,46 @@ let currentIndex = 0;
     link.appendChild(wrapper);
     grid.appendChild(link);
 
+    // активный элемент
     if (index === from) {
       img.classList.add("active");
-      img.scrollIntoView({ block: "center" });
     }
   });
-    
+
   currentIndex += batchSize;
 }
 
-  function loadInitial() {
-  while (document.body.offsetHeight < window.innerHeight * 1.5) {
+// начальная загрузка (несколько батчей сразу)
+function loadInitial() {
+  for (let i = 0; i < 3; i++) {
     loadBatch();
   }
+
+  // скролл после появления DOM
+  setTimeout(() => {
+    const active = document.querySelector(".active");
+    if (active) {
+      active.scrollIntoView({
+        behavior: "auto",
+        block: "center"
+      });
+    }
+  }, 50);
 }
 
 loadInitial();
-  
-  window.addEventListener("scroll", () => {
+
+// догрузка при скролле вниз
+window.addEventListener("scroll", () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
     loadBatch();
   }
 });
-    // кнопка назад
-    document.getElementById("backLink").href = "index.html?image=" + (from + 1);
-  
-    // автоскролл
-    if (activeElement) {
-    activeElement.scrollIntoView({
-    behavior: "auto",
-    block: "center"
-    });
-    }
+
+// кнопка назад
+document.getElementById("backLink").href =
+  "index.html?image=" + (from + 1);
+
 
 </script>
 
