@@ -12,15 +12,6 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body {
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    }
-
-    body.loaded {
-      opacity: 1;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -106,6 +97,64 @@
 <div class="grid" id="grid"></div>
 
 <script>
+  
+const grid = document.getElementById("grid");
+
+const params = new URLSearchParams(window.location.search);
+const fromParam = parseInt(params.get("from"));
+const from = isNaN(fromParam) ? 0 : fromParam;
+
+let activeElement = null;
+
+images.forEach((filename, index) => {
+    const link = document.createElement("a");
+    link.href = "index.html?image=" + (index + 1) + "&from=" + from;
+    
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("item");
+    
+    const img = document.createElement("img");
+    img.src = "images2/" + filename;
+    img.loading = "lazy";
+    img.decoding = "async";
+    
+    // дата из имени файла
+    const dateStr = filename.split("_")[0]; // 2025-01-12
+    
+    // форматируем в 01-01-2025
+    const parts = dateStr.split("-");
+    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+    
+    const date = document.createElement("div");
+    date.classList.add("date");
+    date.innerText = formattedDate;
+    
+    // собираем
+    wrapper.appendChild(img);
+    wrapper.appendChild(date);
+    link.appendChild(wrapper);
+    grid.appendChild(link);
+    
+    // активный элемент
+    if (index === from) {
+      img.classList.add("active");
+      activeElement = img;
+    }
+    });
+
+    // кнопка назад
+    document.getElementById("backLink").href = "index.html?image=" + (from + 1);
+  
+    // автоскролл
+    if (activeElement) {
+      setTimeout(() => {
+        activeElement.scrollIntoView({
+          behavior: "auto",
+          block: "center"
+        });
+      }
+    }
+
   const images = [
   "2025-01-12_1.jpg",
   "2025-01-12_2.jpg",
@@ -808,75 +857,6 @@
   "2025-08-31_699.jpg",
   "2025-09-01_700.jpg"
 ];
-
-const grid = document.getElementById("grid");
-
-const params = new URLSearchParams(window.location.search);
-const fromParam = parseInt(params.get("from"));
-const from = isNaN(fromParam) ? 0 : fromParam;
-
-let activeElement = null;
-
-images.forEach((filename, index) => {
-    const link = document.createElement("a");
-    link.href = "index.html?image=" + (index + 1) + "&from=" + from;
-    
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("item");
-    
-    const img = document.createElement("img");
-    img.src = "images2/" + filename;
-    img.loading = "lazy";
-    img.decoding = "async";
-    
-    // дата из имени файла
-    const dateStr = filename.split("_")[0]; // 2025-01-12
-    
-    // форматируем в 01-01-2025
-    const parts = dateStr.split("-");
-    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-    
-    const date = document.createElement("div");
-    date.classList.add("date");
-    date.innerText = formattedDate;
-    
-    // собираем
-    wrapper.appendChild(img);
-    wrapper.appendChild(date);
-    link.appendChild(wrapper);
-    grid.appendChild(link);
-    
-    // активный элемент
-    if (index === from) {
-      img.classList.add("active");
-      activeElement = img;
-    }
-    });
-
-    // кнопка назад
-    document.getElementById("backLink").onclick = (e) => {
-      e.preventDefault();
-    
-      document.body.classList.remove("loaded");
-    
-      setTimeout(() => {
-        window.location.href = "index.html?image=" + (from + 1);
-      }, 200);
-    };
-
-    window.addEventListener("load", () => {
-      document.body.classList.add("loaded");
-    });
-  
-    // автоскролл
-    if (activeElement) {
-      setTimeout(() => {
-        activeElement.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }, 100);
-    }
 
 </script>
 
