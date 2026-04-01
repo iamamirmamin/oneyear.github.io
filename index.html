@@ -141,117 +141,7 @@
 </div>
 
 <script>
-
-const params = new URLSearchParams(window.location.search);
-
-// текущий индекс
-let indexParam = parseInt(params.get("image"));
-let index = isNaN(indexParam) ? null : indexParam - 1;
-  
-// если не задан → показываем "сегодня"
-if (index === null) {
-  const day = Math.floor(Date.now() / (1000*60*60*24));
-  index = day % images.length;
-}
-
-// откуда пришли (для кнопки назад)
-const from = params.get("from");
-
-// обновление изображения
-function updateImage() {
-
-  index = ((index % images.length) + images.length) % images.length;
-
-  const filename = images[index];
-
-  document.getElementById("img").src = "images2/" + filename;
-
-  const dateStr = getDateFromFilename(filename);
-  const label = formatDate(dateStr);
-
-  document.getElementById("month").innerText = label;
-
-  const nextImg = new Image();
-  nextImg.src = "images2/" + images[(index + 1) % images.length];
-}
-
-
-  // старт
-updateImage();
-
-// навигация
-function goNext() {
-  index++;
-  updateImage();
-}
-
-function goPrev() {
-  index--;
-  updateImage();
-}
-
-// кнопки
-document.getElementById("next").onclick = (e) => {
-  e.preventDefault();
-  goNext();
-};
-
-document.getElementById("prev").onclick = (e) => {
-  e.preventDefault();
-  goPrev();
-};
-
-// клавиатура
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowRight") goNext();
-  if (e.key === "ArrowLeft") goPrev();
-});
-
-// клик по изображению
-document.getElementById("img").onclick = goNext;
-
-// архив
-document.getElementById("archiveLink").href = "archive.html?from=" + index;
-
-// защита
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("dragstart", e => e.preventDefault());
-
-  function getDateFromFilename(filename) {
-  // убираем расширение
-  const name = filename.replace(".jpg", "");
-
-  // разбиваем по "_"
-  const datePart = name.split("_")[0];
-
-  return datePart; // "2025-01-12"
-}
-    function formatDate(dateStr) {
-  const date = new Date(dateStr);
-
-  if (isNaN(date)) return ""; // защита от ошибки
-
-  const month = date.toLocaleString("en", { month: "long" });
-  const day = date.getDate();
-
-  return (month + " " + day);
-}
-
-  const aboutLink = document.getElementById("aboutLink");
-const aboutBox = document.getElementById("aboutBox");
-
-aboutLink.onclick = (e) => {
-  e.preventDefault();
-  aboutBox.style.display = "flex";
-  document.body.classList.add("about-open");
-};
-  
-// закрытие
-aboutBox.onclick = () => {
-  aboutBox.style.display = "none";
-  document.body.classList.remove("about-open");
-};
-  const images = [
+const images = [
   "2025-01-12_1.jpg",
   "2025-01-12_2.jpg",
   "2025-01-12_3.jpg",
@@ -953,6 +843,115 @@ aboutBox.onclick = () => {
   "2025-08-31_699.jpg",
   "2025-09-01_700.jpg"
 ];
+const params = new URLSearchParams(window.location.search);
+
+// текущий индекс
+let indexParam = parseInt(params.get("image"));
+let index = isNaN(indexParam) ? null : indexParam - 1;
+  
+// если не задан → показываем "сегодня"
+if (index === null) {
+  const day = Math.floor(Date.now() / (1000*60*60*24));
+  index = day % images.length;
+}
+
+// откуда пришли (для кнопки назад)
+const from = params.get("from");
+
+// обновление изображения
+function updateImage() {
+
+  index = ((index % images.length) + images.length) % images.length;
+
+  const filename = images[index];
+
+  document.getElementById("img").src = "images2/" + filename;
+
+  const dateStr = getDateFromFilename(filename);
+  const label = formatDate(dateStr);
+
+  document.getElementById("month").innerText = label;
+
+  const nextImg = new Image();
+  nextImg.src = "images2/" + images[(index + 1) % images.length];
+}
+
+
+  // старт
+updateImage();
+
+// навигация
+function goNext() {
+  index++;
+  updateImage();
+}
+
+function goPrev() {
+  index--;
+  updateImage();
+}
+
+// кнопки
+document.getElementById("next").onclick = (e) => {
+  e.preventDefault();
+  goNext();
+};
+
+document.getElementById("prev").onclick = (e) => {
+  e.preventDefault();
+  goPrev();
+};
+
+// клавиатура
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") goNext();
+  if (e.key === "ArrowLeft") goPrev();
+});
+
+// клик по изображению
+document.getElementById("img").onclick = goNext;
+
+// архив
+document.getElementById("archiveLink").href = "archive.html?from=" + index;
+
+// защита
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+
+  function getDateFromFilename(filename) {
+  // убираем расширение
+  const name = filename.replace(".jpg", "");
+
+  // разбиваем по "_"
+  const datePart = name.split("_")[0];
+
+  return datePart; // "2025-01-12"
+}
+    function formatDate(dateStr) {
+  const date = new Date(dateStr);
+
+  if (isNaN(date)) return ""; // защита от ошибки
+
+  const month = date.toLocaleString("en", { month: "long" });
+  const day = date.getDate();
+
+  return (month + " " + day);
+}
+
+  const aboutLink = document.getElementById("aboutLink");
+const aboutBox = document.getElementById("aboutBox");
+
+aboutLink.onclick = (e) => {
+  e.preventDefault();
+  aboutBox.style.display = "flex";
+  document.body.classList.add("about-open");
+};
+  
+// закрытие
+aboutBox.onclick = () => {
+  aboutBox.style.display = "none";
+  document.body.classList.remove("about-open");
+};
 </script>
 
 </body>
