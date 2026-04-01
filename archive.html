@@ -811,7 +811,7 @@ const images = [
   "2025-09-01_700.jpg"
 ];
 
-  const grid = document.getElementById("grid");
+ const grid = document.getElementById("grid");
 
 // параметры
 const params = new URLSearchParams(window.location.search);
@@ -819,13 +819,10 @@ const fromParam = parseInt(params.get("from"));
 const from = isNaN(fromParam) ? 0 : fromParam;
 
 // настройки
-const batchSize = 40;
+const batchSize = 60;
+let currentIndex = 0;
 
-// начинаем НЕ с нуля
-let startIndex = Math.max(0, from - 20);
-let currentIndex = startIndex;
-
-// загрузка батча
+// загрузка батча (только вниз)
 function loadBatch() {
   if (currentIndex >= images.length) return;
 
@@ -834,17 +831,18 @@ function loadBatch() {
   slice.forEach((filename, i) => {
     const index = currentIndex + i;
 
-    
     const link = document.createElement("a");
     link.href = "index.html?image=" + (index + 1) + "&from=" + from;
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("item");
 
+    // активный кадр
     if (index === from) {
       wrapper.classList.add("active");
+      wrapper.id = "activeItem"; // для скролла
     }
-    
+
     const img = document.createElement("img");
     img.src = "thumbs/" + filename;
 
@@ -866,99 +864,42 @@ function loadBatch() {
   currentIndex += batchSize;
 }
 
-  function loadBatchUp() {
-  if (startIndex <= 0) return;
-
-  const newStart = Math.max(0, startIndex - batchSize);
-  const slice = images.slice(newStart, startIndex);
-
-  slice.reverse().forEach((filename, i) => {
-    const index = newStart + i;
-
-    const link = document.createElement("a");
-    link.href = "index.html?image=" + (index + 1) + "&from=" + from;
-
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("item");
-
-    if (index === from) {
-      wrapper.classList.add("active");
-    }
-
-    const img = document.createElement("img");
-    img.src = "thumbs/" + filename;
-
-    const dateStr = filename.split("_")[0];
-    const parts = dateStr.split("-");
-    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-
-    const date = document.createElement("div");
-    date.classList.add("date");
-    date.innerText = formattedDate;
-
-    wrapper.appendChild(img);
-    wrapper.appendChild(date);
-    link.appendChild(wrapper);
-
-    // добавляем в начало
-    grid.prepend(link);
-  });
-
-  startIndex = newStart;
-}
-
-  
-// начальная загрузка (несколько батчей сразу)
+// начальная загрузка (чуть больше сразу)
 function loadInitial() {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 6; i++) {
     loadBatch();
   }
 
-  // скролл после появления DOM
+  // даём DOM построиться
   setTimeout(() => {
-    const active = document.querySelector(".active");
+    const active = document.getElementById("activeItem");
+
     if (active) {
       active.scrollIntoView({
         behavior: "auto",
         block: "center"
       });
     }
-  }, 50);
+  }, 100);
 }
 
 loadInitial();
 
-  window.onload = () => {
-  document.body.classList.add("loaded");
-};
-
-  window.addEventListener("scroll", () => {
-
-  // вниз
+// подгрузка вниз (оставляем)
+window.addEventListener("scroll", () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
     loadBatch();
   }
-
-  // вверх
-  if (window.scrollY < 300) {
-
-  const firstItem = grid.firstElementChild;
-  if (!firstItem) return;
-
-  const prevTop = firstItem.getBoundingClientRect().top;
-
-  loadBatchUp();
-
-  const newTop = firstItem.getBoundingClientRect().top;
-
-  window.scrollBy(0, newTop - prevTop);
-}
-
 });
 
 // кнопка назад
 document.getElementById("backLink").href =
   "index.html?image=" + (from + 1);
+
+// плавное появление
+window.onload = () => {
+  document.body.classList.add("loaded");
+};
 
 
 </script>
