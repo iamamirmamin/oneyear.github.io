@@ -1172,6 +1172,31 @@ aboutBox.onclick = () => {
       fragment.appendChild(link);
     }
 
+
+    function smoothScrollTo(targetY, duration = 800) {
+    const startY = archiveView.scrollTop;
+    const diff = targetY - startY;
+    const startTime = performance.now();
+  
+    function easeInOut(t) {
+      return 1 - Math.pow(1 - t, 3); // easeOutCubic
+    }
+  
+    function step(currentTime) {
+      const time = Math.min(1, (currentTime - startTime) / duration);
+      const eased = easeInOut(time);
+  
+      archiveView.scrollTop = startY + diff * eased;
+  
+      if (time < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+  
+    requestAnimationFrame(step);
+  }
+
+    
     grid.appendChild(fragment);
 
     if (i < images.length) {
@@ -1182,10 +1207,17 @@ aboutBox.onclick = () => {
       if (active && !window._scrolledToActive) {
         window._scrolledToActive = true;
     
-        active.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
+        const rect = active.getBoundingClientRect();
+        const containerRect = archiveView.getBoundingClientRect();
+        
+        // позиция элемента внутри контейнера
+        const targetY =
+          archiveView.scrollTop +
+          (rect.top - containerRect.top) -
+          archiveView.clientHeight / 2 +
+          rect.height / 2;
+        
+        smoothScrollTo(targetY, 1200); // ← длительность (можешь менять)
       }
     
     } else {
