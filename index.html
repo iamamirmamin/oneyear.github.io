@@ -1083,59 +1083,74 @@ aboutBox.onclick = () => {
 };
 
 
-  function openArchive() {
+ function openArchive() {
 
   grid.innerHTML = "";
 
-  images.forEach((filename, i) => {
+  let i = 0;
+  const batchSize = 40;
 
-    const link = document.createElement("a");
-    link.href = "#";
+  function renderBatch() {
 
-    link.onclick = (e) => {
-      e.preventDefault();
+    const fragment = document.createDocumentFragment();
 
-      index = i;
-      updateImage();
+    for (let j = 0; j < batchSize && i < images.length; j++, i++) {
 
-      archiveView.style.display = "none";
-      viewer.style.display = "block";
-    };
+      const filename = images[i];
 
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("item");
+      const link = document.createElement("a");
+      link.href = "#";
 
-    if (i === index) {
-      wrapper.classList.add("active");
+      link.onclick = (e) => {
+        e.preventDefault();
+
+        index = i;
+        updateImage();
+
+        archiveView.style.display = "none";
+        viewer.style.display = "block";
+      };
+
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("item");
+
+      if (i === index) {
+        wrapper.classList.add("active");
+      }
+
+      const img = document.createElement("img");
+      img.src = "thumbs/" + filename;
+      img.loading = "lazy";
+
+      const dateStr = filename.split("_")[0];
+      const parts = dateStr.split("-");
+      const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+
+      const date = document.createElement("div");
+      date.classList.add("date");
+      date.innerText = formattedDate;
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(date);
+      link.appendChild(wrapper);
+      fragment.appendChild(link);
     }
 
-    const img = document.createElement("img");
-    img.src = "thumbs/" + filename;
-    img.loading = "lazy";
+    grid.appendChild(fragment);
 
-    const dateStr = filename.split("_")[0];
-    const parts = dateStr.split("-");
-    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-
-    const date = document.createElement("div");
-    date.classList.add("date");
-    date.innerText = formattedDate;
-
-    wrapper.appendChild(img);
-    wrapper.appendChild(date);
-    link.appendChild(wrapper);
-    grid.appendChild(link);
-  });
-
-  // автоскролл
-  setTimeout(() => {
-    const active = document.querySelector(".active");
-    if (active) {
-      active.scrollIntoView({
-        block: "center"
-      });
+    // продолжаем рендерить дальше (но не блокируем UI)
+    if (i < images.length) {
+      requestAnimationFrame(renderBatch);
+    } else {
+      // автоскролл когда всё готово
+      const active = document.querySelector(".active");
+      if (active) {
+        active.scrollIntoView({ block: "center" });
+      }
     }
-  }, 50);
+  }
+
+  renderBatch();
 }
 </script>
 
