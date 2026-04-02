@@ -1124,32 +1124,28 @@ aboutBox.onclick = () => {
 
       const currentIndex = i;
 
+      
       link.dataset.index = i;
 
       link.onclick = (e) => {
       e.preventDefault();
     
-      const newIndex = currentIndex; // или dataset если используешь его
+      const newIndex = currentIndex;
     
-      // меняем изображение ЧУТЬ позже
-      setTimeout(() => {
+      index = newIndex;
+      updateImage();
     
-        index = newIndex;
-        updateImage();
+      archiveView.style.display = "none";
+      viewer.style.display = "block";
     
-        archiveView.style.display = "none";
-        viewer.style.display = "block";
+      overlay.classList.add("active");
     
-        // запускаем fade через overlay
-        overlay.classList.add("active");
-      
-        // сразу убираем (очень быстро)
-        requestAnimationFrame(() => {
-          overlay.classList.remove("active");
-          
-      }); // длительность затемнения
+      requestAnimationFrame(() => {
+        overlay.classList.remove("active");
+      });
     };
-};
+
+      
       const wrapper = document.createElement("div");
       wrapper.classList.add("item");
 
