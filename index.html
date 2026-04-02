@@ -1032,10 +1032,8 @@ document.getElementById("archiveLink").onclick = (e) => {
   archiveView.style.display = "block";
 
   setTimeout(() => {
-    openArchive(
-      img.loading = "lazy";
-    );
-  }, 0);
+  openArchive();
+}, 0);
 };
 
   document.getElementById("backLink").onclick = (e) => {
@@ -1113,6 +1111,7 @@ aboutBox.onclick = () => {
 
     const img = document.createElement("img");
     img.src = "thumbs/" + filename;
+    img.loading = "lazy";
 
     const dateStr = filename.split("_")[0];
     const parts = dateStr.split("-");
