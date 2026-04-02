@@ -1101,12 +1101,16 @@ aboutBox.onclick = () => {
       const link = document.createElement("a");
       link.href = "#";
 
+      const currentIndex = i;
+
+      link.dataset.index = i;
+
       link.onclick = (e) => {
         e.preventDefault();
-
-        index = i;
+      
+        index = parseInt(e.currentTarget.dataset.index);
         updateImage();
-
+      
         archiveView.style.display = "none";
         viewer.style.display = "block";
       };
