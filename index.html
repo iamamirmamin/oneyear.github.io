@@ -44,6 +44,15 @@
       object-fit: cover;
       clip-path: inset(0 0 5px 0);
     }
+
+    .grid img {
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+    
+    .grid img:hover {
+      opacity: 1;
+    }
     
     .nav, .archive {
       position: absolute;
@@ -138,22 +147,21 @@
     #transitionOverlay {
       position: fixed;
       inset: 0;
-      background: white;
+      background: black;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.25s ease;
       z-index: 9999;
     }
     
     #transitionOverlay.active {
       opacity: 1;
-      backdrop-filter: blur(10px);
     }
 
         #archiveView {
       position: absolute;
       inset: 0;
-      background: white;
+      background: black;
       padding: 40px;
       overflow-y: auto;
     }
@@ -170,14 +178,19 @@
       top: 20px;
       left: 30px;
       font-size: 14px;
-      color: black;
+      color: white;
       text-decoration: none;
-      border: 1px solid black;
+      border: 1px solid white;
       border-radius: 999px;
       padding: 10px 16px;
       opacity: 0.7;
+      z-index: 10000;
     }
-    
+
+    .back:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+    }
     .item {
       position: relative;
     }
@@ -1106,14 +1119,29 @@ aboutBox.onclick = () => {
       link.dataset.index = i;
 
       link.onclick = (e) => {
-        e.preventDefault();
-      
-        index = parseInt(e.currentTarget.dataset.index);
+      e.preventDefault();
+    
+      const newIndex = currentIndex; // или dataset если используешь его
+    
+      // мгновенно показываем overlay
+      overlay.classList.add("active");
+    
+      // меняем изображение ЧУТЬ позже
+      setTimeout(() => {
+    
+        index = newIndex;
         updateImage();
-      
+    
         archiveView.style.display = "none";
         viewer.style.display = "block";
-      };
+    
+        // убираем overlay
+        setTimeout(() => {
+          overlay.classList.remove("active");
+        }, 50);
+    
+      }, 200); // длительность затемнения
+    };
 
       const wrapper = document.createElement("div");
       wrapper.classList.add("item");
