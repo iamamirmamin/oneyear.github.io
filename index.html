@@ -1131,9 +1131,6 @@ aboutBox.onclick = () => {
     
       const newIndex = currentIndex; // или dataset если используешь его
     
-      // мгновенно показываем overlay
-      overlay.classList.add("active");
-    
       // меняем изображение ЧУТЬ позже
       setTimeout(() => {
     
@@ -1152,7 +1149,7 @@ aboutBox.onclick = () => {
           
       }); // длительность затемнения
     };
-
+};
       const wrapper = document.createElement("div");
       wrapper.classList.add("item");
 
