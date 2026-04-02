@@ -193,6 +193,11 @@
     }
     .item {
       position: relative;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    
+    .item:not(.active) {
+      opacity: 0.6;
     }
     
     .item img {
@@ -214,7 +219,10 @@
     }
     
     .active {
-      outline: 2px solid black;
+      outline: 2px solid white;
+      outline-offset: 4px;
+      transform: scale(1.03);
+      z-index: 2;
     }
   </style>
 </head>
@@ -1135,12 +1143,14 @@ aboutBox.onclick = () => {
         archiveView.style.display = "none";
         viewer.style.display = "block";
     
-        // убираем overlay
-        setTimeout(() => {
+        // запускаем fade через overlay
+        overlay.classList.add("active");
+      
+        // сразу убираем (очень быстро)
+        requestAnimationFrame(() => {
           overlay.classList.remove("active");
-        }, 50);
-    
-      }, 200); // длительность затемнения
+          
+      }); // длительность затемнения
     };
 
       const wrapper = document.createElement("div");
