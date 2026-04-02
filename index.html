@@ -1106,6 +1106,7 @@ aboutBox.onclick = () => {
 
  function openArchive() {
 
+  window._scrolledToActive = false;
   grid.innerHTML = "";
 
   let i = 0;
@@ -1173,14 +1174,28 @@ aboutBox.onclick = () => {
 
     grid.appendChild(fragment);
 
-    // продолжаем рендерить дальше (но не блокируем UI)
     if (i < images.length) {
       requestAnimationFrame(renderBatch);
+    
+      // пытаемся найти active как можно раньше
+      const active = grid.querySelector(".active");
+      if (active && !window._scrolledToActive) {
+        window._scrolledToActive = true;
+    
+        active.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    
     } else {
-      // автоскролл когда всё готово
-      const active = document.querySelector(".active");
-      if (active) {
-        active.scrollIntoView({ block: "center" });
+      // fallback если вдруг не нашли раньше
+      const active = grid.querySelector(".active");
+      if (active && !window._scrolledToActive) {
+        active.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
       }
     }
   }
