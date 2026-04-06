@@ -1476,11 +1476,23 @@ function openArchive() {
     const startIndex = startRow * columns;
     const endIndex = Math.min(images.length, endRow * columns);
 
+    let safeStartIndex = startIndex;
+    let safeEndIndex = endIndex;
+    
+    // гарантируем, что текущий index всегда в диапазоне
+    if (index < safeStartIndex) {
+      safeStartIndex = index;
+    }
+    
+    if (index >= safeEndIndex) {
+      safeEndIndex = index + 1;
+    }
+
     grid.innerHTML = "";
 
     const fragment = document.createDocumentFragment();
 
-    for (let i = startIndex; i < endIndex; i++) {
+    for (let i = safeStartIndex; i < safeEndIndex; i++) {
 
       const filename = images[i];
       const currentIndex = i;
