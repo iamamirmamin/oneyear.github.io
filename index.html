@@ -1457,7 +1457,11 @@ function openArchive() {
 
   // применяем сохранённый скролл
     requestAnimationFrame(() => {
-    archiveView.scrollTop = archiveState.scrollTop;
+      renderVisible(); // сначала создаём DOM
+    
+      requestAnimationFrame(() => {
+        archiveView.scrollTop = archiveState.scrollTop;
+      });
     });
 
   // ---------- РЕНДЕР ----------
