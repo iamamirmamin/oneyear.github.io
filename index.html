@@ -1278,6 +1278,23 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
 
+  const imgEl = document.getElementById("img");
+
+  imgEl.style.opacity = 0;
+
+  document.getElementById("prev").style.opacity = 0;
+  document.getElementById("next").style.opacity = 0;
+
+  const filename = images[index];
+  imgEl.src = "images2/" + filename;
+
+  imgEl.onload = () => {
+    imgEl.style.opacity = 1;
+
+    document.getElementById("prev").style.opacity = 0.7;
+    document.getElementById("next").style.opacity = 0.7;
+  };
+  
   index = ((index % images.length) + images.length) % images.length;
 
   const filename = images[index];
@@ -1458,7 +1475,9 @@ function openArchive() {
   // применяем сохранённый скролл
     requestAnimationFrame(() => {
       archiveView.scrollTop = archiveState.scrollTop;
+      requestAnimationFrame(() => {
       renderVisible();
+      });
     });
 
   // ---------- РЕНДЕР ----------
