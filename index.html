@@ -236,10 +236,10 @@
 <div class="viewer">
   <img id="img">
   <div id="month"></div>
-  <a href="#" id="prev" class="nav prev">←</a>
-  <a href="#" id="next" class="nav next">→</a>
-  <a href="#" id="archiveLink" class="archive">archive</a>
-  <a href="#" id="aboutLink" class="archive about">about</a>
+  <a href="#" id="prev" class="nav prev ui">←</a>
+  <a href="#" id="next" class="nav next ui">→</a>
+  <a href="#" id="archiveLink" class="archive ui">archive</a>
+  <a href="#" id="aboutLink" class="archive about ui">about</a>
 </div>
 
 <div id="archiveView" style="display:none">
@@ -1286,8 +1286,10 @@ function updateImage() {
 
   // скрываем
   imgEl.style.opacity = 0;
-  document.getElementById("prev").style.opacity = 0;
-  document.getElementById("next").style.opacity = 0;
+  const uiElements = document.querySelectorAll(".ui");
+  uiElements.forEach(el => {
+    el.style.opacity = 0;
+  });
 
   // ставим src ОДИН раз
   imgEl.src = "images2/" + filename;
@@ -1295,8 +1297,9 @@ function updateImage() {
   imgEl.onload = () => {
     imgEl.style.opacity = 1;
 
-    document.getElementById("prev").style.opacity = 0.7;
-    document.getElementById("next").style.opacity = 0.7;
+    uiElements.forEach(el => {
+    el.style.opacity = 0.7;
+    });
   };
 
   if (imgEl.complete) {
