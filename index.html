@@ -229,6 +229,10 @@
       border: 2px solid white;
       pointer-events: none;
     }
+    
+    .virtual-spacer {
+      width: 100%;
+    }
   </style>
 </head>
 
@@ -1335,6 +1339,11 @@ const overlay = document.getElementById("transitionOverlay");
 const viewer = document.querySelector(".viewer");
 const archiveView = document.getElementById("archiveView");
 const grid = document.getElementById("grid");
+  
+  let archiveState = {
+  scrollTop: 0,
+  initialized: false
+};
 
 document.getElementById("archiveLink").onclick = (e) => {
   e.preventDefault();
@@ -1397,40 +1406,63 @@ aboutBox.onclick = () => {
 
   function openArchive() {
 
-  grid.innerHTML = "";
-
   const gap = 20;
   const itemSize = 200;
 
   const containerWidth = grid.clientWidth;
 
-  // точное количество колонок
   const columns = Math.max(
     1,
     Math.floor((containerWidth + gap) / (itemSize + gap))
   );
 
-  // считаем строку
-  const row = Math.floor(index / columns);
-
   const itemHeight = itemSize + gap;
+  const totalRows = Math.ceil(images.length / columns);
 
-  const targetY =
-  row * itemHeight -
-  (archiveView.clientHeight - itemSize) / 2;
+  // виртуальная высота
+  grid.style.position = "relative";
+  grid.style.height = totalRows * itemHeight + "px";
+
+  // ---------- ПЕРВЫЙ ВХОД ----------
+  if (!archiveState.initialized) {
+
+    const row = Math.floor(index / columns);
+
+    archiveState.scrollTop =
+      row * itemHeight -
+      (archiveView.clientHeight - itemSize) / 2;
+
+    archiveState.initialized = true;
+  }
+
+  // применяем сохранённый скролл
+  archiveView.scrollTop = archiveState.scrollTop;
 
   // ---------- РЕНДЕР ----------
-  let i = 0;
-  const batchSize = 60;
+  function renderVisible() {
 
-  function renderBatch() {
+    const scrollTop = archiveView.scrollTop;
+    archiveState.scrollTop = scrollTop; // сохраняем
+
+    const viewHeight = archiveView.clientHeight;
+
+    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
+    const endRow = Math.min(
+      totalRows,
+      Math.ceil((scrollTop + viewHeight) / itemHeight) + 2
+    );
+
+    const startIndex = startRow * columns;
+    const endIndex = Math.min(images.length, endRow * columns);
+
+    grid.innerHTML = "";
 
     const fragment = document.createDocumentFragment();
 
-    for (let j = 0; j < batchSize && i < images.length; j++, i++) {
+    for (let i = startIndex; i < endIndex; i++) {
 
-      const currentIndex = i;
       const filename = images[i];
+      const currentIndex = i;
 
       const link = document.createElement("a");
       link.href = "#";
@@ -1473,28 +1505,27 @@ aboutBox.onclick = () => {
       wrapper.appendChild(img);
       wrapper.appendChild(date);
       link.appendChild(wrapper);
+
+      // позиционирование
+      const row = Math.floor(i / columns);
+      const col = i % columns;
+
+      wrapper.style.position = "absolute";
+      wrapper.style.top = row * itemHeight + "px";
+      wrapper.style.left = col * (itemSize + gap) + "px";
+      wrapper.style.width = itemSize + "px";
+
       fragment.appendChild(link);
     }
 
     grid.appendChild(fragment);
-
-    // 🔥 СКРОЛЛ — когда уже есть высота
-    if (i >= batchSize && !window._scrolled) {
-      window._scrolled = true;
-
-      requestAnimationFrame(() => {
-        archiveView.scrollTop = Math.max(0, targetY);
-      });
-    }
-
-    if (i < images.length) {
-      requestAnimationFrame(renderBatch);
-    }
   }
 
-  window._scrolled = false;
+  renderVisible();
 
-  renderBatch();
+  archiveView.onscroll = () => {
+    requestAnimationFrame(renderVisible);
+  };
 }
 
 </script>
