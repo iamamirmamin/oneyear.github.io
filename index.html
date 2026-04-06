@@ -14,9 +14,6 @@
       height: 100vh;
       overflow: hidden;
       font-family: Helvetica, Arial, sans-serif;
-    }
-
-    body {
       transition: transform 0.4s ease, opacity 0.4s ease;
     }
     
@@ -43,10 +40,7 @@
       height: auto;
       object-fit: cover;
       clip-path: inset(0 0 5px 0);
-    }
-
-    .grid img {
-      opacity: 0.9;
+      opacity: 0.8;
       transition: opacity 0.2s ease;
     }
     
@@ -1227,27 +1221,27 @@ const images = [
   "2026-01-11_945.jpg"
 ];
 
-  function getClosestIndexByDate() {
+function getClosestIndexByDate() {
 
   const today = new Date();
-
+  
   let closestIndex = 0;
   let smallestDiff = Infinity;
-
+  
   images.forEach((filename, i) => {
     const dateStr = filename.split("_")[0];
     const date = new Date(dateStr);
-
+  
     // создаём дату в текущем году
     const candidate = new Date(
       today.getFullYear(),
       date.getMonth(),
       date.getDate()
     );
-
+  
     // вариант: этот год или прошлый (чтобы январь работал)
     let bestCandidate = candidate;
-
+  
     if (candidate > today) {
       bestCandidate = new Date(
         today.getFullYear() - 1,
@@ -1255,16 +1249,16 @@ const images = [
         date.getDate()
       );
     }
-
+  
     const diff = today - bestCandidate; // только назад
-
+  
     if (diff >= 0 && diff < smallestDiff) {
       smallestDiff = diff;
       closestIndex = i;
-    }
+      }
   });
-
-  return closestIndex;
+  
+    return closestIndex;
 }
   
 const params = new URLSearchParams(window.location.search);
@@ -1406,12 +1400,12 @@ aboutBox.onclick = () => {
 };
 
 
-  function openArchive() {
+function openArchive() {
 
-    if (grid.clientWidth === 0) {
-  requestAnimationFrame(openArchive);
-  return;
-}
+  if (grid.clientWidth === 0) {
+    requestAnimationFrame(openArchive);
+    return;
+  }
   const gap = 20;
   const itemSize = 200;
 
