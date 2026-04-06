@@ -1435,10 +1435,13 @@ aboutBox.onclick = () => {
 
     const row = Math.floor(index / columns);
 
-    archiveState.scrollTop =
-      row * itemHeight -
-      (archiveView.clientHeight - itemSize) / 2;
+    const itemHeightPx = 113;
 
+    archiveState.scrollTop =
+      row * itemHeight +
+      itemHeightPx / 2 -
+      archiveView.clientHeight / 2;
+    
     archiveState.initialized = true;
   }
 
