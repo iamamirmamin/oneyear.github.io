@@ -1471,11 +1471,10 @@ aboutBox.onclick = () => {
 
     const viewHeight = archiveView.clientHeight;
 
-    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
+    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 8);
     const endRow = Math.min(
       totalRows,
-      Math.ceil((scrollTop + viewHeight) / itemHeight) + 2
-    );
+      Math.ceil((scrollTop + viewHeight) / itemHeight) + 8);
 
     const startIndex = startRow * columns;
     const endIndex = Math.min(images.length, endRow * columns);
