@@ -1411,7 +1411,7 @@ aboutBox.onclick = () => {
   const itemSize = 200;
 
   grid.style.display = "block";
-  const containerWidth = grid.clientWidth;
+  const containerWidth = archiveView.clientWidth;
   const columns = Math.max(
     1,
     Math.floor((containerWidth + gap) / (itemSize + gap))
@@ -1455,7 +1455,9 @@ aboutBox.onclick = () => {
   }
 
   // применяем сохранённый скролл
+  requestAnimationFrame(() => {
   archiveView.scrollTop = archiveState.scrollTop;
+  });
 
   // ---------- РЕНДЕР ----------
   function renderVisible() {
@@ -1539,12 +1541,13 @@ aboutBox.onclick = () => {
 
     grid.appendChild(fragment);
   }
-
   renderVisible();
-
-  archiveView.onscroll = () => {
-    requestAnimationFrame(renderVisible);
-  };
+  
+  requestAnimationFrame(() => {
+    archiveView.scrollTop = archiveState.scrollTop;
+  
+    renderVisible();
+  });renderVisible();
 }
 
 </script>
