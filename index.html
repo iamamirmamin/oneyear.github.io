@@ -1438,7 +1438,8 @@ function openArchive() {
 
     archiveState.scrollTop =
       row * itemHeight +
-      itemHeight / 2 -
+      (113 / 2) +
+      (gap / 2) -
       archiveView.clientHeight / 2;
 
     const maxScroll =
@@ -1455,31 +1456,9 @@ function openArchive() {
   }
 
   // применяем сохранённый скролл
-  requestAnimationFrame(() => {
-  requestAnimationFrame(() => {
-
-    const viewHeight = archiveView.clientHeight;
-
-    const row = Math.floor(index / columns);
-
-    archiveState.scrollTop =
-      row * itemHeight +
-      itemHeight / 2 -
-      viewHeight / 2;
-
-    const maxScroll =
-      grid.offsetHeight - viewHeight;
-
-    archiveState.scrollTop = Math.max(
-      0,
-      Math.min(archiveState.scrollTop, maxScroll)
-    );
-
+    requestAnimationFrame(() => {
     archiveView.scrollTop = archiveState.scrollTop;
-
-    renderVisible();
-  });
-});
+    });
 
   // ---------- РЕНДЕР ----------
   function renderVisible() {
