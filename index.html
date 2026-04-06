@@ -1394,6 +1394,7 @@ aboutBox.onclick = () => {
 
 function openArchive() {
 
+    window._didInitialScroll = false;
     requestAnimationFrame(() => {
       
     const gap = 20;
@@ -1422,9 +1423,6 @@ function openArchive() {
       row * itemHeight -
       archiveView.clientHeight / 2 +
       itemHeight / 2;
-    
-    // мгновенный точный скролл
-    archiveView.scrollTop = Math.max(0, targetY);
   
   grid.innerHTML = "";
 
@@ -1494,8 +1492,10 @@ function openArchive() {
     
     grid.appendChild(fragment);
 
-    if (i < images.length) {
-      requestAnimationFrame(renderBatch);
+    if (i >= batchSize && !window._didInitialScroll) {
+      window._didInitialScroll = true;
+    
+      archiveView.scrollTop = Math.max(0, targetY);
     }
   }
 
