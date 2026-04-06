@@ -1394,7 +1394,37 @@ aboutBox.onclick = () => {
 
 function openArchive() {
 
-  window._scrolledToActive = false;
+
+    const gap = 20;
+    const itemMinWidth = 200;
+    
+    // считаем колонки (как делает CSS)
+    const containerWidth = archiveView.clientWidth;
+    
+    const columns = Math.max(
+      1,
+      Math.floor((containerWidth + gap) / (itemMinWidth + gap))
+    );
+    
+    // применяем
+    grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    
+    // считаем РЕАЛЬНЫЙ размер элемента
+    const actualItemWidth =
+      (containerWidth - gap * (columns - 1)) / columns;
+    
+    const itemHeight = actualItemWidth + gap; // квадрат + gap
+
+    const row = Math.floor(index / columns);
+
+    const targetY =
+      row * itemHeight -
+      archiveView.clientHeight / 2 +
+      itemHeight / 2;
+    
+    // мгновенный точный скролл
+    archiveView.scrollTop = Math.max(0, targetY);
+  
   grid.innerHTML = "";
 
   let i = 0;
@@ -1460,75 +1490,15 @@ function openArchive() {
       fragment.appendChild(link);
     }
 
-
-    function smoothScrollTo(targetY, duration = 800) {
-    const startY = archiveView.scrollTop;
-    const diff = targetY - startY;
-    const startTime = performance.now();
-  
-    function easeInOut(t) {
-      return 1 - Math.pow(1 - t, 3); // easeOutCubic
-    }
-  
-    function step(currentTime) {
-      const time = Math.min(1, (currentTime - startTime) / duration);
-      const eased = easeInOut(time);
-  
-      archiveView.scrollTop = startY + diff * eased;
-  
-      if (time < 1) {
-        requestAnimationFrame(step);
-      }
-    }
-  
-    requestAnimationFrame(step);
-  }
-
     
     grid.appendChild(fragment);
 
     if (i < images.length) {
       requestAnimationFrame(renderBatch);
-    
-      // пытаемся найти active как можно раньше
-      const active = grid.querySelector(".active");
-      if (active && !window._scrolledToActive) {
-        window._scrolledToActive = true;
-    
-        const rect = active.getBoundingClientRect();
-        const containerRect = archiveView.getBoundingClientRect();
-        
-        // позиция элемента внутри контейнера
-        const targetY =
-          archiveView.scrollTop +
-          (rect.top - containerRect.top) -
-          archiveView.clientHeight / 2 +
-          rect.height / 2;
-        
-        smoothScrollTo(targetY, 1200); // ← длительность (можешь менять)
-      }
-    
-    } else {
-      function scrollToActiveSmooth() {
-        const active = document.querySelector(".active");
-        if (!active) return;
-    
-        active.scrollIntoView({
-          block: "center"
-        });
-    
-        setTimeout(() => {
-          active.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-          });
-        }, 200);
-      }
     }
   }
 
   renderBatch();
-  scrollToActiveSmooth();
 }
 </script>
 
