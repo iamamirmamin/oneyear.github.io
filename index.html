@@ -1225,18 +1225,26 @@ function openArchive() {
       }
     
     } else {
-      // fallback если вдруг не нашли раньше
-      const active = grid.querySelector(".active");
-      if (active && !window._scrolledToActive) {
+      function scrollToActiveSmooth() {
+        const active = document.querySelector(".active");
+        if (!active) return;
+    
         active.scrollIntoView({
-          behavior: "smooth",
           block: "center"
         });
+    
+        setTimeout(() => {
+          active.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }, 200);
       }
     }
   }
 
   renderBatch();
+  scrollToActiveSmooth();
 }
 </script>
 
