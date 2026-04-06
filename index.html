@@ -1545,11 +1545,12 @@ aboutBox.onclick = () => {
     grid.appendChild(fragment);
   }
   
-  requestAnimationFrame(() => {
-    archiveView.scrollTop = archiveState.scrollTop;
+    archiveView.onscroll = null;
   
-    renderVisible();
-  });
+    archiveView.onscroll = () => {
+    console.log("scroll");
+    requestAnimationFrame(renderVisible);
+    };
 }
 
 </script>
