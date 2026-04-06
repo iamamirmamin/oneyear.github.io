@@ -1407,11 +1407,15 @@ aboutBox.onclick = () => {
 
   function openArchive() {
 
+    if (grid.clientWidth === 0) {
+  requestAnimationFrame(openArchive);
+  return;
+}
   const gap = 20;
   const itemSize = 200;
 
   grid.style.display = "block";
-  const containerWidth = archiveView.clientWidth;
+  const containerWidth = grid.clientWidth;
   const columns = Math.max(
     1,
     Math.floor((containerWidth + gap) / (itemSize + gap))
