@@ -1410,17 +1410,18 @@ aboutBox.onclick = () => {
   const itemSize = 200;
 
   grid.style.display = "block";
-  const totalGridWidth =
-  columns * itemSize + (columns - 1) * gap;
-
-  const offsetX = (containerWidth - totalGridWidth) / 2;
   const containerWidth = grid.clientWidth;
-
   const columns = Math.max(
     1,
     Math.floor((containerWidth + gap) / (itemSize + gap))
   );
 
+  const totalGridWidth =
+  columns * itemSize + (columns - 1) * gap;
+
+  const offsetX = (containerWidth - totalGridWidth) / 2;
+
+  
   const itemHeight = itemSize + gap;
   const totalRows = Math.ceil(images.length / columns);
 
