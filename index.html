@@ -1278,14 +1278,18 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
 
+  index = ((index % images.length) + images.length) % images.length;
+
   const imgEl = document.getElementById("img");
 
-  imgEl.style.opacity = 0;
+  const filename = images[index];
 
+  // скрываем
+  imgEl.style.opacity = 0;
   document.getElementById("prev").style.opacity = 0;
   document.getElementById("next").style.opacity = 0;
 
-  const filename = images[index];
+  // ставим src ОДИН раз
   imgEl.src = "images2/" + filename;
 
   imgEl.onload = () => {
@@ -1294,22 +1298,20 @@ function updateImage() {
     document.getElementById("prev").style.opacity = 0.7;
     document.getElementById("next").style.opacity = 0.7;
   };
+
+  if (imgEl.complete) {
+    imgEl.onload();
+    }
   
-  index = ((index % images.length) + images.length) % images.length;
-
-  const filename = images[index];
-
-  document.getElementById("img").src = "images2/" + filename;
-
+  // текст даты
   const dateStr = getDateFromFilename(filename);
   const label = formatDate(dateStr);
-
   document.getElementById("month").innerText = label;
 
+  // preload следующего
   const nextImg = new Image();
   nextImg.src = "images2/" + images[(index + 1) % images.length];
 }
-
 
   // старт
 updateImage();
