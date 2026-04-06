@@ -1218,6 +1218,46 @@ const images = [
   "2026-01-11_944.jpg",
   "2026-01-11_945.jpg"
 ];
+
+  function getClosestIndexByDate() {
+
+  const today = new Date();
+
+  let closestIndex = 0;
+  let smallestDiff = Infinity;
+
+  images.forEach((filename, i) => {
+    const dateStr = filename.split("_")[0];
+    const date = new Date(dateStr);
+
+    // создаём дату в текущем году
+    const candidate = new Date(
+      today.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+    // вариант: этот год или прошлый (чтобы январь работал)
+    let bestCandidate = candidate;
+
+    if (candidate > today) {
+      bestCandidate = new Date(
+        today.getFullYear() - 1,
+        date.getMonth(),
+        date.getDate()
+      );
+    }
+
+    const diff = today - bestCandidate; // только назад
+
+    if (diff >= 0 && diff < smallestDiff) {
+      smallestDiff = diff;
+      closestIndex = i;
+    }
+  });
+
+  return closestIndex;
+}
   
 const params = new URLSearchParams(window.location.search);
 
@@ -1227,8 +1267,7 @@ let index = isNaN(indexParam) ? null : indexParam - 1;
   
 // если не задан → показываем "сегодня"
 if (index === null) {
-  const day = Math.floor(Date.now() / (1000*60*60*24));
-  index = day % images.length;
+  index = getClosestIndexByDate();
 }
 
 // откуда пришли (для кнопки назад)
