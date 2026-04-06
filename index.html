@@ -1441,6 +1441,15 @@ aboutBox.onclick = () => {
       row * itemHeight +
       itemHeightPx / 2 -
       archiveView.clientHeight / 2;
+
+    const maxScroll =
+    grid.offsetHeight - archiveView.clientHeight;
+
+    archiveState.scrollTop = Math.max(
+      0,
+      Math.min(archiveState.scrollTop, maxScroll)
+    );
+
     
     archiveState.initialized = true;
   }
