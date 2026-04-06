@@ -1339,9 +1339,9 @@ document.getElementById("archiveLink").onclick = (e) => {
   viewer.style.display = "none";
   archiveView.style.display = "block";
 
-  setTimeout(() => {
+  requestAnimationFrame(() => {
   openArchive();
-  }, 0);
+  });
 };
 
   document.getElementById("backLink").onclick = (e) => {
@@ -1394,7 +1394,8 @@ aboutBox.onclick = () => {
 
 function openArchive() {
 
-
+    requestAnimationFrame(() => {
+      
     const gap = 20;
     const itemMinWidth = 200;
     
@@ -1499,6 +1500,8 @@ function openArchive() {
   }
 
   renderBatch();
+});
+
 }
 </script>
 
