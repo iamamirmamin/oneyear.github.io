@@ -1409,6 +1409,11 @@ aboutBox.onclick = () => {
   const gap = 20;
   const itemSize = 200;
 
+  grid.style.display = "block";
+  const totalGridWidth =
+  columns * itemSize + (columns - 1) * gap;
+
+  const offsetX = (containerWidth - totalGridWidth) / 2;
   const containerWidth = grid.clientWidth;
 
   const columns = Math.max(
@@ -1512,7 +1517,7 @@ aboutBox.onclick = () => {
 
       wrapper.style.position = "absolute";
       wrapper.style.top = row * itemHeight + "px";
-      wrapper.style.left = col * (itemSize + gap) + "px";
+      wrapper.style.left = offsetX + col * (itemSize + gap) + "px";
       wrapper.style.width = itemSize + "px";
 
       fragment.appendChild(link);
