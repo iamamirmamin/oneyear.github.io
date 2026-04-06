@@ -170,9 +170,10 @@
     
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, 200px);
       gap: 20px;
       margin-top: 40px;
+      justify-content: center;
     }
     
     .back {
@@ -1399,58 +1400,35 @@ aboutBox.onclick = () => {
   grid.innerHTML = "";
 
   const gap = 20;
-  const itemMinWidth = 200;
+  const itemSize = 200;
 
   const containerWidth = archiveView.clientWidth;
 
+  // точное количество колонок
   const columns = Math.max(
     1,
-    Math.floor((containerWidth + gap) / (itemMinWidth + gap))
+    Math.floor((containerWidth + gap) / (itemSize + gap))
   );
 
-  grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-
-  const actualItemWidth =
-    (containerWidth - gap * (columns - 1)) / columns;
-
-  const itemHeight = actualItemWidth + gap;
-
-  const totalRows = Math.ceil(images.length / columns);
-
-  // создаём виртуальную высоту
-  grid.style.position = "relative";
-  grid.style.height = totalRows * itemHeight + "px";
-
-  // ---------- СКРОЛЛ СРАЗУ ----------
+  // считаем строку
   const row = Math.floor(index / columns);
+
+  const itemHeight = itemSize + gap;
 
   const targetY =
     row * itemHeight -
     archiveView.clientHeight / 2 +
-    itemHeight / 2;
+    itemSize / 2;
 
-  archiveView.scrollTop = Math.max(0, targetY);
+  // ---------- РЕНДЕР ----------
+  let i = 0;
+  const batchSize = 60;
 
-  // ---------- РЕНДЕР ВИДИМОЙ ОБЛАСТИ ----------
-  function renderVisible() {
-
-    const scrollTop = archiveView.scrollTop;
-    const viewHeight = archiveView.clientHeight;
-
-    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
-    const endRow = Math.min(
-      totalRows,
-      Math.ceil((scrollTop + viewHeight) / itemHeight) + 2
-    );
-
-    const startIndex = startRow * columns;
-    const endIndex = Math.min(images.length, endRow * columns);
-
-    grid.innerHTML = "";
+  function renderBatch() {
 
     const fragment = document.createDocumentFragment();
 
-    for (let i = startIndex; i < endIndex; i++) {
+    for (let j = 0; j < batchSize && i < images.length; j++, i++) {
 
       const filename = images[i];
 
@@ -1495,28 +1473,28 @@ aboutBox.onclick = () => {
       wrapper.appendChild(img);
       wrapper.appendChild(date);
       link.appendChild(wrapper);
-
-      // позиционируем вручную
-      const row = Math.floor(i / columns);
-      const col = i % columns;
-
-      wrapper.style.position = "absolute";
-      wrapper.style.top = row * itemHeight + "px";
-      wrapper.style.left =
-        col * (actualItemWidth + gap) + "px";
-      wrapper.style.width = actualItemWidth + "px";
-
       fragment.appendChild(link);
     }
 
     grid.appendChild(fragment);
+
+    // 🔥 СКРОЛЛ — когда уже есть высота
+    if (i >= batchSize && !window._scrolled) {
+      window._scrolled = true;
+
+      requestAnimationFrame(() => {
+        archiveView.scrollTop = Math.max(0, targetY);
+      });
+    }
+
+    if (i < images.length) {
+      requestAnimationFrame(renderBatch);
+    }
   }
 
-  renderVisible();
+  window._scrolled = false;
 
-  archiveView.onscroll = () => {
-    requestAnimationFrame(renderVisible);
-  };
+  renderBatch();
 }
 
 </script>
