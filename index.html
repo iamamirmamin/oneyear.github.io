@@ -1395,6 +1395,7 @@ aboutBox.onclick = () => {
 function openArchive() {
 
     window._didInitialScroll = false;
+    grid.innerHTML = "";
     requestAnimationFrame(() => {
       
     const gap = 20;
@@ -1492,10 +1493,17 @@ function openArchive() {
     
     grid.appendChild(fragment);
 
-    if (i >= batchSize && !window._didInitialScroll) {
+    if (!window._didInitialScroll) {
       window._didInitialScroll = true;
     
-      archiveView.scrollTop = Math.max(0, targetY);
+      requestAnimationFrame(() => {
+        archiveView.scrollTop = Math.max(0, targetY);
+      });
+    }
+    
+    // продолжаем рендер ВСЕГДА
+    if (i < images.length) {
+      requestAnimationFrame(renderBatch);
     }
   }
 
