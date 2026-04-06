@@ -93,17 +93,18 @@
     }
 
     #month {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 32px;
-    letter-spacing: 2px;
-    pointer-events: none;
-    opacity: 0.5;
-    }
-        .about {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 32px;
+      letter-spacing: 2px;
+      pointer-events: none;
+      opacity: 0.5;
+      }
+    
+    .about {
       top: 90px;
       right: 10px;
     }
@@ -128,6 +129,7 @@
       font-size: 14px;
       line-height: 1.5;
     }
+    
     .about-open #month {
       opacity: 0 !important;
     }
@@ -158,7 +160,7 @@
       opacity: 1;
     }
 
-        #archiveView {
+    #archiveView {
       position: absolute;
       inset: 0;
       background: black;
@@ -191,6 +193,7 @@
       opacity: 1;
       background: rgba(255,255,255,0.1);
     }
+    
     .item {
       position: relative;
       transition: transform 0.2s ease, opacity 0.2s ease;
@@ -225,7 +228,6 @@
       border: 2px solid white;
       pointer-events: none;
     }
-    }
   </style>
 </head>
 
@@ -234,21 +236,18 @@
 <div class="viewer">
   <img id="img">
   <div id="month"></div>
-
   <a href="#" id="prev" class="nav prev">←</a>
   <a href="#" id="next" class="nav next">→</a>
   <a href="#" id="archiveLink" class="archive">archive</a>
   <a href="#" id="aboutLink" class="archive about">about</a>
 </div>
 
-  <div id="archiveView" style="display:none">
-
+<div id="archiveView" style="display:none">
   <a href="#" id="backLink" class="back">← back</a>
-
-  <div class="grid" id="grid"></div>
+  <div class="grid" id="grid">
+</div>
 
 </div>
-  
   <div id="aboutBox">
   <div class="about-content">
     <p>
@@ -268,7 +267,8 @@
     </p>
   </div>
 </div>
-  <div id="transitionOverlay"></div>
+<div id="transitionOverlay">
+</div>
 
 <script>
 const images = [
@@ -973,6 +973,7 @@ const images = [
   "2025-08-31_699.jpg",
   "2025-09-01_700.jpg"
 ];
+  
 const params = new URLSearchParams(window.location.search);
 
 // текущий индекс
@@ -1056,7 +1057,7 @@ document.getElementById("archiveLink").onclick = (e) => {
 
   setTimeout(() => {
   openArchive();
-}, 0);
+  }, 0);
 };
 
   document.getElementById("backLink").onclick = (e) => {
@@ -1070,7 +1071,7 @@ document.getElementById("archiveLink").onclick = (e) => {
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
 
-  function getDateFromFilename(filename) {
+function getDateFromFilename(filename) {
   // убираем расширение
   const name = filename.replace(".jpg", "");
 
@@ -1079,7 +1080,8 @@ document.addEventListener("dragstart", e => e.preventDefault());
 
   return datePart; // "2025-01-12"
 }
-    function formatDate(dateStr) {
+  
+function formatDate(dateStr) {
   const date = new Date(dateStr);
 
   if (isNaN(date)) return ""; // защита от ошибки
@@ -1090,7 +1092,7 @@ document.addEventListener("dragstart", e => e.preventDefault());
   return (month + " " + day);
 }
 
-  const aboutLink = document.getElementById("aboutLink");
+const aboutLink = document.getElementById("aboutLink");
 const aboutBox = document.getElementById("aboutBox");
 
 aboutLink.onclick = (e) => {
@@ -1106,7 +1108,7 @@ aboutBox.onclick = () => {
 };
 
 
- function openArchive() {
+function openArchive() {
 
   window._scrolledToActive = false;
   grid.innerHTML = "";
