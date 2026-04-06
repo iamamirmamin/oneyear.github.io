@@ -1402,7 +1402,7 @@ aboutBox.onclick = () => {
   const gap = 20;
   const itemSize = 200;
 
-  const containerWidth = archiveView.clientWidth;
+  const containerWidth = grid.clientWidth;
 
   // точное количество колонок
   const columns = Math.max(
@@ -1416,9 +1416,8 @@ aboutBox.onclick = () => {
   const itemHeight = itemSize + gap;
 
   const targetY =
-    row * itemHeight -
-    archiveView.clientHeight / 2 +
-    itemSize / 2;
+  row * itemHeight -
+  (archiveView.clientHeight - itemSize) / 2;
 
   // ---------- РЕНДЕР ----------
   let i = 0;
@@ -1430,6 +1429,7 @@ aboutBox.onclick = () => {
 
     for (let j = 0; j < batchSize && i < images.length; j++, i++) {
 
+      const currentIndex = i;
       const filename = images[i];
 
       const link = document.createElement("a");
@@ -1438,7 +1438,7 @@ aboutBox.onclick = () => {
       link.onclick = (e) => {
         e.preventDefault();
 
-        index = i;
+        index = currentIndex;
         updateImage();
 
         archiveView.style.display = "none";
