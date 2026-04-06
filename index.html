@@ -1343,7 +1343,8 @@ const grid = document.getElementById("grid");
   
   let archiveState = {
   scrollTop: 0,
-  initialized: false
+  initialized: false,
+  lastIndex: null
 };
 
 document.getElementById("archiveLink").onclick = (e) => {
@@ -1435,7 +1436,7 @@ aboutBox.onclick = () => {
   grid.style.height = totalRows * itemHeight + "px";
 
   // ---------- ПЕРВЫЙ ВХОД ----------
-  if (!archiveState.initialized) {
+  if (!archiveState.initialized || archiveState.lastIndex !== index) {
 
     const row = Math.floor(index / columns);
 
@@ -1455,6 +1456,7 @@ aboutBox.onclick = () => {
     );
 
     
+    archiveState.lastIndex = index;
     archiveState.initialized = true;
   }
 
