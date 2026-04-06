@@ -173,6 +173,7 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
       margin-top: 40px;
+      position: relative;
     }
     
     .back {
@@ -1392,79 +1393,85 @@ aboutBox.onclick = () => {
 };
 
 
-function openArchive() {
+  function openArchive() {
 
-    window._didInitialScroll = false;
-    grid.innerHTML = "";
-    requestAnimationFrame(() => {
-      
-    const gap = 20;
-    const itemMinWidth = 200;
-    
-    // считаем колонки (как делает CSS)
-    const containerWidth = archiveView.clientWidth;
-    
-    const columns = Math.max(
-      1,
-      Math.floor((containerWidth + gap) / (itemMinWidth + gap))
-    );
-    
-    // применяем
-    grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-    
-    // считаем РЕАЛЬНЫЙ размер элемента
-    const actualItemWidth =
-      (containerWidth - gap * (columns - 1)) / columns;
-    
-    const itemHeight = actualItemWidth + gap; // квадрат + gap
-
-    const row = Math.floor(index / columns);
-
-    const targetY =
-      row * itemHeight -
-      archiveView.clientHeight / 2 +
-      itemHeight / 2;
-  
   grid.innerHTML = "";
 
-  let i = 0;
-  const batchSize = 40;
+  const gap = 20;
+  const itemMinWidth = 200;
 
-  function renderBatch() {
+  const containerWidth = archiveView.clientWidth;
+
+  const columns = Math.max(
+    1,
+    Math.floor((containerWidth + gap) / (itemMinWidth + gap))
+  );
+
+  grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+
+  const actualItemWidth =
+    (containerWidth - gap * (columns - 1)) / columns;
+
+  const itemHeight = actualItemWidth + gap;
+
+  const totalRows = Math.ceil(images.length / columns);
+
+  // создаём виртуальную высоту
+  grid.style.position = "relative";
+  grid.style.height = totalRows * itemHeight + "px";
+
+  // ---------- СКРОЛЛ СРАЗУ ----------
+  const row = Math.floor(index / columns);
+
+  const targetY =
+    row * itemHeight -
+    archiveView.clientHeight / 2 +
+    itemHeight / 2;
+
+  archiveView.scrollTop = Math.max(0, targetY);
+
+  // ---------- РЕНДЕР ВИДИМОЙ ОБЛАСТИ ----------
+  function renderVisible() {
+
+    const scrollTop = archiveView.scrollTop;
+    const viewHeight = archiveView.clientHeight;
+
+    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
+    const endRow = Math.min(
+      totalRows,
+      Math.ceil((scrollTop + viewHeight) / itemHeight) + 2
+    );
+
+    const startIndex = startRow * columns;
+    const endIndex = Math.min(images.length, endRow * columns);
+
+    grid.innerHTML = "";
 
     const fragment = document.createDocumentFragment();
 
-    for (let j = 0; j < batchSize && i < images.length; j++, i++) {
+    for (let i = startIndex; i < endIndex; i++) {
 
       const filename = images[i];
 
       const link = document.createElement("a");
       link.href = "#";
 
-      const currentIndex = i;
-
-      
-      link.dataset.index = i;
-
       link.onclick = (e) => {
-      e.preventDefault();
-    
-      const newIndex = currentIndex;
-    
-      index = newIndex;
-      updateImage();
-    
-      archiveView.style.display = "none";
-      viewer.style.display = "block";
-    
-      overlay.classList.add("active");
-    
-      requestAnimationFrame(() => {
-        overlay.classList.remove("active");
-      });
-    };
+        e.preventDefault();
 
-      
+        index = i;
+        updateImage();
+
+        archiveView.style.display = "none";
+        viewer.style.display = "block";
+
+        overlay.classList.add("active");
+
+        requestAnimationFrame(() => {
+          overlay.classList.remove("active");
+        });
+      };
+
       const wrapper = document.createElement("div");
       wrapper.classList.add("item");
 
@@ -1487,30 +1494,30 @@ function openArchive() {
       wrapper.appendChild(img);
       wrapper.appendChild(date);
       link.appendChild(wrapper);
+
+      // позиционируем вручную
+      const row = Math.floor(i / columns);
+      const col = i % columns;
+
+      wrapper.style.position = "absolute";
+      wrapper.style.top = row * itemHeight + "px";
+      wrapper.style.left =
+        col * (actualItemWidth + gap) + "px";
+      wrapper.style.width = actualItemWidth + "px";
+
       fragment.appendChild(link);
     }
 
-    
     grid.appendChild(fragment);
-
-    if (!window._didInitialScroll) {
-      window._didInitialScroll = true;
-    
-      requestAnimationFrame(() => {
-        archiveView.scrollTop = Math.max(0, targetY);
-      });
-    }
-    
-    // продолжаем рендер ВСЕГДА
-    if (i < images.length) {
-      requestAnimationFrame(renderBatch);
-    }
   }
 
-  renderBatch();
-});
+  renderVisible();
 
+  archiveView.onscroll = () => {
+    requestAnimationFrame(renderVisible);
+  };
 }
+
 </script>
 
 </body>
