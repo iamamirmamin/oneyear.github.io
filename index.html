@@ -169,11 +169,8 @@
     }
     
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 200px);
-      gap: 20px;
+      position: relative;
       margin-top: 40px;
-      justify-content: center;
     }
     
     .back {
@@ -1426,7 +1423,7 @@ aboutBox.onclick = () => {
   const offsetX = (containerWidth - totalGridWidth) / 2;
 
   
-  const itemHeight = itemSize + gap;
+  const itemHeight = 113 + gap;
   const totalRows = Math.ceil(images.length / columns);
 
   // виртуальная высота
