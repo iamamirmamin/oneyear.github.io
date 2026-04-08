@@ -2063,7 +2063,9 @@ document.getElementById("archiveLink").onclick = (e) => {
   updateImage();
 
   const uiElements = document.querySelectorAll(".ui");
-  uiElements.forEach(el => el.style.opacity = 0.7);
+  requestAnimationFrame(() => {
+    uiElements.forEach(el => el.style.opacity = 0.7);
+  });
 };
   
 // защита
