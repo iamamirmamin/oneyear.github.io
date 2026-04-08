@@ -2206,19 +2206,42 @@ function openArchive() {
 
       link.onclick = (e) => {
         e.preventDefault();
-
+      
+        const imgEl = document.getElementById("img");
+        const uiElements = document.querySelectorAll(".ui");
+      
+        // скрываем UI ТОЛЬКО здесь
+        uiElements.forEach(el => {
+          el.classList.add("ui-hidden");
+        });
+      
         index = currentIndex;
-        updateImage();
-
+      
+        // заранее задаём src
+        const currentImages = getCurrentImages();
+        const filename = currentImages[index];
+      
+        imgEl.src = currentMode === "front"
+          ? "images2/" + filename
+          : "backimages/" + filename;
+      
+        // ждём загрузку
+        imgEl.onload = () => {
+          uiElements.forEach(el => {
+            el.classList.remove("ui-hidden");
+          });
+        };
+      
         archiveView.style.display = "none";
         viewer.style.display = "block";
-
-        document.querySelectorAll(".ui").forEach(el => {
-          el.classList.remove("ui-hidden");
-        });
-
+      
+        // обновляем дату
+        const dateStr = getDateFromFilename(filename);
+        const label = formatDate(dateStr);
+        document.getElementById("month").innerText = label;
+      
         overlay.classList.add("active");
-
+      
         requestAnimationFrame(() => {
           overlay.classList.remove("active");
         });
