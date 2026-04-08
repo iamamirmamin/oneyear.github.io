@@ -2043,6 +2043,9 @@ const grid = document.getElementById("grid");
 document.getElementById("archiveLink").onclick = (e) => {
   e.preventDefault();
 
+  const uiElements = document.querySelectorAll(".ui");
+  uiElements.forEach(el => el.style.opacity = 0);
+  
   viewer.style.display = "none";
   archiveView.style.display = "block";
 
@@ -2056,6 +2059,11 @@ document.getElementById("archiveLink").onclick = (e) => {
 
   archiveView.style.display = "none";
   viewer.style.display = "block";
+
+  updateImage();
+
+  const uiElements = document.querySelectorAll(".ui");
+  uiElements.forEach(el => el.style.opacity = 0.7);
 };
   
 // защита
