@@ -24,25 +24,17 @@
     
     .viewer {
       position: relative;
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 100vw;
+      height: 100vh;
     }
 
     .viewer img {
-      max-width: 100vw;
-      max-height: 100vh;
-      width: auto;
-      height: auto;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
       clip-path: inset(0 0 60px 0);
       transition: opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-      display: block;
     }
-
-    .frame {
-      position: relative;
-      display: inline-block;
-    } 
     
     .grid img {
       width: 100%;
@@ -1954,6 +1946,10 @@ function updateImage() {
   ? "images2/" + filename
   : "backimages/" + filename;
 
+  imgEl.onload = () => {
+    updateUIPosition();
+  };
+
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
   });
@@ -1976,9 +1972,53 @@ function updateImage() {
   : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
 }
 
+
+  function updateUIPosition() {
+    const img = document.getElementById("img");
+    const viewer = document.querySelector(".viewer");
+  
+    const rect = img.getBoundingClientRect();
+    const viewerRect = viewer.getBoundingClientRect();
+  
+    const offsetX = rect.left - viewerRect.left;
+    const offsetY = rect.top - viewerRect.top;
+  
+    const width = rect.width;
+    const height = rect.height;
+  
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const archive = document.getElementById("archiveLink");
+    const about = document.getElementById("aboutLink");
+    const toggle = document.getElementById("toggleSide");
+  
+    const padding = 10;
+  
+    // ← стрелка
+    prev.style.left = offsetX + padding + "px";
+    prev.style.top = offsetY + height / 2 + "px";
+  
+    // → стрелка
+    next.style.right = (viewerRect.width - (offsetX + width) + padding) + "px";
+    next.style.top = offsetY + height / 2 + "px";
+  
+    // archive
+    archive.style.top = offsetY + 40 + "px";
+    archive.style.right = (viewerRect.width - (offsetX + width) + padding) + "px";
+  
+    // about
+    about.style.top = offsetY + 90 + "px";
+    about.style.right = (viewerRect.width - (offsetX + width) + padding) + "px";
+  
+    // toggle
+    toggle.style.right = (viewerRect.width - (offsetX + width) + padding) + "px";
+    toggle.style.bottom = offsetY + 40 + "px";
+  }
+  
   // старт
 updateImage();
-
+setTimeout(updateUIPosition, 50);
+  
 // навигация
 function goNext() {
   index++;
@@ -2310,6 +2350,7 @@ function openArchive() {
     };
 }
 
+  window.addEventListener("resize", updateUIPosition);
 </script>
 
 </body>
