@@ -257,7 +257,7 @@
   <a href="#" id="next" class="nav next ui">→</a>
   <a href="#" id="archiveLink" class="archive ui">archive</a>
   <a href="#" id="aboutLink" class="archive about ui">about</a>
-  <a href="#" id="toggleSide" class="archive ui" style="top:auto; bottom:40px; right:10px;">back side</a>
+  <a href="#" id="toggleSide" class="archive ui" style="top:auto; bottom:40px; right:10px;">to back side</a>
 </div>
 
 <div id="archiveView" style="display:none">
@@ -1595,7 +1595,7 @@ toggleBtn.onclick = (e) => {
     index = newIndex !== -1 ? newIndex : 0;
 
     currentMode = "back";
-    toggleBtn.textContent = "front side";
+    toggleBtn.textContent = "to front side";
 
     archiveBtn.style.display = "none";
     aboutBtn.style.display = "none";
@@ -1608,7 +1608,7 @@ toggleBtn.onclick = (e) => {
     index = newIndex !== -1 ? newIndex : 0;
 
     currentMode = "front";
-    toggleBtn.textContent = "back side";
+    toggleBtn.textContent = "to back side";
 
     archiveBtn.style.display = "";
     aboutBtn.style.display = "";
