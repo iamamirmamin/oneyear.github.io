@@ -33,6 +33,7 @@
       height: 100%;
       object-fit: contain;
       clip-path: inset(0 0 60px 0);
+      transition: opacity 0.12s ease;
     }
 
     .grid img {
@@ -1932,6 +1933,7 @@ function updateImage() {
   index = ((index % currentImages.length) + currentImages.length) % currentImages.length;
 
   const imgEl = document.getElementById("img");
+  imgEl.style.opacity = 0.9;
 
   const filename = currentImages[index];
 
@@ -1939,7 +1941,11 @@ function updateImage() {
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
   : "backimages/" + filename;
-  
+
+  requestAnimationFrame(() => {
+    imgEl.style.opacity = 1;
+  });
+    
   // текст даты
   const dateStr = getDateFromFilename(filename);
   const label = formatDate(dateStr);
@@ -2037,7 +2043,7 @@ const viewer = document.querySelector(".viewer");
 const archiveView = document.getElementById("archiveView");
 const grid = document.getElementById("grid");
   
-  let archiveState = {
+let archiveState = {
   scrollTop: 0,
   initialized: false,
   lastIndex: null
