@@ -2050,8 +2050,8 @@ const grid = document.getElementById("grid");
       el.classList.add("ui-hidden");
     });
   
-    viewer.style.display = "none";
     archiveView.style.display = "block";
+    viewer.style.visibility = "hidden";
   
     requestAnimationFrame(() => {
       openArchive();
@@ -2062,7 +2062,7 @@ const grid = document.getElementById("grid");
     e.preventDefault();
   
     archiveView.style.display = "none";
-    viewer.style.display = "block";
+    viewer.style.visibility = "visible";
   
     updateImage();
   
@@ -2225,7 +2225,7 @@ function openArchive() {
       
         // ТОЛЬКО ПОТОМ показываем viewer
         archiveView.style.display = "none";
-        viewer.style.display = "block";
+        viewer.style.visibility = "visible";
       
         document.querySelectorAll(".ui").forEach(el => {
           el.classList.remove("ui-hidden");
