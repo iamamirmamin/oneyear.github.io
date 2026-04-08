@@ -1933,7 +1933,6 @@ function updateImage() {
   const filename = currentImages[index];
 
   // скрываем
-  imgEl.style.opacity = 0;
   const uiElements = document.querySelectorAll(".ui");
   uiElements.forEach(el => {
     el.style.opacity = 0;
@@ -1945,8 +1944,6 @@ function updateImage() {
   : "backimages/" + filename;
 
   imgEl.onload = () => {
-    imgEl.style.opacity = 1;
-
     uiElements.forEach(el => {
     el.style.opacity = 0.7;
     });
@@ -1961,11 +1958,17 @@ function updateImage() {
   const label = formatDate(dateStr);
   document.getElementById("month").innerText = label;
 
-  // preload следующего
+  // preload вперед
   const nextImg = new Image();
   nextImg.src = currentMode === "front"
   ? "images2/" + currentImages[(index + 1) % currentImages.length]
   : "backimages/" + currentImages[(index + 1) % currentImages.length];
+
+  // preload назад
+  const prevImg = new Image();
+  prevImg.src = currentMode === "front"
+  ? "images2/" + currentImages[(index - 1 + currentImages.length) % currentImages.length]
+  : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
 }
 
   // старт
