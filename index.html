@@ -228,6 +228,23 @@
     .virtual-spacer {
       width: 100%;
     }
+
+    #toggleSide {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+  
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+  
+    opacity: 0.7;
+    }
+  
+    #toggleSide:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 
@@ -240,6 +257,7 @@
   <a href="#" id="next" class="nav next ui">→</a>
   <a href="#" id="archiveLink" class="archive ui">archive</a>
   <a href="#" id="aboutLink" class="archive about ui">about</a>
+  <div id="toggleSide">back side</div>
 </div>
 
 <div id="archiveView" style="display:none">
@@ -1221,7 +1239,215 @@ const images = [
   "2026-01-11_945.jpg"
 ];
 
-function getClosestIndexByDate() {
+const backimages = [
+  "2025-01-12_1.jpg",
+  "2025-01-16_2.jpg",
+  "2025-01-17_3.jpg",
+  "2025-01-19_4.jpg",
+  "2025-01-19_5.jpg",
+  "2025-01-19_6.jpg",
+  "2025-01-20_7.jpg",
+  "2025-01-20_8.jpg",
+  "2025-01-20_9.jpg",
+  "2025-01-21_10.jpg",
+  "2025-01-21_11.jpg",
+  "2025-01-24_12.jpg",
+  "2025-01-25_13.jpg",
+  "2025-01-26_14.jpg",
+  "2025-01-26_15.jpg",
+  "2025-01-26_16.jpg",
+  "2025-01-28_17.jpg",
+  "2025-01-29_18.jpg",
+  "2025-01-31_19.jpg",
+  "2025-02-01_20.jpg",
+  "2025-02-02_21.jpg",
+  "2025-02-02_22.jpg",
+  "2025-02-02_23.jpg",
+  "2025-02-04_24.jpg",
+  "2025-02-04_25.jpg",
+  "2025-02-04_26.jpg",
+  "2025-02-04_27.jpg",
+  "2025-02-05_28.jpg",
+  "2025-02-07_29.jpg",
+  "2025-02-12_30.jpg",
+  "2025-02-12_31.jpg",
+  "2025-02-18_32.jpg",
+  "2025-02-18_33.jpg",
+  "2025-02-18_34.jpg",
+  "2025-02-19_35.jpg",
+  "2025-02-21_36.jpg",
+  "2025-02-22_37.jpg",
+  "2025-02-23_38.jpg",
+  "2025-02-23_39.jpg",
+  "2025-02-23_40.jpg",
+  "2025-02-23_41.jpg",
+  "2025-02-23_42.jpg",
+  "2025-02-23_43.jpg",
+  "2025-02-23_44.jpg",
+  "2025-02-24_45.jpg",
+  "2025-02-24_46.jpg",
+  "2025-02-24_47.jpg",
+  "2025-02-24_48.jpg",
+  "2025-02-24_49.jpg",
+  "2025-02-25_50.jpg",
+  "2025-02-25_51.jpg",
+  "2025-02-26_52.jpg",
+  "2025-02-26_53.jpg",
+  "2025-02-27_54.jpg",
+  "2025-02-28_55.jpg",
+  "2025-02-28_56.jpg",
+  "2025-03-01_57.jpg",
+  "2025-03-01_58.jpg",
+  "2025-03-02_59.jpg",
+  "2025-03-03_60.jpg",
+  "2025-03-03_61.jpg",
+  "2025-03-03_62.jpg",
+  "2025-03-03_63.jpg",
+  "2025-03-04_64.jpg",
+  "2025-03-04_65.jpg",
+  "2025-03-04_66.jpg",
+  "2025-03-04_67.jpg",
+  "2025-03-04_68.jpg",
+  "2025-03-04_69.jpg",
+  "2025-03-04_70.jpg",
+  "2025-03-04_71.jpg",
+  "2025-03-04_72.jpg",
+  "2025-03-05_73.jpg",
+  "2025-03-06_74.jpg",
+  "2025-03-06_75.jpg",
+  "2025-03-06_76.jpg",
+  "2025-03-07_77.jpg",
+  "2025-03-08_78.jpg",
+  "2025-03-08_79.jpg",
+  "2025-03-09_80.jpg",
+  "2025-03-10_81.jpg",
+  "2025-03-10_82.jpg",
+  "2025-03-11_83.jpg",
+  "2025-03-11_84.jpg",
+  "2025-03-12_85.jpg",
+  "2025-03-13_86.jpg",
+  "2025-03-14_87.jpg",
+  "2025-03-14_88.jpg",
+  "2025-03-15_89.jpg",
+  "2025-03-15_90.jpg",
+  "2025-03-15_91.jpg",
+  "2025-03-16_92.jpg",
+  "2025-03-16_93.jpg",
+  "2025-03-16_94.jpg",
+  "2025-03-17_95.jpg",
+  "2025-03-18_96.jpg",
+  "2025-03-18_97.jpg",
+  "2025-03-19_98.jpg",
+  "2025-03-21_100.jpg",
+  "2025-03-21_99.jpg",
+  "2025-03-22_101.jpg",
+  "2025-03-23_102.jpg",
+  "2025-03-23_103.jpg",
+  "2025-03-24_104.jpg",
+  "2025-03-25_105.jpg",
+  "2025-03-25_106.jpg",
+  "2025-03-26_107.jpg",
+  "2025-03-26_108.jpg",
+  "2025-03-26_109.jpg",
+  "2025-03-27_110.jpg",
+  "2025-03-28_111.jpg",
+  "2025-03-30_112.jpg",
+  "2025-03-31_113.jpg",
+  "2025-04-01_114.jpg",
+  "2025-04-01_115.jpg",
+  "2025-04-02_116.jpg",
+  "2025-04-03_117.jpg",
+  "2025-04-03_118.jpg",
+  "2025-04-03_119.jpg",
+  "2025-04-03_120.jpg",
+  "2025-04-04_121.jpg",
+  "2025-04-06_122.jpg",
+  "2025-04-06_123.jpg",
+  "2025-04-09_124.jpg",
+  "2025-04-09_125.jpg",
+  "2025-04-09_126.jpg",
+  "2025-04-10_127.jpg",
+  "2025-04-11_128.jpg",
+  "2025-04-11_129.jpg",
+  "2025-04-11_130.jpg",
+  "2025-04-11_131.jpg",
+  "2025-04-11_132.jpg",
+  "2025-04-11_133.jpg",
+  "2025-04-12_134.jpg",
+  "2025-04-13_135.jpg",
+  "2025-04-13_136.jpg",
+  "2025-04-14_137.jpg",
+  "2025-04-15_138.jpg",
+  "2025-04-15_139.jpg",
+  "2025-04-15_140.jpg",
+  "2025-04-16_141.jpg",
+  "2025-04-16_142.jpg",
+  "2025-04-17_143.jpg",
+  "2025-04-18_144.jpg",
+  "2025-04-19_145.jpg",
+  "2025-04-19_146.jpg",
+  "2025-04-20_147.jpg",
+  "2025-04-21_148.jpg",
+  "2025-04-22_149.jpg",
+  "2025-04-22_150.jpg",
+  "2025-04-23_151.jpg",
+  "2025-04-24_152.jpg",
+  "2025-04-24_153.jpg",
+  "2025-04-25_154.jpg",
+  "2025-04-25_155.jpg",
+  "2025-04-25_156.jpg",
+  "2025-04-25_157.jpg",
+  "2025-04-27_158.jpg",
+  "2025-04-27_159.jpg",
+  "2025-04-29_160.jpg",
+  "2025-04-30_161.jpg",
+  "2025-04-30_162.jpg",
+  "2025-05-01_163.jpg",
+  "2025-05-03_164.jpg",
+  "2025-05-03_165.jpg",
+  "2025-05-04_166.jpg",
+  "2025-05-05_167.jpg",
+  "2025-05-06_168.jpg",
+  "2025-05-06_169.jpg",
+  "2025-05-07_170.jpg",
+  "2025-05-07_171.jpg",
+  "2025-05-14_172.jpg",
+  "2025-05-14_173.jpg",
+  "2025-05-14_174.jpg",
+  "2025-05-15_175.jpg",
+  "2025-05-16_176.jpg",
+  "2025-05-16_177.jpg",
+  "2025-05-16_178.jpg",
+  "2025-05-17_179.jpg",
+  "2025-05-18_180.jpg",
+  "2025-05-19_181.jpg",
+  "2025-05-19_182.jpg",
+  "2025-05-20_183.jpg",
+  "2025-05-20_184.jpg",
+  "2025-05-20_185.jpg",
+  "2025-05-20_186.jpg",
+  "2025-05-21_187.jpg",
+  "2025-05-21_188.jpg",
+  "2025-05-22_189.jpg",
+  "2025-05-23_190.jpg",
+  "2025-05-23_191.jpg",
+  "2025-05-24_192.jpg",
+  "2025-05-24_193.jpg",
+  "2025-05-24_194.jpg",
+  "2025-05-24_195.jpg"
+];
+
+  function getCurrentImages() {
+  return currentMode === "front" ? images : backimages;
+  }
+  function findIndexByDate(filename, targetArray) {
+  const dateStr = filename.split("_")[0];
+  return targetArray.findIndex(f => f.startsWith(dateStr));
+  }
+  
+  let currentMode = "front"; // front | back
+
+  function getClosestIndexByDate() {
 
   const today = new Date();
   
@@ -1278,11 +1504,12 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
 
-  index = ((index % images.length) + images.length) % images.length;
+  const currentImages = getCurrentImages();
+  index = ((index % currentImages.length) + currentImages.length) % currentImages.length;
 
   const imgEl = document.getElementById("img");
 
-  const filename = images[index];
+  const filename = currentImages[index];
 
   // скрываем
   imgEl.style.opacity = 0;
@@ -1292,7 +1519,9 @@ function updateImage() {
   });
 
   // ставим src ОДИН раз
-  imgEl.src = "images2/" + filename;
+  imgEl.src = currentMode === "front"
+  ? "images2/" + filename
+  : "backside/" + filename;
 
   imgEl.onload = () => {
     imgEl.style.opacity = 1;
@@ -1313,7 +1542,9 @@ function updateImage() {
 
   // preload следующего
   const nextImg = new Image();
-  nextImg.src = "images2/" + images[(index + 1) % images.length];
+  nextImg.src = currentMode === "front"
+  ? "images2/" + currentImages[(index + 1) % currentImages.length]
+  : "backside/" + currentImages[(index + 1) % currentImages.length];
 }
 
   // старт
@@ -1349,6 +1580,43 @@ document.addEventListener("keydown", (e) => {
 
 // клик по изображению
 document.getElementById("img").onclick = goNext;
+
+const toggleBtn = document.getElementById("toggleSide");
+const archiveBtn = document.getElementById("archiveLink");
+const aboutBtn = document.getElementById("aboutLink");
+
+toggleBtn.onclick = () => {
+
+  if (currentMode === "front") {
+
+    const currentFile = images[index];
+    const newIndex = findIndexByDate(currentFile, backimages);
+
+    index = newIndex !== -1 ? newIndex : 0;
+
+    currentMode = "back";
+    toggleBtn.textContent = "front side";
+
+    archiveBtn.style.display = "none";
+    aboutBtn.style.display = "none";
+
+  } else {
+
+    const currentFile = backimages[index];
+    const newIndex = findIndexByDate(currentFile, images);
+
+    index = newIndex !== -1 ? newIndex : 0;
+
+    currentMode = "front";
+    toggleBtn.textContent = "back side";
+
+    archiveBtn.style.display = "";
+    aboutBtn.style.display = "";
+  }
+
+  updateImage();
+};
+  
 
 // архив
 const overlay = document.getElementById("transitionOverlay");
