@@ -96,7 +96,7 @@
       letter-spacing: 2px;
       pointer-events: none;
       opacity: 0.5;
-      }
+    }
     
     .about {
       top: 90px;
@@ -230,16 +230,16 @@
     }
 
     #toggleSide {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 10;
-  
-    font-size: 14px;
-    color: white;
-    cursor: pointer;
-  
-    opacity: 0.7;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+    
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+    
+      opacity: 0.7;
     }
   
     #toggleSide:hover {
@@ -257,7 +257,7 @@
   <a href="#" id="next" class="nav next ui">→</a>
   <a href="#" id="archiveLink" class="archive ui">archive</a>
   <a href="#" id="aboutLink" class="archive about ui">about</a>
-  <div id="toggleSide">back side</div>
+  <a href="#" id="toggleSide" class="archive ui" style="top:auto; bottom:40px; right:10px;">back side</a>
 </div>
 
 <div id="archiveView" style="display:none">
@@ -1438,53 +1438,52 @@ const backimages = [
 ];
 
   function getCurrentImages() {
-  return currentMode === "front" ? images : backimages;
+    return currentMode === "front" ? images : backimages;
   }
+
+  
   function findIndexByDate(filename, targetArray) {
-  const dateStr = filename.split("_")[0];
-  return targetArray.findIndex(f => f.startsWith(dateStr));
+    const dateStr = filename.split("_")[0];
+    return targetArray.findIndex(f => f.startsWith(dateStr));
   }
+
   
   let currentMode = "front"; // front | back
 
+  
   function getClosestIndexByDate() {
-
-  const today = new Date();
+    const today = new Date();
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
   
-  let closestIndex = 0;
-  let smallestDiff = Infinity;
-  
-  images.forEach((filename, i) => {
-    const dateStr = filename.split("_")[0];
-    const date = new Date(dateStr);
-  
-    // создаём дату в текущем году
-    const candidate = new Date(
-      today.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-  
-    // вариант: этот год или прошлый (чтобы январь работал)
-    let bestCandidate = candidate;
-  
-    if (candidate > today) {
-      bestCandidate = new Date(
-        today.getFullYear() - 1,
+    images.forEach((filename, i) => {
+      const dateStr = filename.split("_")[0];
+      const date = new Date(dateStr);
+    
+      // создаём дату в текущем году
+      const candidate = new Date(
+        today.getFullYear(),
         date.getMonth(),
         date.getDate()
       );
-    }
   
-    const diff = today - bestCandidate; // только назад
-  
-    if (diff >= 0 && diff < smallestDiff) {
-      smallestDiff = diff;
-      closestIndex = i;
+      // вариант: этот год или прошлый (чтобы январь работал)
+      let bestCandidate = candidate;
+    
+      if (candidate > today) {
+        bestCandidate = new Date(
+          today.getFullYear() - 1,
+          date.getMonth(),
+          date.getDate()
+          );
       }
+      const diff = today - bestCandidate; // только назад
+      if (diff >= 0 && diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+        }
   });
-  
-    return closestIndex;
+  return closestIndex;
 }
   
 const params = new URLSearchParams(window.location.search);
@@ -1521,7 +1520,7 @@ function updateImage() {
   // ставим src ОДИН раз
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
-  : "backside/" + filename;
+  : "backimages/" + filename;
 
   imgEl.onload = () => {
     imgEl.style.opacity = 1;
@@ -1544,7 +1543,7 @@ function updateImage() {
   const nextImg = new Image();
   nextImg.src = currentMode === "front"
   ? "images2/" + currentImages[(index + 1) % currentImages.length]
-  : "backside/" + currentImages[(index + 1) % currentImages.length];
+  : "backimages/" + currentImages[(index + 1) % currentImages.length];
 }
 
   // старт
@@ -1585,7 +1584,8 @@ const toggleBtn = document.getElementById("toggleSide");
 const archiveBtn = document.getElementById("archiveLink");
 const aboutBtn = document.getElementById("aboutLink");
 
-toggleBtn.onclick = () => {
+toggleBtn.onclick = (e) => {
+  e.preventDefault();
 
   if (currentMode === "front") {
 
