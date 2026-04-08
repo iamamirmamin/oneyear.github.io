@@ -239,7 +239,6 @@
     }
 
     #toggleSide {
-      position: fixed;
       bottom: 20px;
       right: 20px;
       z-index: 10;
@@ -1957,8 +1956,6 @@ function updateImage() {
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
   : "backimages/" + filename;
-  
-  };
 
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
