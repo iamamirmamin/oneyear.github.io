@@ -2219,22 +2219,28 @@ function openArchive() {
         const currentImages = getCurrentImages();
         const filename = currentImages[index];
       
-        // 1. включаем overlay (начинаем затемнение)
+        // 1. включаем overlay
         overlay.classList.add("active");
       
-        setTimeout(() => {
+        // 2. ЖДЁМ, пока он реально закроется
+        const onFadeIn = () => {
       
-          // 2. СНАЧАЛА ставим src
+          // удаляем обработчик (очень важно)
+          overlay.removeEventListener("transitionend", onFadeIn);
+      
+          // теперь экран точно закрыт
+      
+          // меняем изображение
           imgEl.src = currentMode === "front"
             ? "images2/" + filename
             : "backimages/" + filename;
       
-          // 3. обновляем дату
+          // обновляем дату
           const dateStr = getDateFromFilename(filename);
           const label = formatDate(dateStr);
           document.getElementById("month").innerText = label;
       
-          // 4. показываем viewer
+          // показываем viewer
           archiveView.style.display = "none";
           viewer.style.visibility = "visible";
       
@@ -2242,16 +2248,17 @@ function openArchive() {
             el.classList.remove("ui-hidden");
           });
       
-          // preload остаётся
+          // preload
           const nextImg = new Image();
           nextImg.src = imgEl.src;
       
-          // 5. убираем overlay
+          // 3. открываем обратно (следующий кадр)
           requestAnimationFrame(() => {
             overlay.classList.remove("active");
           });
+        };
       
-        }, 180);
+        overlay.addEventListener("transitionend", onFadeIn);
       };
       
 
