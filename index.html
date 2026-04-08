@@ -274,9 +274,9 @@
   <div class="about-content">
     <p>
       these are screenshots from a street camera <br>
-      at an intersection in saint petersburg in 2025.<br><br>
+      at an intersection in saint petersburg.<br><br>
 
-      each day i saved one or several frames<br>
+      almost each day in 2025 i saved one or several frames<br>
       when something caught my attention.<br><br>
 
       nothing special happens here but over time<br>
@@ -2219,28 +2219,20 @@ function openArchive() {
         const currentImages = getCurrentImages();
         const filename = currentImages[index];
       
-        // 1. включаем overlay
+        // 1. запускаем overlay
         overlay.classList.add("active");
       
-        // 2. ЖДЁМ, пока он реально закроется
-        const onFadeIn = () => {
+        // 2. меняем изображение ПОД ШТОРКОЙ (но не слишком поздно)
+        setTimeout(() => {
       
-          // удаляем обработчик (очень важно)
-          overlay.removeEventListener("transitionend", onFadeIn);
-      
-          // теперь экран точно закрыт
-      
-          // меняем изображение
           imgEl.src = currentMode === "front"
             ? "images2/" + filename
             : "backimages/" + filename;
       
-          // обновляем дату
           const dateStr = getDateFromFilename(filename);
           const label = formatDate(dateStr);
           document.getElementById("month").innerText = label;
       
-          // показываем viewer
           archiveView.style.display = "none";
           viewer.style.visibility = "visible";
       
@@ -2248,17 +2240,15 @@ function openArchive() {
             el.classList.remove("ui-hidden");
           });
       
-          // preload
           const nextImg = new Image();
           nextImg.src = imgEl.src;
       
-          // 3. открываем обратно (следующий кадр)
-          requestAnimationFrame(() => {
-            overlay.classList.remove("active");
-          });
-        };
+        }, 260); // ключевая точка
       
-        overlay.addEventListener("transitionend", onFadeIn);
+        // 3. открываем обратно
+        setTimeout(() => {
+          overlay.classList.remove("active");
+        }, 350);
       };
       
 
