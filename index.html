@@ -2213,6 +2213,10 @@ function openArchive() {
         archiveView.style.display = "none";
         viewer.style.display = "block";
 
+        document.querySelectorAll(".ui").forEach(el => {
+          el.classList.remove("ui-hidden");
+        });
+
         overlay.classList.add("active");
 
         requestAnimationFrame(() => {
