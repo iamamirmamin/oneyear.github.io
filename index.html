@@ -146,7 +146,7 @@
       background: black;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 9999;
     }
     
@@ -2219,33 +2219,39 @@ function openArchive() {
         const currentImages = getCurrentImages();
         const filename = currentImages[index];
       
-        // СНАЧАЛА ставим src (пока viewer скрыт)
-        imgEl.src = currentMode === "front"
-          ? "images2/" + filename
-          : "backimages/" + filename;
-      
-        // обновляем дату сразу
-        const dateStr = getDateFromFilename(filename);
-        const label = formatDate(dateStr);
-        document.getElementById("month").innerText = label;
-      
-        // ТОЛЬКО ПОТОМ показываем viewer
-        archiveView.style.display = "none";
-        viewer.style.visibility = "visible";
-      
-        document.querySelectorAll(".ui").forEach(el => {
-          el.classList.remove("ui-hidden");
-        });
-      
-        // preload (чтобы сохранить оптимизацию)
-        const nextImg = new Image();
-        nextImg.src = imgEl.src;
-      
+        // 1. включаем overlay (начинаем затемнение)
         overlay.classList.add("active");
       
-        requestAnimationFrame(() => {
-          overlay.classList.remove("active");
-        });
+        setTimeout(() => {
+      
+          // 2. СНАЧАЛА ставим src
+          imgEl.src = currentMode === "front"
+            ? "images2/" + filename
+            : "backimages/" + filename;
+      
+          // 3. обновляем дату
+          const dateStr = getDateFromFilename(filename);
+          const label = formatDate(dateStr);
+          document.getElementById("month").innerText = label;
+      
+          // 4. показываем viewer
+          archiveView.style.display = "none";
+          viewer.style.visibility = "visible";
+      
+          document.querySelectorAll(".ui").forEach(el => {
+            el.classList.remove("ui-hidden");
+          });
+      
+          // preload остаётся
+          const nextImg = new Image();
+          nextImg.src = imgEl.src;
+      
+          // 5. убираем overlay
+          requestAnimationFrame(() => {
+            overlay.classList.remove("active");
+          });
+      
+        }, 120);
       };
       
 
