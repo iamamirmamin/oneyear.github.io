@@ -2209,6 +2209,21 @@ function openArchive() {
       
         index = currentIndex;
       
+        const imgEl = document.getElementById("img");
+        const currentImages = getCurrentImages();
+        const filename = currentImages[index];
+      
+        // СНАЧАЛА ставим src (пока viewer скрыт)
+        imgEl.src = currentMode === "front"
+          ? "images2/" + filename
+          : "backimages/" + filename;
+      
+        // обновляем дату сразу
+        const dateStr = getDateFromFilename(filename);
+        const label = formatDate(dateStr);
+        document.getElementById("month").innerText = label;
+      
+        // ТОЛЬКО ПОТОМ показываем viewer
         archiveView.style.display = "none";
         viewer.style.display = "block";
       
@@ -2216,7 +2231,9 @@ function openArchive() {
           el.classList.remove("ui-hidden");
         });
       
-        updateImage();
+        // preload (чтобы сохранить оптимизацию)
+        const nextImg = new Image();
+        nextImg.src = imgEl.src;
       
         overlay.classList.add("active");
       
