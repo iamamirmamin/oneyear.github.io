@@ -67,26 +67,27 @@
     }
 
     .prev {
-      left: clamp(6px, 1vw, 10px);
-      top: 50%;
-      transform: translateY(-50%);
       font-size: clamp(16px, 2vw, 20px);
     }
 
     .next {
-      right: clamp(6px, 1vw, 10px);
-      top: 50%;
-      transform: translateY(-50%);
       font-size: clamp(16px, 2vw, 20px);
     }
 
     .archive {
-      top: clamp(20px, 4vh, 40px);
-      right: clamp(6px, 1vw, 10px);
       font-size: clamp(12px, 1.2vw, 14px);
       letter-spacing: clamp(0.3px, 0.1vw, 0.5px);
     }
 
+    .about {
+      top: 90px;
+      right: 10px;
+    }
+    
+    .prev, .next, .archive, .about {
+      position: absolute;
+    }
+    
     #month {
       position: absolute;
       top: 50%;
@@ -97,11 +98,6 @@
       letter-spacing: 2px;
       pointer-events: none;
       opacity: 0.5;
-    }
-    
-    .about {
-      top: 90px;
-      right: 10px;
     }
     
     #aboutBox {
@@ -1947,7 +1943,12 @@ function updateImage() {
   : "backimages/" + filename;
 
   imgEl.onload = () => {
-    updateUIPosition();
+    requestAnimationFrame(() => {
+      updateUIPosition();
+    });
+  
+    // дополнительная страховка (важно!)
+    setTimeout(updateUIPosition, 50);
   };
 
   requestAnimationFrame(() => {
@@ -2351,6 +2352,7 @@ function openArchive() {
 }
 
   window.addEventListener("resize", updateUIPosition);
+  window.addEventListener("load", updateUIPosition);
 </script>
 
 </body>
