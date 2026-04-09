@@ -248,6 +248,18 @@
       opacity: 0 !important;
     }
 
+    .image-container {
+      cursor: default;
+    }
+    
+    .image-container.left {
+      cursor: w-resize;
+    }
+    
+    .image-container.right {
+      cursor: e-resize;
+    }
+
   </style>
 </head>
 
@@ -1999,9 +2011,37 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight") goNext();
   if (e.key === "ArrowLeft") goPrev();
 });
+  
 
-// клик по изображению
-document.getElementById("img").onclick = goNext;
+// клик по изображению (левая/правая сторона)
+const imgEl = document.getElementById("img");
+
+imgEl.onclick = (e) => {
+  const rect = imgEl.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+
+  if (clickX < rect.width / 2) {
+    goPrev();
+  } else {
+    goNext();
+  }
+};
+
+
+// движение мыши (курсор)
+imgEl.addEventListener("mousemove", (e) => {
+  const rect = imgEl.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+
+  if (x < rect.width / 2) {
+    imgEl.classList.add("left");
+    imgEl.classList.remove("right");
+  } else {
+    imgEl.classList.add("right");
+    imgEl.classList.remove("left");
+  }
+});
+  
 
 const toggleBtn = document.getElementById("toggleSide");
 const archiveBtn = document.getElementById("archiveLink");
