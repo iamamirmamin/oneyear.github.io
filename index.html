@@ -263,7 +263,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -140%);
+      transform: translate(-50%, -180%);
       color: white;
       font-size: clamp(12px, 1.2vw, 16px);
       opacity: 0.7;
@@ -1947,10 +1947,11 @@ const backimages = [
   }
   
 
-  const timeline = buildTimeline(images);
+  const frontTimeline = buildTimeline(images);
+  const backTimeline = buildTimeline(backimages);
   
-  function getCurrentImages() {
-    return currentMode === "front" ? images : backimages;
+  function getCurrentTimeline() {
+    return currentMode === "front" ? frontTimeline : backTimeline;
   }
 
   
@@ -2052,13 +2053,13 @@ function updateImage() {
   // preload вперед
   const nextImg = new Image();
   nextImg.src = currentMode === "front"
-  ? "images2/" + currentImages[(index + 1) % currentImages.length].file
+  ? "images2/" + currentTimeline[(index + 1) % currentTimeline.length].file
   : "backimages/" + currentImages[(index + 1) % currentImages.length];
 
   // preload назад
   const prevImg = new Image();
   prevImg.src = currentMode === "front"
-  ? "images2/" + currentImages[(index - 1 + currentImages.length) % currentImages.length].file
+  ? "images2/" + currentTimeline[(index + 1) % currentTimeline.length].file
   : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
 }
   
@@ -2113,17 +2114,18 @@ const toggleBtn = document.getElementById("toggleSide");
 const archiveBtn = document.getElementById("archiveLink");
 const aboutBtn = document.getElementById("aboutLink");
 
+
 toggleBtn.onclick = (e) => {
   e.preventDefault();
 
+  // 1. берём текущий timeline
+  const currentTimeline = getCurrentTimeline();
+
+  // 2. берём текущий день (это главное!)
+  const currentDate = currentTimeline[index].date;
+
+  // 3. переключаем режим
   if (currentMode === "front") {
-
-    const currentItem = timeline[index];
-    const currentFile = currentItem.file;
-    const newIndex = findIndexByDate(currentFile, backimages);
-
-    index = newIndex !== -1 ? newIndex : 0;
-
     currentMode = "back";
     toggleBtn.textContent = "to front side";
 
@@ -2131,12 +2133,6 @@ toggleBtn.onclick = (e) => {
     aboutBtn.style.display = "none";
 
   } else {
-
-    const currentFile = backimages[index];
-    const newIndex = findIndexByDate(currentFile, images);
-
-    index = newIndex !== -1 ? newIndex : 0;
-
     currentMode = "front";
     toggleBtn.textContent = "to back side";
 
@@ -2144,6 +2140,16 @@ toggleBtn.onclick = (e) => {
     aboutBtn.style.display = "";
   }
 
+  // 4. берём НОВЫЙ timeline
+  const newTimeline = getCurrentTimeline();
+
+  // 5. ищем тот же день в новом timeline
+  const newIndex = newTimeline.findIndex(item => item.date === currentDate);
+
+  // 6. если нашли — переходим, если нет — fallback
+  index = newIndex !== -1 ? newIndex : 0;
+
+  // 7. обновляем изображение
   updateImage();
 };
   
@@ -2328,8 +2334,9 @@ function openArchive() {
         index = currentIndex;
       
         const imgEl = document.getElementById("img");
-        const currentImages = getCurrentImages();
-        const filename = currentImages[index];
+        const currentTimeline = getCurrentTimeline();
+        const item = currentTimeline[index];
+        const filename = item.file;
       
         // 1. запускаем overlay
         overlay.classList.add("active");
