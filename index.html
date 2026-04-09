@@ -255,7 +255,7 @@
     }
 
     .placeholder {
-      filter: blur(15px);
+      filter: blur(20px) brightness(0.8);
       opacity: 0.7;
     }
     
@@ -263,7 +263,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -120%);
       color: white;
       font-size: clamp(14px, 2vw, 20px);
       letter-spacing: 1px;
@@ -279,7 +279,7 @@
   <div class="image-container">
     <img id="img">
     <div id="noDataText" class="no-data" style="display:none">
-      no view this date
+      missing frame
     </div>
 
     <div id="month" class="ui"></div>
@@ -1932,9 +1932,10 @@ const backimages = [
         });
   
       } else if (lastAvailableDay) {
-        // только ОДИН placeholder
+        const lastImageOfDay = lastAvailableDay[lastAvailableDay.length - 1];
+      
         result.push({
-          file: lastAvailableDay[0],
+          file: lastImageOfDay,
           date: dateStr,
           isPlaceholder: true
         });
