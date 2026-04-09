@@ -254,6 +254,22 @@
       -webkit-user-select: none;
     }
 
+    .placeholder {
+      filter: blur(10px);
+      opacity: 0.7;
+    }
+    
+    .no-data {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: clamp(14px, 2vw, 20px);
+      letter-spacing: 1px;
+      pointer-events: none;
+    }
+
   </style>
 </head>
 
@@ -262,6 +278,9 @@
 <div class="viewer">
   <div class="image-container">
     <img id="img">
+    <div id="noDataText" class="no-data" style="display:none">
+      no view this date
+    </div>
 
     <div id="month" class="ui"></div>
 
@@ -1874,6 +1893,48 @@ const backimages = [
   "2026-01-11_617.jpg"
 ];
 
+  function buildTimeline(images) {
+    const map = new Map();
+  
+    images.forEach(file => {
+      const date = file.split("_")[0];
+      if (!map.has(date)) {
+        map.set(date, file); // берём ПЕРВОЕ изображение дня
+      }
+    });
+  
+    const result = [];
+  
+    const start = new Date(images[0].split("_")[0]);
+    const end = new Date(images[images.length - 1].split("_")[0]);
+  
+    let current = new Date(start);
+    let lastAvailable = null;
+  
+    while (current <= end) {
+      const dateStr = current.toISOString().slice(0, 10);
+  
+      if (map.has(dateStr)) {
+        lastAvailable = map.get(dateStr);
+        result.push({
+          file: lastAvailable,
+          date: dateStr,
+          isPlaceholder: false
+        });
+      } else if (lastAvailable) {
+        result.push({
+          file: lastAvailable,
+          date: dateStr,
+          isPlaceholder: true
+        });
+      }
+      current.setDate(current.getDate() + 1);
+    }
+    return result;
+  }
+
+  const timeline = buildTimeline(images);
+  
   function getCurrentImages() {
     return currentMode === "front" ? images : backimages;
   }
@@ -1940,18 +2001,30 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
 
-  const currentImages = getCurrentImages();
+  const currentImages = currentMode === "front"
+  ? timeline
+  : backimages.map(f => ({ file: f, isPlaceholder: false }));
   index = ((index % currentImages.length) + currentImages.length) % currentImages.length;
 
   const imgEl = document.getElementById("img");
   imgEl.style.opacity = 0.9;
 
-  const filename = currentImages[index];
+  const item = currentImages[index];
+  const filename = item.file;
 
   // ставим src ОДИН раз
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
   : "backimages/" + filename;
+
+  const noData = document.getElementById("noDataText");
+  if (item.isPlaceholder) {
+    imgEl.classList.add("placeholder");
+    noData.style.display = "block";
+  } else {
+    imgEl.classList.remove("placeholder");
+    noData.style.display = "none";
+  }
 
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
@@ -1965,13 +2038,13 @@ function updateImage() {
   // preload вперед
   const nextImg = new Image();
   nextImg.src = currentMode === "front"
-  ? "images2/" + currentImages[(index + 1) % currentImages.length]
+  ? "images2/" + currentImages[(index + 1) % currentImages.length].file
   : "backimages/" + currentImages[(index + 1) % currentImages.length];
 
   // preload назад
   const prevImg = new Image();
   prevImg.src = currentMode === "front"
-  ? "images2/" + currentImages[(index - 1 + currentImages.length) % currentImages.length]
+  ? "images2/" + currentImages[(index - 1 + currentImages.length) % currentImages.length].file
   : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
 }
   
@@ -2031,7 +2104,7 @@ toggleBtn.onclick = (e) => {
 
   if (currentMode === "front") {
 
-    const currentFile = images[index];
+    const currentFile = timeline[index].file;
     const newIndex = findIndexByDate(currentFile, backimages);
 
     index = newIndex !== -1 ? newIndex : 0;
