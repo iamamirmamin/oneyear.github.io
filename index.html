@@ -29,6 +29,8 @@
       transition: all 0.2s ease;
       display: inline-block;
       width: auto;
+      cursor: pointer;
+      mix-blend-mode: difference;
     }
     
     .ui-button:hover {
@@ -246,18 +248,6 @@
 
     .ui-hidden {
       opacity: 0 !important;
-    }
-
-    .image-container {
-      cursor: default;
-    }
-    
-    .image-container.left {
-      cursor: w-resize;
-    }
-    
-    .image-container.right {
-      cursor: e-resize;
     }
 
   </style>
@@ -2026,21 +2016,6 @@ imgEl.onclick = (e) => {
     goNext();
   }
 };
-
-
-// движение мыши (курсор)
-imgEl.addEventListener("mousemove", (e) => {
-  const rect = imgEl.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-
-  if (x < rect.width / 2) {
-    imgEl.classList.add("left");
-    imgEl.classList.remove("right");
-  } else {
-    imgEl.classList.add("right");
-    imgEl.classList.remove("left");
-  }
-});
   
 
 const toggleBtn = document.getElementById("toggleSide");
