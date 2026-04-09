@@ -16,6 +16,25 @@
       font-family: Helvetica, Arial, sans-serif;
       transition: transform 0.4s ease, opacity 0.4s ease;
     }
+
+    .ui-button {
+      color: white;
+      text-decoration: none;
+      border: 1px solid white;
+      border-radius: 999px;
+      font-size: clamp(12px, 1.2vw, 16px);
+      padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.2vw, 16px);
+      backdrop-filter: blur(4px);
+      opacity: 0.7;
+      transition: all 0.2s ease;
+      display: inline-block;
+      width: auto;
+    }
+    
+    .ui-button:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+    }
     
     body.zoom-out {
       transform: scale(0.98);
@@ -54,15 +73,6 @@
     
     .nav, .archive {
       position: absolute;
-      color: white;
-      text-decoration: none;
-      border: 1px solid white;
-      border-radius: 999px;
-      font-size: clamp(12px, 1.2vw, 16px);
-      padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.2vw, 16px);
-      backdrop-filter: blur(4px);
-      opacity: 0.7;
-      transition: all 0.2s ease;
     }
 
     .nav:hover, .archive:hover {
@@ -229,13 +239,6 @@
     .virtual-spacer {
       width: 100%;
     }
-
-    #toggleSide {
-      bottom: 20px;
-      z-index: 10;
-      color: white;
-      cursor: pointer;
-    }
   
     #toggleSide:hover {
       opacity: 1;
@@ -256,18 +259,18 @@
 
     <div id="month" class="ui"></div>
 
-    <a href="#" id="prev" class="nav prev ui">←</a>
-    <a href="#" id="next" class="nav next ui">→</a>
+    <a href="#" id="prev" class="ui-button nav prev ui">←</a>
+    <a href="#" id="next" class="ui-button nav next ui">→</a>
 
-    <a href="#" id="archiveLink" class="archive ui">archive</a>
-    <a href="#" id="aboutLink" class="archive about ui">about</a>
+    <a href="#" id="archiveLink" class="ui-button archive ui">archive</a>
+    <a href="#" id="aboutLink" class="ui-button archive about ui">about</a>
 
-    <a href="#" id="toggleSide" class="archive ui toggle">to back side</a>
+    <a href="#" id="toggleSide" class="ui-button archive ui toggle">to back side</a>
   </div>
 </div>
 
 <div id="archiveView" style="display:none">
-  <a href="#" id="backLink" class="archive back">← back</a>
+  <a href="#" id="backLink" class="ui-button back">← back</a>
   <div class="grid" id="grid">
 </div>
 
