@@ -2260,7 +2260,8 @@ function openArchive() {
 
   
   const itemHeight = 113 + gap;
-  const totalRows = Math.ceil(images.length / columns);
+  const timeline = frontTimeline;
+  const totalRows = Math.ceil(timeline.length / columns);
 
   // виртуальная высота
   grid.style.position = "relative";
@@ -2320,7 +2321,7 @@ function openArchive() {
       Math.ceil((scrollTop + viewHeight) / itemHeight) + 2);
 
     const startIndex = startRow * columns;
-    const endIndex = Math.min(images.length, endRow * columns);
+    const endIndex = Math.min(timeline.length, endRow * columns);
 
     grid.innerHTML = "";
 
@@ -2328,7 +2329,8 @@ function openArchive() {
 
     for (let i = startIndex; i < endIndex; i++) {
 
-      const filename = images[i];
+      const item = timeline[i];
+      const filename = item.file;
       const currentIndex = i;
 
       const link = document.createElement("a");
@@ -2389,6 +2391,10 @@ function openArchive() {
       img.src = "thumbs/" + filename;
       img.loading = "lazy";
 
+      if (item.isPlaceholder) {
+        img.classList.add("placeholder");
+      }
+
       const dateStr = filename.split("_")[0];
       const parts = dateStr.split("-");
       const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
@@ -2398,6 +2404,12 @@ function openArchive() {
       date.innerText = formattedDate;
 
       wrapper.appendChild(img);
+      if (item.isPlaceholder) {
+        const noData = document.createElement("div");
+        noData.classList.add("no-data");
+        noData.innerText = "missing frame";
+        wrapper.appendChild(noData);
+      }
       wrapper.appendChild(date);
       link.appendChild(wrapper);
 
