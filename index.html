@@ -5,6 +5,7 @@
   <title>one more day</title>
 
   <style>
+    
     body {
       margin: 0;
       background: black;
@@ -293,9 +294,36 @@
     .item:hover .no-data-archive {
       opacity: 0;
     }
+
+    .fs-hint {
+      position: fixed;
+      bottom: clamp(16px, 4%, 40px);
+      left: 50%;
+      transform: translateX(-50%);
+    
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    
+      z-index: 10000;
+    }
+    
+    .fs-hint.show {
+      opacity: 0.7;
+      pointer-events: auto;
+    }
+    
+    .fs-hint:hover {
+      opacity: 1;
+    }
+    
   </style>
 </head>
 
+<div id="fsHint" class="fs-hint ui-button ui">
+    fullscreen
+</div>
+  
 <body>
 
 <div class="viewer">
@@ -2446,6 +2474,29 @@ function openArchive() {
     requestAnimationFrame(renderVisible);
     };
 }
+
+
+  // показываем только один раз
+  if (!localStorage.getItem("fsHintShown")) {
+    setTimeout(() => {
+      if (!document.fullscreenElement) {
+        fsHint.classList.add("show");
+        localStorage.setItem("fsHintShown", "true");
+      }
+    }, 800);
+  }
+  
+  // клик → fullscreen
+  fsHint.onclick = () => {
+    document.documentElement.requestFullscreen();
+    fsHint.classList.remove("show");
+  };
+  
+  // авто-скрытие
+  setTimeout(() => {
+    fsHint.classList.remove("show");
+  }, 5000);
+  
 </script>
 
 </body>
