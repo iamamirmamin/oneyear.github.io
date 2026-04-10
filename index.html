@@ -1988,38 +1988,34 @@ const backimages = [
   
   function getClosestIndexByDate() {
     const today = new Date();
+    const timeline = frontTimeline;
+  
     let closestIndex = 0;
     let smallestDiff = Infinity;
   
-    images.forEach((filename, i) => {
-      const dateStr = filename.split("_")[0];
-      const date = new Date(dateStr);
-    
-      // создаём дату в текущем году
+    timeline.forEach((item, i) => {
+      const date = new Date(item.date);
       const candidate = new Date(
         today.getFullYear(),
         date.getMonth(),
         date.getDate()
       );
-  
-      // вариант: этот год или прошлый (чтобы январь работал)
       let bestCandidate = candidate;
-    
       if (candidate > today) {
         bestCandidate = new Date(
           today.getFullYear() - 1,
           date.getMonth(),
           date.getDate()
-          );
+        );
       }
-      const diff = today - bestCandidate; // только назад
+      const diff = today - bestCandidate;
       if (diff >= 0 && diff < smallestDiff) {
         smallestDiff = diff;
         closestIndex = i;
-        }
-  });
-  return closestIndex;
-}
+      }
+    });
+    return closestIndex;
+  }
   
 const params = new URLSearchParams(window.location.search);
 
@@ -2296,15 +2292,14 @@ function openArchive() {
   // ---------- ПЕРВЫЙ ВХОД ----------
   if (!archiveState.initialized || archiveState.lastIndex !== index) {
 
-    const row = Math.floor(archiveIndex / columns);
+    const row = Math.floor(index / columns);
 
     const itemHeightPx = 113;
 
     archiveState.scrollTop =
-      row * itemHeight +
-      113 + 
-      gap -
-      archiveView.clientHeight / 2;
+    row * itemHeight -
+    archiveView.clientHeight / 2 +
+    itemHeight / 2;
 
     const maxScroll =
     grid.offsetHeight - archiveView.clientHeight;
