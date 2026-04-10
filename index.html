@@ -273,6 +273,19 @@
       pointer-events: none;
     }
 
+    .no-data-archive {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* центр, без смещения вверх */
+    
+      color: white;
+      font-size: clamp(12px, 1vw, 16px); /* меньше, чем во viewer */
+      letter-spacing: 1px;
+    
+      opacity: 0.6;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -2353,13 +2366,7 @@ function openArchive() {
         // 2. меняем изображение ПОД ШТОРКОЙ (но не слишком поздно)
         setTimeout(() => {
       
-          imgEl.src =
-          (currentMode === "front" ? "images2/" : "backimages/") +
-          filename;
-      
-          const dateStr = getDateFromFilename(filename);
-          const label = formatDate(dateStr);
-          document.getElementById("month").innerText = label;
+          index = currentIndex;
       
           archiveView.style.display = "none";
           viewer.style.visibility = "visible";
@@ -2367,6 +2374,8 @@ function openArchive() {
           document.querySelectorAll(".ui").forEach(el => {
             el.classList.remove("ui-hidden");
           });
+
+          updateImage();
       
           const nextImg = new Image();
           nextImg.src = imgEl.src;
@@ -2406,7 +2415,7 @@ function openArchive() {
       wrapper.appendChild(img);
       if (item.isPlaceholder) {
         const noData = document.createElement("div");
-        noData.classList.add("no-data");
+        noData.classList.add("no-data-archive");
         noData.innerText = "missing frame";
         wrapper.appendChild(noData);
       }
