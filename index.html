@@ -205,6 +205,7 @@
       height: 113px;
       position: relative;
       transition: transform 0.2s ease, opacity 0.2s ease;
+      overflow: hidden;
     }
     
     .item:not(.active) {
@@ -260,10 +261,10 @@
     }
 
     .placeholder {
-      filter: blur(20px) brightness(0.7);
+      filter: blur(12px) brightness(0.7);
       opacity: 0.7;
-      transform: translateZ(0);       
-      will-change: filter;            
+      transform: translateZ(0) scale(1.05);       
+      will-change: filter;    
     }
     
     .no-data {
