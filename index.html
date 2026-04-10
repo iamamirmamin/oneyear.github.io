@@ -330,6 +330,11 @@
       opacity: 1;
     }
     
+    .fs-hint.auto-show {
+      opacity: 0.7;
+      pointer-events: auto;
+    }
+    
   </style>
 </head>
 
@@ -2488,12 +2493,33 @@ function openArchive() {
     };
 }
 
-
   const fsHint = document.getElementById("fsHint");
 
   fsHint.onclick = () => {
     document.documentElement.requestFullscreen();
   };
+
+  // показываем на старте
+  setTimeout(() => {
+    fsHint.classList.add("auto-show");
+  }, 500);
+  
+  // скрываем через несколько секунд
+  setTimeout(() => {
+    fsHint.classList.remove("auto-show");
+  }, 4000);
+
+  if (!localStorage.getItem("fsShown")) {
+    setTimeout(() => {
+      fsHint.classList.add("auto-show");
+    }, 500);
+  
+    setTimeout(() => {
+      fsHint.classList.remove("auto-show");
+    }, 4000);
+  
+    localStorage.setItem("fsShown", "true");
+  }
   
 </script>
 
