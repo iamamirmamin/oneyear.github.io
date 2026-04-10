@@ -2019,9 +2019,6 @@ function updateImage() {
   const currentTimeline = getCurrentTimeline();
   const currentImages = currentTimeline;
   
-  const currentImages = currentMode === "front"
-  ? frontTimeline
-  : backTimeline;
   index = ((index % currentImages.length) + currentImages.length) % currentImages.length;
 
   const imgEl = document.getElementById("img");
@@ -2225,7 +2222,7 @@ function formatDate(dateStr) {
 
 const aboutBox = document.getElementById("aboutBox");
 
-aboutLink.onclick = (e) => {
+aboutBtn.onclick = (e) => {
   e.preventDefault();
   aboutBox.style.display = "flex";
   document.body.classList.add("about-open");
