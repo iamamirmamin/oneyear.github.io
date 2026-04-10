@@ -2066,6 +2066,8 @@ const backimages = [
   
   let currentMode = "front"; // front | back
 
+  const PRELOAD_RANGE = 4;
+  const preloaded = new Set();
   
   function getClosestIndexByDate() {
     const today = new Date();
@@ -2149,17 +2151,22 @@ function updateImage() {
   const label = formatDate(dateStr);
   document.getElementById("month").innerText = label;
 
-  // preload вперед
-  const nextImg = new Image();
-  nextImg.src =
-    (currentMode === "front" ? "images2/" : "backimages/") +
-    currentTimeline[(index + 1) % currentTimeline.length].file;
+  // расширенный preload вокруг текущего индекса
+  const basePath = currentMode === "front" ? "images2/" : "backimages/";
+  const length = currentTimeline.length;
   
-  // preload назад
-  const prevImg = new Image();
-  prevImg.src =
-    (currentMode === "front" ? "images2/" : "backimages/") +
-    currentTimeline[(index - 1 + currentTimeline.length) % currentTimeline.length].file;
+  for (let i = -PRELOAD_RANGE; i <= PRELOAD_RANGE; i++) {
+    if (i === 0) continue;
+  
+    const preloadIndex = (index + i + length) % length;
+    const src = basePath + currentTimeline[preloadIndex].file;
+  
+    if (!preloaded.has(src)) {
+      const img = new Image();
+      img.src = src;
+      preloaded.add(src);
+    }
+  }
 }
   
   // старт
@@ -2225,6 +2232,7 @@ toggleBtn.onclick = (e) => {
 
   // 3. переключаем режим
   if (currentMode === "front") {
+    preloaded.clear();
     currentMode = "back";
     toggleBtn.textContent = "to front side";
 
@@ -2233,6 +2241,7 @@ toggleBtn.onclick = (e) => {
 
   } else {
     currentMode = "front";
+    preloaded.clear();
     toggleBtn.textContent = "to back side";
 
     archiveBtn.style.display = "";
