@@ -341,6 +341,26 @@
     body.fullscreen .fs-zone {
       display: none;
     }
+
+    @keyframes hintLeft {
+      0% { transform: translateY(-50%) translateX(0); }
+      50% { transform: translateY(-50%) translateX(-6px); }
+      100% { transform: translateY(-50%) translateX(0); }
+    }
+    
+    @keyframes hintRight {
+      0% { transform: translateY(-50%) translateX(0); }
+      50% { transform: translateY(-50%) translateX(6px); }
+      100% { transform: translateY(-50%) translateX(0); }
+    }
+    
+    .prev.hint {
+      animation: hintLeft 1s ease 2;
+    }
+    
+    .next.hint {
+      animation: hintRight 1s ease 2;
+    }
     
   </style>
 </head>
@@ -2539,6 +2559,11 @@ function openArchive() {
   }
   
   document.addEventListener("fullscreenchange", updateFullscreenState);
+
+  setTimeout(() => {
+    document.getElementById("prev").classList.add("hint");
+    document.getElementById("next").classList.add("hint");
+  }, 500);
   
 </script>
 
