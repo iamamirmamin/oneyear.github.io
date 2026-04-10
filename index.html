@@ -2016,6 +2016,9 @@ const from = params.get("from");
 // обновление изображения
 function updateImage() {
 
+  const currentTimeline = getCurrentTimeline();
+  const currentImages = currentTimeline;
+  
   const currentImages = currentMode === "front"
   ? frontTimeline
   : backTimeline;
@@ -2052,15 +2055,15 @@ function updateImage() {
 
   // preload вперед
   const nextImg = new Image();
-  nextImg.src = currentMode === "front"
-  ? "images2/" + currentTimeline[(index + 1) % currentTimeline.length].file
-  : "backimages/" + currentImages[(index + 1) % currentImages.length];
-
+  nextImg.src =
+    (currentMode === "front" ? "images2/" : "backimages/") +
+    currentTimeline[(index + 1) % currentTimeline.length].file;
+  
   // preload назад
   const prevImg = new Image();
-  prevImg.src = currentMode === "front"
-  ? "images2/" + currentTimeline[(index - 1 + currentTimeline.length) % currentTimeline.length].file
-  : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
+  prevImg.src =
+    (currentMode === "front" ? "images2/" : "backimages/") +
+    currentTimeline[(index - 1 + currentTimeline.length) % currentTimeline.length].file;
 }
   
   // старт
@@ -2343,9 +2346,9 @@ function openArchive() {
         // 2. меняем изображение ПОД ШТОРКОЙ (но не слишком поздно)
         setTimeout(() => {
       
-          imgEl.src = currentMode === "front"
-            ? "images2/" + filename
-            : "backimages/" + filename;
+          imgEl.src =
+          (currentMode === "front" ? "images2/" : "backimages/") +
+          filename;
       
           const dateStr = getDateFromFilename(filename);
           const label = formatDate(dateStr);
