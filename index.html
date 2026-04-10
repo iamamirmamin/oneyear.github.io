@@ -302,9 +302,10 @@
     .fs-zone {
       position: fixed;
       bottom: 0;
-      left: 0;
+      left: 50%;
       width: clamp(160px, 20vw, 260px);
       height: 80px; /* зона активации */
+      transform: translateX(-50%);
 
       display: flex;
       justify-content: center;
@@ -341,6 +342,8 @@
     
   </style>
 </head>
+  
+<body>
 
 <div id="fsZone" class="fs-zone">
   <div id="fsHint" class="fs-hint ui-button ui">
@@ -348,8 +351,6 @@
   </div>
 </div>
   
-<body>
-
 <div class="viewer">
   <div class="image-container">
     <img id="img">
