@@ -2017,8 +2017,8 @@ const from = params.get("from");
 function updateImage() {
 
   const currentImages = currentMode === "front"
-  ? timeline
-  : backimages.map(f => ({ file: f, isPlaceholder: false }));
+  ? frontTimeline
+  : backTimeline;
   index = ((index % currentImages.length) + currentImages.length) % currentImages.length;
 
   const imgEl = document.getElementById("img");
@@ -2059,7 +2059,7 @@ function updateImage() {
   // preload назад
   const prevImg = new Image();
   prevImg.src = currentMode === "front"
-  ? "images2/" + currentTimeline[(index + 1) % currentTimeline.length].file
+  ? "images2/" + currentTimeline[(index - 1 + currentTimeline.length) % currentTimeline.length].file
   : "backimages/" + currentImages[(index - 1 + currentImages.length) % currentImages.length];
 }
   
@@ -2220,7 +2220,6 @@ function formatDate(dateStr) {
   return (month + " " + day);
 }
 
-const aboutLink = document.getElementById("aboutLink");
 const aboutBox = document.getElementById("aboutBox");
 
 aboutLink.onclick = (e) => {
