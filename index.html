@@ -333,6 +333,10 @@
       opacity: 0.7;
       pointer-events: auto;
     }
+
+    body.fullscreen .fs-zone {
+      display: none;
+    }
     
   </style>
 </head>
@@ -2510,7 +2514,9 @@ function openArchive() {
 
   if (!localStorage.getItem("fsShown")) {
     setTimeout(() => {
-      fsHint.classList.add("auto-show");
+      if (!document.fullscreenElement) {
+        fsHint.classList.add("auto-show");
+      }
     }, 500);
   
     setTimeout(() => {
@@ -2519,6 +2525,16 @@ function openArchive() {
   
     localStorage.setItem("fsShown", "true");
   }
+
+  function updateFullscreenState() {
+    if (document.fullscreenElement) {
+      document.body.classList.add("fullscreen");
+    } else {
+      document.body.classList.remove("fullscreen");
+    }
+  }
+  
+  document.addEventListener("fullscreenchange", updateFullscreenState);
   
 </script>
 
