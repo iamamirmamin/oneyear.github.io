@@ -303,13 +303,13 @@
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
+      width: clamp(160px, 20vw, 260px);
       height: 80px; /* зона активации */
 
       display: flex;
       justify-content: center;
       align-items: flex-end; 
-      pointer-events: none;
+      pointer-events: auto;
       z-index: 9999;
     }
     
@@ -322,11 +322,11 @@
     
     .fs-zone:hover .fs-hint {
       opacity: 0.7;
+      pointer-events: auto;
     }
     
     .fs-hint:hover {
       opacity: 1;
-      pointer-events: auto;
     }
     
     .fs-hint.auto-show {
