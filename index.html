@@ -60,6 +60,35 @@
       max-height: 100vh;
       display: block;
     }
+
+    .image-container::before,
+    .image-container::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 20%; /* можно 15–25% подстроить */
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .image-container::before {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.35),
+        rgba(0, 0, 0, 0)
+      );
+    }
+
+    .image-container::after {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.35),
+        rgba(0, 0, 0, 0)
+      );
+    }
     
     .grid img {
       width: 100%;
@@ -82,6 +111,10 @@
       background: rgba(255,255,255,0.1);
     }
 
+    .nav {
+      z-index: 2;
+    }
+    
     .prev {
       left: clamp(8px, 2%, 24px);
       top: 50%;
