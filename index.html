@@ -111,13 +111,18 @@
     }
 
     .about {
-      top: clamp(60px, 8%, 80px);
+      top: calc(clamp(16px, 4%, 40px) + 28px);
       right: clamp(8px, 2%, 24px);
     }
     .toggle {
       bottom: clamp(16px, 4%, 40px);
       right: clamp(8px, 2%, 24px);
       top: auto;
+    }
+
+    .prev::after,
+    .next::after {
+      display: none;
     }
     
     #month {
