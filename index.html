@@ -376,6 +376,31 @@
     .nav.hint {
       animation: hintPulse 3s ease 3;
     }
+
+    #introVideoWrapper {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 10000;
+    
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    
+      transition: opacity 0.6s ease;
+    }
+    
+    #introVideoWrapper.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    #introVideo {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
     
   </style>
 </head>
@@ -386,6 +411,12 @@
   <div id="fsHint" class="fs-hint ui-button ui">
     fullscreen
   </div>
+</div>
+
+<div id="introVideoWrapper">
+  <video id="introVideo" autoplay muted loop playsinline>
+    <source src="images2/Timeline 3_1.mp4" type="video/mp4">
+  </video>
 </div>
   
 <div class="viewer">
@@ -2588,6 +2619,19 @@ function openArchive() {
     document.getElementById("prev").classList.add("hint");
     document.getElementById("next").classList.add("hint");
   }, 500);
+
+  
+  const introWrapper = document.getElementById("introVideoWrapper");
+  const introVideo = document.getElementById("introVideo");
+  
+  // по клику скрываем видео
+  introWrapper.onclick = () => {
+    introWrapper.classList.add("hidden");
+  
+    setTimeout(() => {
+      introWrapper.style.display = "none";
+    }, 600);
+  };
   
 </script>
 
