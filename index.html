@@ -22,20 +22,32 @@
       color: white;
       text-decoration: none;
       border: none;
-      background: rgba(255,255,255,0.05);
-      border-radius: 16px;
+      background: none;
+      border-radius: 0;
       font-size: clamp(12px, 1.2vw, 16px);
       padding: clamp(4px, 0.6vw, 8px) clamp(8px, 1vw, 14px);
-      backdrop-filter: blur(8px);
+      backdrop-filter: none;
       opacity: 1;
       transition: all 0.2s ease;
       display: inline-block;
       width: auto;
     }
+
+    .ui-button::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 1px;
+      background: white;
+      transition: width 0.2s ease;
+    }
     
     .ui-button:hover {
       opacity: 1;
-      background: rgba(255,255,255,0.12);
+    }
+
+    .ui-button:hover::after {
+      width: 100%;
     }
     
     body.zoom-out {
@@ -75,13 +87,10 @@
     
     .nav, .archive {
       position: absolute;
-      
-      outline: 1px solid rgba(255,255,255,0.25);
     }
 
     .nav:hover, .archive:hover {
       opacity: 1;
-      background: rgba(255,255,255,0.1);
     }
     
     .prev {
@@ -199,7 +208,6 @@
 
     .back:hover {
       opacity: 1;
-      background: rgba(255,255,255,0.1);
     }
     
     .item {
