@@ -388,6 +388,7 @@
       align-items: center;
     
       transition: opacity 0.6s ease;
+      overflow: hidden;
     }
     
     #introVideoWrapper.hidden {
@@ -401,7 +402,29 @@
       object-fit: cover;
       cursor: pointer;
     }
+
+    .intro-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4); /* регулируй 0.3–0.6 */
+      pointer-events: none;
+    }
+
+    .intro-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      
+      color: white;
+      font-family: Helvetica, Arial, sans-serif;
+      
+      font-size: clamp(18px, 3vw, 32px);
+      letter-spacing: clamp(1px, 0.2vw, 2px);
     
+      opacity: 0.85;
+      pointer-events: none;
+    }
   </style>
 </head>
   
@@ -417,6 +440,11 @@
   <video id="introVideo" autoplay muted loop playsinline>
     <source src="images2/Timeline 3_1.mp4" type="video/mp4">
   </video>
+  <div class="intro-overlay"></div>
+
+  <div class="intro-title">
+    wait (подождите)
+  </div>
 </div>
   
 <div class="viewer">
