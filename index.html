@@ -426,8 +426,12 @@
     .intro-title {
       position: absolute;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+
+      overflow: hidden;
+      pointer-events: none;
       
       color: white;
       font-family: Helvetica, Arial, sans-serif;
@@ -440,20 +444,11 @@
       pointer-events: none;
     }
 
-    .intro-title span {
-      display: block;
-      font-size: 0.75em;
-      opacity: 0.6;
-    }
-
-    /* контейнер поверх видео */
-    .intro-marquee {
-      position: absolute;
-      bottom: 20%;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
-      pointer-events: none;
+    .intro-sub {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.6em;
+      opacity: 0.7;
     }
     
     /* движущаяся лента */
@@ -468,17 +463,17 @@
       white-space: nowrap;
       font-size: clamp(18px, 3vw, 32px);
       color: white;
-      opacity: 0.8;
+      opacity: 1;
       padding-right: 40px; /* расстояние между повторениями */
     }
     
     /* анимация */
     @keyframes marqueeMove {
       from {
-        transform: translateX(0);
+        transform: translateX(-50%);
       }
       to {
-        transform: translateX(-50%);
+        transform: translateX(0);
       }
     }
   </style>
@@ -499,18 +494,14 @@
   <div class="intro-overlay"></div>
 
   <div class="intro-title">
-    ждите/идите<br>
-    <span>(wait/go, rus.)<span>
-  </div>
-
-      
-  <div class="intro-marquee">
     <div class="marquee-track">
-      <span>ждите/идите/ждите/идите/ждите/идите/ждите/идите/</span>
-      <span>ждите/идите/ждите/идите/ждите/идите/ждите/идите/</span>
+      <span>ждите/идите/ждите/идите/ждите/идите/</span>
+      <span>ждите/идите/ждите/идите/ждите/идите/</span>
+    </div>
+    <div class="intro-sub">
+      (wait/go, rus.)
     </div>
   </div>
-</div>
   
 <div class="viewer">
   <div class="image-container">
