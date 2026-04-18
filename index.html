@@ -73,23 +73,11 @@
       display: block;
     }
     
-    .grid img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      opacity: 0.8;
-      transition: opacity 0.2s ease;
-    }
-    
-    .grid img:hover {
-      opacity: 1;
-    }
-    
-    .nav, .archive {
+    .nav {
       position: absolute;
     }
 
-    .nav:hover, .archive:hover {
+    .nav:hover {
       opacity: 1;
     }
     
@@ -105,13 +93,8 @@
       transform: translateY(-50%);
     }
 
-    .archive {
-      top: clamp(32px, 6%, 56px);
-      right: clamp(8px, 2%, 24px);
-    }
-
     .about {
-      top: calc(clamp(32px, 6%, 56px) + 28px);
+      top: clamp(32px, 6%, 56px);
       right: clamp(8px, 2%, 24px);
     }
     .toggle {
@@ -123,18 +106,6 @@
     .prev::after,
     .next::after {
       display: none;
-    }
-    
-    #month {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: clamp(18px, 3vw, 32px);
-      letter-spacing: clamp(1px, 0.2vw, 2px);
-      pointer-events: none;
-      opacity: 0.5;
     }
     
     #aboutBox {
@@ -189,57 +160,6 @@
       opacity: 1;
     }
 
-    #archiveView {
-      position: absolute;
-      inset: 0;
-      background: black;
-      padding: 40px;
-      overflow-y: auto;
-    }
-    
-    .grid {
-      position: relative;
-      margin-top: 40px;
-    }
-    
-    .back {
-      position: fixed;
-      top: 20px;
-      left: 30px;
-      z-index: 10000;
-      display: inline-block;
-      width: auto; 
-    }
-
-    .back:hover {
-      opacity: 1;
-    }
-    
-    .item {
-      width: 200px;
-      height: 113px;
-      position: relative;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      overflow: hidden;
-    }
-    
-    .item:not(.active) {
-      opacity: 0.8;
-    }
-    
-    .item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      backface-visibility: hidden;
-      transform: translateZ(0);
-    }
-
-    .item img.placeholder {
-      transform: scale(1.05);
-    }
-    
     .date {
       position: absolute;
       top: 50%;
@@ -247,18 +167,6 @@
       transform: translate(-50%, -50%);
       color: white;
       opacity: 0;
-    }
-    
-    .item:hover .date {
-      opacity: 1;
-    }
-    
-    .item.active::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 2px solid white;
-      pointer-events: none;
     }
     
     .virtual-spacer {
@@ -298,27 +206,6 @@
       
       opacity: 0.5;
       pointer-events: none;
-    }
-
-    .no-data-archive {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%); /* центр, без смещения вверх */
-
-      width: 100%;
-      text-align: center;
-      
-      color: white;
-      font-size: clamp(12px, 1vw, 16px); /* меньше, чем во viewer */
-      letter-spacing: 1px;
-    
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    .item:hover .no-data-archive {
-      opacity: 0;
     }
 
     .fs-zone {
@@ -511,21 +398,13 @@
       missing frame
     </div>
 
-    <div id="month" class="ui"></div>
-
     <a href="#" id="prev" class="ui-button nav prev ui">←</a>
     <a href="#" id="next" class="ui-button nav next ui">→</a>
 
-    <a href="#" id="archiveLink" class="ui-button archive ui">archive</a>
     <a href="#" id="aboutLink" class="ui-button archive about ui">about</a>
 
     <a href="#" id="toggleSide" class="ui-button archive ui toggle">to back side</a>
   </div>
-</div>
-
-<div id="archiveView" style="display:none">
-  <a href="#" id="backLink" class="ui-button back">← back</a>
-  <div class="grid" id="grid">
 </div>
 
 </div>
@@ -2271,8 +2150,6 @@ function updateImage() {
     
   // текст даты
   const dateStr = item.date;
-  const label = formatDate(dateStr);
-  document.getElementById("month").innerText = label;
 
   // расширенный preload вокруг текущего индекса
   const basePath = currentMode === "front" ? "images2/" : "backimages/";
@@ -2340,7 +2217,6 @@ imgEl.onclick = (e) => {
   
 
 const toggleBtn = document.getElementById("toggleSide");
-const archiveBtn = document.getElementById("archiveLink");
 const aboutBtn = document.getElementById("aboutLink");
 
 
@@ -2359,7 +2235,6 @@ toggleBtn.onclick = (e) => {
     currentMode = "back";
     toggleBtn.textContent = "to front side";
 
-    archiveBtn.style.display = "none";
     aboutBtn.style.display = "none";
 
   } else {
@@ -2367,7 +2242,6 @@ toggleBtn.onclick = (e) => {
     preloaded.clear();
     toggleBtn.textContent = "to back side";
 
-    archiveBtn.style.display = "";
     aboutBtn.style.display = "";
   }
 
@@ -2398,33 +2272,6 @@ let archiveState = {
   lastIndex: null
 };
 
-  document.getElementById("archiveLink").onclick = (e) => {
-    e.preventDefault();
-  
-    document.querySelectorAll(".ui").forEach(el => {
-      el.classList.add("ui-hidden");
-    });
-  
-    archiveView.style.display = "block";
-    viewer.style.visibility = "hidden";
-  
-    requestAnimationFrame(() => {
-      openArchive();
-    });
-  };
-
-  document.getElementById("backLink").onclick = (e) => {
-    e.preventDefault();
-  
-    archiveView.style.display = "none";
-    viewer.style.visibility = "visible";
-  
-    updateImage();
-  
-    document.querySelectorAll(".ui").forEach(el => {
-      el.classList.remove("ui-hidden");
-    });
-  };
   
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -2465,200 +2312,6 @@ aboutBox.onclick = () => {
   document.body.classList.remove("about-open");
 };
 
-
-function openArchive() {
-
-  if (grid.clientWidth === 0) {
-    requestAnimationFrame(openArchive);
-    return;
-  }
-  const gap = 20;
-  const itemSize = 200;
-
-  grid.style.display = "block";
-  const containerWidth = grid.clientWidth;
-  const columns = Math.max(
-    1,
-    Math.floor((containerWidth + gap) / (itemSize + gap))
-  );
-
-  const totalGridWidth =
-  columns * itemSize + (columns - 1) * gap;
-
-  const offsetX = (containerWidth - totalGridWidth) / 2;
-
-  
-  const itemHeight = 113 + gap;
-  const timeline = frontTimeline;
-  const totalRows = Math.ceil(timeline.length / columns);
-
-  // виртуальная высота
-  grid.style.position = "relative";
-  grid.style.height = totalRows * itemHeight + "px";
-
-  const currentTimeline = getCurrentTimeline();
-  const currentItem = currentTimeline[index];
-  
-  // находим индекс в оригинальном массиве
-  const archiveIndex = images.findIndex(f => f === currentItem.file);
-
-  // ---------- ПЕРВЫЙ ВХОД ----------
-  if (!archiveState.initialized || archiveState.lastIndex !== index) {
-
-    const row = Math.floor(index / columns);
-
-    const itemHeightPx = 113;
-
-    archiveState.scrollTop =
-    row * itemHeight -
-    archiveView.clientHeight / 2 +
-    itemHeight;
-
-    const maxScroll =
-    grid.offsetHeight - archiveView.clientHeight;
-
-    archiveState.scrollTop = Math.max(
-      0,
-      Math.min(archiveState.scrollTop, maxScroll)
-    );
-
-    
-    archiveState.lastIndex !== archiveIndex
-    archiveState.initialized = true;
-  }
-
-  // применяем сохранённый скролл
-    requestAnimationFrame(() => {
-      archiveView.scrollTop = archiveState.scrollTop;
-      requestAnimationFrame(() => {
-      renderVisible();
-      });
-    });
-
-  // ---------- РЕНДЕР ----------
-  function renderVisible() {
-
-    const scrollTop = archiveView.scrollTop;
-    archiveState.scrollTop = scrollTop; // сохраняем
-
-    const viewHeight = archiveView.clientHeight;
-
-    const startRow = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
-    const endRow = Math.min(
-      totalRows,
-      Math.ceil((scrollTop + viewHeight) / itemHeight) + 2);
-
-    const startIndex = startRow * columns;
-    const endIndex = Math.min(timeline.length, endRow * columns);
-
-    grid.innerHTML = "";
-
-    const fragment = document.createDocumentFragment();
-
-    for (let i = startIndex; i < endIndex; i++) {
-
-      const item = timeline[i];
-      const filename = item.file;
-      const currentIndex = i;
-
-      const link = document.createElement("a");
-      link.href = "#";
-
-      
-      link.onclick = (e) => {
-        e.preventDefault();
-      
-        index = currentIndex;
-      
-        const imgEl = document.getElementById("img");
-        const currentTimeline = getCurrentTimeline();
-        const item = currentTimeline[index];
-        const filename = item.file;
-      
-        // 1. запускаем overlay
-        overlay.classList.add("active");
-      
-        // 2. меняем изображение ПОД ШТОРКОЙ (но не слишком поздно)
-        setTimeout(() => {
-      
-          index = currentIndex;
-      
-          archiveView.style.display = "none";
-          viewer.style.visibility = "visible";
-      
-          document.querySelectorAll(".ui").forEach(el => {
-            el.classList.remove("ui-hidden");
-          });
-
-          updateImage();
-      
-          const nextImg = new Image();
-          nextImg.src = imgEl.src;
-      
-        }, 300); // ключевая точка
-      
-        // 3. открываем обратно
-        setTimeout(() => {
-          overlay.classList.remove("active");
-        }, 350);
-      };
-      
-
-      const wrapper = document.createElement("div");
-      wrapper.classList.add("item");
-
-      if (i === index) {
-        wrapper.classList.add("active");
-      }
-
-      const img = document.createElement("img");
-      img.src = "thumbs/" + filename;
-      img.loading = "lazy";
-
-      if (item.isPlaceholder) {
-        img.classList.add("placeholder");
-      }
-
-      const dateStr = item.date;
-      const parts = dateStr.split("-");
-      const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-
-      const date = document.createElement("div");
-      date.classList.add("date");
-      date.innerText = formattedDate;
-
-      wrapper.appendChild(img);
-      if (item.isPlaceholder) {
-        const noData = document.createElement("div");
-        noData.classList.add("no-data-archive");
-        noData.innerText = "missing frame";
-        wrapper.appendChild(noData);
-      }
-      wrapper.appendChild(date);
-      link.appendChild(wrapper);
-
-      // позиционирование
-      const row = Math.floor(i / columns);
-      const col = i % columns;
-
-      wrapper.style.position = "absolute";
-      wrapper.style.top = row * itemHeight + "px";
-      wrapper.style.left = offsetX + col * (itemSize + gap) + "px";
-      wrapper.style.width = itemSize + "px";
-
-      fragment.appendChild(link);
-    }
-
-    grid.appendChild(fragment);
-  }
-  
-    archiveView.onscroll = null;
-  
-    archiveView.onscroll = () => {
-    console.log("scroll");
-    requestAnimationFrame(renderVisible);
-    };
-}
 
   const fsHint = document.getElementById("fsHint");
 
