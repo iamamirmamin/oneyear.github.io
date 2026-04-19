@@ -59,16 +59,24 @@
     }
     
     .image-container {
+      position: fixed;
+      inset: 0;
+    
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-frame {
       position: relative;
-      width: 100vw;
-      height: 100vh;
+      display: inline-block;
     }
     
     .image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: black;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
       display: block;
     }
     
@@ -329,14 +337,14 @@
   
 <div class="viewer">
   <div class="image-container">
+    <div class="image-frame">
     <img id="img">
 
     <a href="#" id="prev" class="ui-button nav prev ui">←</a>
     <a href="#" id="next" class="ui-button nav next ui">→</a>
-
     <a href="#" id="aboutLink" class="ui-button nav about ui">about</a>
-
     <a href="#" id="toggleSide" class="ui-button nav ui toggle">to back side</a>
+    </div>
   </div>
 </div>
 
