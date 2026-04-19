@@ -2317,6 +2317,22 @@ aboutBox.onclick = () => {
       introWrapper.style.display = "none";
     }, 600);
   };
+
+  let scrollTimeout;
+
+  window.addEventListener("wheel", (e) => {
+    e.preventDefault();
+  
+    clearTimeout(scrollTimeout);
+  
+    scrollTimeout = setTimeout(() => {
+      if (e.deltaY > 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    }, 30); // регулируй чувствительность
+  }, { passive: false });
   
 </script>
 
