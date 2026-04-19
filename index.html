@@ -188,19 +188,6 @@
       -webkit-user-select: none;
     }
     
-    .no-data {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -180%);
-      
-      color: white;
-      font-size: clamp(18px, 3vw, 32px);
-      letter-spacing: clamp(1px, 0.2vw, 2px);
-      
-      opacity: 0.5;
-      pointer-events: none;
-    }
 
     .fs-zone {
       position: fixed;
@@ -388,9 +375,6 @@
 <div class="viewer">
   <div class="image-container">
     <img id="img">
-    <div id="noDataText" class="no-data" style="display:none">
-      missing frame
-    </div>
 
     <a href="#" id="prev" class="ui-button nav prev ui">←</a>
     <a href="#" id="next" class="ui-button nav next ui">→</a>
@@ -2103,8 +2087,6 @@ function updateImage() {
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
   : "backimages/" + filename;
-
-  const noData = document.getElementById("noDataText");
 
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
