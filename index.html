@@ -186,13 +186,6 @@
       -webkit-user-drag: none;
       -webkit-user-select: none;
     }
-
-    .placeholder {
-      filter: blur(12px) brightness(0.7);
-      opacity: 0.7;
-      transform: translateZ(0);       
-      will-change: filter;    
-    }
     
     .no-data {
       position: absolute;
@@ -2015,39 +2008,14 @@ const backimages = [
   
     const result = [];
   
-    const start = new Date(images[0].split("_")[0]);
-    const end = new Date(images[images.length - 1].split("_")[0]);
-  
-    let current = new Date(start);
-    let lastAvailableDay = null;
-  
-    while (current <= end) {
-      const dateStr = current.toISOString().slice(0, 10);
-  
-      if (map.has(dateStr)) {
-        const files = map.get(dateStr);
-        lastAvailableDay = files;
-  
-        // добавляем ВСЕ изображения дня
-        files.forEach(file => {
-          result.push({
-            file,
-            date: dateStr,
-            isPlaceholder: false
-          });
+    Array.from(map.keys())
+      .sort() // сортируем даты
+      .forEach(date => {
+        map.get(date).forEach(file => {
+          result.push({ file, date });
         });
+      });
   
-      } else if (lastAvailableDay) {
-        const lastImageOfDay = lastAvailableDay[lastAvailableDay.length - 1];
-      
-        result.push({
-          file: lastImageOfDay,
-          date: dateStr,
-          isPlaceholder: true
-        });
-      }
-      current.setDate(current.getDate() + 1);
-    }
     return result;
   }
   
@@ -2136,13 +2104,6 @@ function updateImage() {
   : "backimages/" + filename;
 
   const noData = document.getElementById("noDataText");
-  if (item.isPlaceholder) {
-    imgEl.classList.add("placeholder");
-    noData.style.display = "block";
-  } else {
-    imgEl.classList.remove("placeholder");
-    noData.style.display = "none";
-  }
 
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
