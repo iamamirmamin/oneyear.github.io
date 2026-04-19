@@ -1577,6 +1577,7 @@ const aboutBtn = document.getElementById("aboutLink");
 
 toggleBtn.onclick = (e) => {
   e.preventDefault();
+  e.stopPropagation();
 
   // 1. берём текущий timeline
   const currentTimeline = getCurrentTimeline();
@@ -1608,7 +1609,9 @@ toggleBtn.onclick = (e) => {
 
   index = newIndex !== -1
   ? newIndex
-  : findClosestIndexByDate(currentDate, newTimeline);
+  : findClosestPastIndex(currentDate, newTimeline);
+
+  updateImage();
 };
   
 
