@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>zhdite/idite</title>
+  <title>wait/go</title>
 
   <style>
     
@@ -97,16 +97,16 @@
       transform: translateY(-50%);
     }
 
-    .about {
+    .toggle {
       top: clamp(32px, 6%, 56px);
       right: clamp(8px, 2%, 24px);
     }
-    .toggle {
-      bottom: clamp(32px, 6%, 56px);
+    
+    .about {
+      top: calc(clamp(32px, 6%, 56px) + 28px);
       right: clamp(8px, 2%, 24px);
-      top: auto;
     }
-
+    
     .prev::after,
     .next::after {
       display: none;
