@@ -55,6 +55,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 10;
     }
     
     .image-container {
@@ -2245,7 +2246,10 @@ aboutBox.onclick = () => {
   // по клику скрываем видео
   introWrapper.onclick = () => {
     introWrapper.classList.add("hidden");
-    introWrapper.style.display = "none";
+    
+    setTimeout(() => {
+      introWrapper.remove(); // полностью убираем слой
+    }, 600);
   };
 
   let scrollTimeout;
