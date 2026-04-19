@@ -122,6 +122,7 @@
       justify-content: center;
       align-items: center;
       background: rgba(0,0,0,0.55);
+      z-index: 10000;
     }
     
     .about-content {
@@ -1718,19 +1719,36 @@ aboutBox.onclick = () => {
 
   let scrollTimeout;
 
+  let scrollAccumulator = 0;
+  let isScrolling = false;
+  
+  const SCROLL_THRESHOLD = 80; // чувствительность (подберём)
+  
   window.addEventListener("wheel", (e) => {
     e.preventDefault();
   
-    clearTimeout(scrollTimeout);
+    if (isScrolling) return;
   
-    scrollTimeout = setTimeout(() => {
-      if (e.deltaY > 0) {
-        goNext();
-      } else {
-        goPrev();
-      }
-    }, 30); // регулируй чувствительность
+    scrollAccumulator += e.deltaY;
+  
+    if (scrollAccumulator > SCROLL_THRESHOLD) {
+      goNext();
+      lockScroll();
+    } else if (scrollAccumulator < -SCROLL_THRESHOLD) {
+      goPrev();
+      lockScroll();
+    }
+  
   }, { passive: false });
+  
+  function lockScroll() {
+    isScrolling = true;
+    scrollAccumulator = 0;
+  
+    setTimeout(() => {
+      isScrolling = false;
+    }, 200); // время "шага"
+  }
   
 </script>
 
