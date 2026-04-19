@@ -51,7 +51,6 @@
     }
     
     body.zoom-out {
-      transform: scale(0.98);
       opacity: 0;
     }
 
@@ -60,6 +59,11 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+    }
+
+    .viewer.zoom-out {
+      transform: scale(0.98);
+      opacity: 0;
     }
     
     .image-container {
@@ -375,14 +379,14 @@
 <div class="viewer">
   <div class="image-container">
     <img id="img">
-
-    <a href="#" id="prev" class="ui-button nav prev ui">←</a>
-    <a href="#" id="next" class="ui-button nav next ui">→</a>
-
-    <a href="#" id="aboutLink" class="ui-button archive about ui">about</a>
-
-    <a href="#" id="toggleSide" class="ui-button archive ui toggle">to back side</a>
   </div>
+
+  <a href="#" id="prev" class="ui-button nav prev ui">←</a>
+  <a href="#" id="next" class="ui-button nav next ui">→</a>
+
+  <a href="#" id="aboutLink" class="ui-button archive about ui">about</a>
+
+  <a href="#" id="toggleSide" class="ui-button archive ui toggle">to back side</a>
 </div>
 
 </div>
