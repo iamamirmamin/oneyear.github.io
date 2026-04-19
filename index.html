@@ -168,10 +168,12 @@
       opacity: 1;
     }
 
-    .img {
+    #img {
       user-select: none;
       -webkit-user-drag: none;
       -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      pointer-events: auto;
     }
     
     .ui {
@@ -1620,6 +1622,10 @@ const viewer = document.querySelector(".viewer");
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
+  
+imgEl.addEventListener("mousedown", (e) => {
+  e.preventDefault();
+});
 
 function getDateFromFilename(filename) {
   // убираем расширение
