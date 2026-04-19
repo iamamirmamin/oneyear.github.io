@@ -9,11 +9,6 @@
     body {
       margin: 0;
       background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
       font-family: Helvetica, Arial, sans-serif;
       transition: transform 0.4s ease, opacity 0.4s ease;
     }
@@ -30,7 +25,6 @@
       opacity: 1;
       transition: all 0.2s ease;
       display: inline-block;
-      width: auto;
     }
 
     .ui-button::after {
@@ -56,34 +50,29 @@
     }
 
     .viewer {
+      position: fixed;
+      inset: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-    }
-
-    .viewer.zoom-out {
-      transform: scale(0.98);
-      opacity: 0;
     }
     
     .image-container {
       position: relative;
-      display: inline-block;
+      width: 100vw;
+      height: 100vh;
     }
     
     .image-container img {
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: black;
       display: block;
     }
     
     .nav {
       position: absolute;
-    }
-
-    .nav:hover {
-      opacity: 1;
     }
     
     .prev {
@@ -164,26 +153,9 @@
     #transitionOverlay.active {
       opacity: 1;
     }
-
-    .date {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      opacity: 0;
-    }
-    
-    .virtual-spacer {
-      width: 100%;
-    }
   
     #toggleSide:hover {
       opacity: 1;
-    }
-
-    .ui-hidden {
-      opacity: 0 !important;
     }
 
     .img {
@@ -238,35 +210,7 @@
     body.fullscreen .fs-zone {
       display: none;
     }
-
-    @keyframes hintLeft {
-      0% { transform: translateY(-50%) translateX(0); }
-      50% { transform: translateY(-50%) translateX(0); }
-      100% { transform: translateY(-50%) translateX(0); }
-    }
     
-    @keyframes hintRight {
-      0% { transform: translateY(-50%) translateX(0); }
-      50% { transform: translateY(-50%) translateX(0); }
-      100% { transform: translateY(-50%) translateX(0); }
-    }
-    
-    @keyframes hintPulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(255,255,255,0);
-      }
-      30% {
-        box-shadow: 0 0 0 2px rgba(255,255,255,0.9);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(255,255,255,0);
-      }
-    }
-
-    .nav.hint {
-      animation: hintPulse 3s ease 3;
-    }
-
     #introVideoWrapper {
       position: fixed;
       inset: 0;
@@ -308,7 +252,6 @@
       transform: translateY(-50%);
 
       overflow: hidden;
-      pointer-events: none;
       
       color: white;
       font-family: Helvetica, Arial, sans-serif;
@@ -2074,9 +2017,6 @@ if (index === null) {
   index = getClosestIndexByDate();
 }
 
-// откуда пришли (для кнопки назад)
-const from = params.get("from");
-
 // обновление изображения
 function updateImage() {
 
@@ -2215,14 +2155,6 @@ toggleBtn.onclick = (e) => {
 const overlay = document.getElementById("transitionOverlay");
 
 const viewer = document.querySelector(".viewer");
-const archiveView = document.getElementById("archiveView");
-const grid = document.getElementById("grid");
-  
-let archiveState = {
-  scrollTop: 0,
-  initialized: false,
-  lastIndex: null
-};
 
   
 // защита
@@ -2304,11 +2236,6 @@ aboutBox.onclick = () => {
   }
   
   document.addEventListener("fullscreenchange", updateFullscreenState);
-
-  setTimeout(() => {
-    document.getElementById("prev").classList.add("hint");
-    document.getElementById("next").classList.add("hint");
-  }, 500);
 
   
   const introWrapper = document.getElementById("introVideoWrapper");
