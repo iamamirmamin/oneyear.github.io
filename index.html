@@ -9,9 +9,6 @@
     body {
       margin: 0;
       background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
       overflow: hidden;
       font-family: Helvetica, Arial, sans-serif;
@@ -55,10 +52,11 @@
     }
 
     .viewer {
+      position: fixed;
+      inset: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
 
     .viewer.zoom-out {
@@ -2316,10 +2314,7 @@ aboutBox.onclick = () => {
   // по клику скрываем видео
   introWrapper.onclick = () => {
     introWrapper.classList.add("hidden");
-  
-    setTimeout(() => {
-      introWrapper.style.display = "none";
-    }, 600);
+    introWrapper.style.display = "none";
   };
 
   let scrollTimeout;
