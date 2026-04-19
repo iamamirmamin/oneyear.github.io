@@ -1606,20 +1606,16 @@ toggleBtn.onclick = (e) => {
   // 5. ищем тот же день в новом timeline
   const newIndex = newTimeline.findIndex(item => item.date === currentDate);
 
-  // 6. если нашли — переходим, если нет — fallback
-  index = newIndex !== -1 ? newIndex : 0;
-
-  // 7. обновляем изображение
-  updateImage();
+  index = newIndex !== -1
+  ? newIndex
+  : findClosestIndexByDate(currentDate, newTimeline);
 };
   
 
 // архив
 const overlay = document.getElementById("transitionOverlay");
-
 const viewer = document.querySelector(".viewer");
 
-  
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
@@ -1628,6 +1624,25 @@ imgEl.addEventListener("mousedown", (e) => {
   e.preventDefault();
 });
 
+function findClosestPastIndex(targetDate, timeline) {
+  const target = new Date(targetDate);
+
+  let closestIndex = 0;
+  let smallestDiff = Infinity;
+
+  timeline.forEach((item, i) => {
+    const date = new Date(item.date);
+    const diff = target - date;
+
+    if (diff >= 0 && diff < smallestDiff) {
+      smallestDiff = diff;
+      closestIndex = i;
+    }
+  });
+
+  return closestIndex;
+}
+  
 function getDateFromFilename(filename) {
   // убираем расширение
   const name = filename.replace(".jpg", "");
