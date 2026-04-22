@@ -285,6 +285,59 @@
       font-size: 0.65em;
       opacity: 0.4;
     }
+
+    .timeline {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+    
+      width: clamp(200px, 60vw, 800px);
+      height: 40px;
+    
+      pointer-events: none;
+      z-index: 50;
+    }
+    
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+    
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 50%;
+    
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    
+      background: white;
+    
+      transform: translate(-50%, -50%);
+    }
+    
+    .timeline-year {
+      position: absolute;
+      top: 0;
+    
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      opacity: 0.5;
+    }
+    
+    .timeline-year.left {
+      left: 0;
+    }
+    
+    .timeline-year.right {
+      right: 0;
+    }
     
     /* движущаяся лента */
     .marquee-track {
@@ -349,6 +402,12 @@
     <a href="#" id="aboutLink" class="ui-button nav about ui">about</a>
     <a href="#" id="toggleSide" class="ui-button nav ui toggle">to back side</a>
     </div>
+    <div class="timeline">
+    <div class="timeline-line"></div>
+    <div class="timeline-dot" id="timelineDot"></div>
+    <div class="timeline-year left">2025</div>
+    <div class="timeline-year right">2026</div>
+  </div>
   </div>
 </div>
 
@@ -1523,6 +1582,7 @@ function updateImage() {
       preloaded.add(src);
     }
   }
+  updateTimeline();
 }
   
   // старт
@@ -1768,7 +1828,17 @@ aboutBox.onclick = () => {
       isScrolling = false;
     }, 200); // время "шага"
   }
+
+  function updateTimeline() {
+    const timeline = getCurrentTimeline();
+    const dot = document.getElementById("timelineDot");
   
+    if (!timeline.length) return;
+  
+    const progress = index / (timeline.length - 1);
+  
+    dot.style.left = (progress * 100) + "%";
+  }
 </script>
 
 </body>
