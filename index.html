@@ -298,7 +298,7 @@
     
     .intro-title h1 {
       margin: 0;
-      font-family: "Helvetica Black", Helvetica, sans-serif;
+      font-family: "Helvetica Black", Helvetica, Arial, sans-serif;
       font-size: clamp(72px, 18vw, 260px);
       line-height: 0.84;
       font-weight: 700;
@@ -318,6 +318,8 @@
       line-height: 1;
       letter-spacing: 0;
       opacity: 0.7;
+      text-align: left;
+      transform: translateX(0.02em);
     }
 
     .timeline {
@@ -360,9 +362,10 @@
       position: absolute;
       top: 0;
       color: white;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      opacity: 0.5;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0.65;
     }
     
     .timeline-year.left {
@@ -403,10 +406,6 @@
       transform: translateX(-0.055em);
     }
     
-    .intro-sub {
-      text-align: left;
-      transform: translateX(0.02em);
-    }
     
   </style>  
 </head>
@@ -1880,7 +1879,14 @@ aboutBox.onclick = () => {
   
     if (!timeline.length) return;
   
-    const progress = index / (timeline.length - 1);
+    const currentDate = new Date(timeline[index].date);
+    const startDate = new Date("2025-01-01");
+    const endDate = new Date("2026-12-31");
+  
+    const total = endDate - startDate;
+    const current = currentDate - startDate;
+  
+    const progress = Math.max(0, Math.min(1, current / total));
   
     dot.style.left = (progress * 100) + "%";
   }
