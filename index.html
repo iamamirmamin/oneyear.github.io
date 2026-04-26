@@ -324,12 +324,12 @@
     }
 
     .timeline {
-      position: fixed;
-      bottom: 20px;
+      position: absolute;
+      bottom: clamp(18px, 4%, 32px);
       left: 50%;
       transform: translateX(-50%);
     
-      width: clamp(200px, 60vw, 800px);
+      width: min(70%, 800px);
       height: 40px;
     
       pointer-events: none;
@@ -342,7 +342,7 @@
       left: 0;
       right: 0;
     
-      height: 1px;
+      height: 2px;
       background: rgba(255,255,255,0.3);
     }
 
@@ -363,7 +363,8 @@
       position: absolute;
       top: 0;
       color: white;
-      font-size: 11px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
       opacity: 0.65;
@@ -446,13 +447,13 @@
           fullscreen
         </div>
       </div>
+      <div class="timeline">
+        <div class="timeline-line"></div>
+        <div class="timeline-dot" id="timelineDot"></div>
+        <div class="timeline-year left">2025</div>
+        <div class="timeline-year right">2026</div>
+      </div>
     </div>
-    <div class="timeline">
-    <div class="timeline-line"></div>
-    <div class="timeline-dot" id="timelineDot"></div>
-    <div class="timeline-year left">2025</div>
-    <div class="timeline-year right">2026</div>
-  </div>
   </div>
 </div>
 
