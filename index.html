@@ -342,18 +342,29 @@
       position: absolute;
       top: 50%;
     
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #ff2a1f;
       transform: translate(-50%, -50%);
      
       cursor: grab;
       pointer-events: auto;
+      transition: background 0.2s ease;
     }
 
+    .timeline:hover .timeline-dot,
+    .timeline-dot:hover,
+    .timeline-dot:active {
+      background: white;
+    }
+    
     .timeline-dot:active {
       cursor: grabbing;
+    }
+    
+    .timeline.is-dragging .timeline-dot {
+      background: white;
     }
     
     .timeline-year {
@@ -1965,6 +1976,7 @@ aboutBox.onclick = () => {
     e.stopPropagation();
   
     isDraggingTimeline = true;
+    timelineEl.classList.add("is-dragging");
     moveTimelineToEvent(e);
   });
   
@@ -1979,6 +1991,7 @@ aboutBox.onclick = () => {
     if (!isDraggingTimeline) return;
   
     isDraggingTimeline = false;
+    timelineEl.classList.remove("is-dragging");
   
     if (pendingTimelineIndex !== null) {
       index = pendingTimelineIndex;
