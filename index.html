@@ -323,7 +323,8 @@
       width: min(70%, 800px);
       height: 40px;
     
-      pointer-events: none;
+      pointer-events: auto;
+      cursor: pointer;
       z-index: 50;
     }
     
@@ -346,6 +347,13 @@
       border-radius: 50%;
       background: #ff2a1f;
       transform: translate(-50%, -50%);
+     
+      cursor: grab;
+      pointer-events: auto;
+    }
+
+    .timeline-dot:active {
+      cursor: grabbing;
     }
     
     .timeline-year {
@@ -1881,6 +1889,69 @@ aboutBox.onclick = () => {
   
     dot.style.left = (clampedProgress * 100) + "%";
   }
+
+  
+  const timelineEl = document.querySelector(".timeline");
+  const timelineDot = document.getElementById("timelineDot");
+  
+  let isDraggingTimeline = false;
+  
+  function getTimelineProgressFromEvent(e) {
+    const rect = timelineEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    return Math.max(0, Math.min(1, x / rect.width));
+  }
+  
+  function findClosestIndexByProgress(progress) {
+    const timeline = getCurrentTimeline();
+  
+    if (!timeline.length) return 0;
+  
+    const targetTime =
+      timelineStartDate.getTime() +
+      progress * (timelineEndDate.getTime() - timelineStartDate.getTime());
+  
+    let closestIndex = 0;
+    let smallestDiff = Infinity;
+  
+    timeline.forEach((item, i) => {
+      const itemTime = parseDateOnly(item.date).getTime();
+      const diff = Math.abs(itemTime - targetTime);
+  
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = i;
+      }
+    });
+  
+    return closestIndex;
+  }
+  
+  function moveTimelineToEvent(e) {
+    const progress = getTimelineProgressFromEvent(e);
+    index = findClosestIndexByProgress(progress);
+    updateImage();
+  }
+  
+  timelineEl.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  
+    isDraggingTimeline = true;
+    moveTimelineToEvent(e);
+  });
+  
+  window.addEventListener("mousemove", (e) => {
+    if (!isDraggingTimeline) return;
+  
+    e.preventDefault();
+    moveTimelineToEvent(e);
+  });
+  
+  window.addEventListener("mouseup", () => {
+    isDraggingTimeline = false;
+  });
+
 </script>
 
 </body>
