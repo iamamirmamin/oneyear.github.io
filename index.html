@@ -35,11 +35,6 @@
       color: white;
       opacity: 1;
     }
-    
-    body.zoom-out {
-      transform: scale(0.98);
-      opacity: 0;
-    }
 
     .viewer {
       position: fixed;
@@ -99,11 +94,6 @@
       right: clamp(8px, 2%, 24px);
     }
     
-    .prev::after,
-    .next::after {
-      display: none;
-    }
-    
     #aboutBox {
       position: fixed;
       top: 0;
@@ -126,11 +116,6 @@
       line-height: 1.5;
     }
     
-    .about-open #month, 
-    .about-open #noDataText {
-      opacity: 0 !important;
-    }
-
     .about-content a {
       color: rgba(255,255,255,0.8);
       text-decoration: none;
@@ -141,20 +126,6 @@
     .about-content a:hover {
       color: white;
       border-bottom: 1px solid white;
-    }
-
-    #transitionOverlay {
-      position: fixed;
-      inset: 0;
-      background: black;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 9999;
-    }
-    
-    #transitionOverlay.active {
-      opacity: 1;
     }
   
     #toggleSide:hover {
@@ -471,8 +442,6 @@
       amir mamin 2026<br>
     </p>
   </div>
-</div>
-<div id="transitionOverlay">
 </div>
 
 <script>
@@ -1579,13 +1548,6 @@ const backimages = [
   function getCurrentTimeline() {
     return currentMode === "front" ? frontTimeline : backTimeline;
   }
-
-  
-  function findIndexByDate(filename, targetArray) {
-    const dateStr = filename.split("_")[0];
-    return targetArray.findIndex(f => f.startsWith(dateStr));
-  }
-
   
   let currentMode = "front"; // front | back
 
@@ -1656,9 +1618,6 @@ function updateImage() {
   requestAnimationFrame(() => {
     imgEl.style.opacity = 1;
   });
-    
-  // текст даты
-  const dateStr = item.date;
 
   // расширенный preload вокруг текущего индекса
   const basePath = currentMode === "front" ? "images2/" : "backimages/";
@@ -1768,11 +1727,6 @@ toggleBtn.onclick = (e) => {
 
   updateImage();
 };
-  
-
-// архив
-const overlay = document.getElementById("transitionOverlay");
-const viewer = document.querySelector(".viewer");
 
 // защита
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -1801,26 +1755,6 @@ function findClosestPastIndex(targetDate, timeline) {
   return closestIndex;
 }
   
-function getDateFromFilename(filename) {
-  // убираем расширение
-  const name = filename.replace(".jpg", "");
-
-  // разбиваем по "_"
-  const datePart = name.split("_")[0];
-
-  return datePart; // "2025-01-12"
-}
-  
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-
-  if (isNaN(date)) return ""; // защита от ошибки
-
-  const month = date.toLocaleString("en", { month: "long" });
-  const day = date.getDate();
-
-  return (month + " " + day);
-}
 
 const aboutBox = document.getElementById("aboutBox");
 
@@ -1881,7 +1815,6 @@ aboutBox.onclick = () => {
 
   
   const introWrapper = document.getElementById("introVideoWrapper");
-  const introVideo = document.getElementById("introVideo");
   
   // по клику скрываем видео
   introWrapper.onclick = () => {
@@ -1891,8 +1824,6 @@ aboutBox.onclick = () => {
       introWrapper.remove(); // полностью убираем слой
     }, 600);
   };
-
-  let scrollTimeout;
 
   let scrollAccumulator = 0;
   let isScrolling = false;
@@ -2036,6 +1967,7 @@ aboutBox.onclick = () => {
   
     if (pendingTimelineIndex !== null) {
       index = pendingTimelineIndex;
+      clearTimeout(timelineDragTimeout);
       updateImage();
     }
   });
