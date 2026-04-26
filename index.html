@@ -185,11 +185,11 @@
 
     .fs-zone {
       position: absolute;
-      top: 0;
+      top: clamp(32px, 6%, 56px);
       left: 50%;
     
       width: clamp(160px, 20vw, 260px);
-      height: 80px;
+      height: 40px;
       transform: translateX(-50%);
     
       display: flex;
@@ -201,7 +201,7 @@
     }
     
     .fs-hint {
-      margin-top: clamp(16px, 4%, 40px);
+      margin-top: 0;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
