@@ -1525,6 +1525,16 @@ const backimages = [
 
   const frontTimeline = buildTimeline(images);
   const backTimeline = buildTimeline(backimages);
+
+  const allDates = [...frontTimeline, ...backTimeline].map(item => item.date);
+
+  const timelineStartDate = parseDateOnly(allDates.sort()[0]);
+  const timelineEndDate = parseDateOnly(allDates.sort()[allDates.length - 1]);
+  
+  function parseDateOnly(dateStr) {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
   
   function getCurrentTimeline() {
     return currentMode === "front" ? frontTimeline : backTimeline;
@@ -1879,16 +1889,15 @@ aboutBox.onclick = () => {
   
     if (!timeline.length) return;
   
-    const currentDate = new Date(timeline[index].date);
-    const startDate = new Date("2025-01-01");
-    const endDate = new Date("2026-12-31");
+    const currentDate = parseDateOnly(timeline[index].date);
   
-    const total = endDate - startDate;
-    const current = currentDate - startDate;
+    const total = timelineEndDate - timelineStartDate;
+    const current = currentDate - timelineStartDate;
   
-    const progress = Math.max(0, Math.min(1, current / total));
+    const progress = total === 0 ? 0 : current / total;
+    const clampedProgress = Math.max(0, Math.min(1, progress));
   
-    dot.style.left = (progress * 100) + "%";
+    dot.style.left = (clampedProgress * 100) + "%";
   }
 </script>
 
