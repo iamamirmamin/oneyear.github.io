@@ -243,24 +243,30 @@
       opacity: 0;
       pointer-events: none;
     }
+
+
+    .intro-stage {
+      position: relative;
+      display: inline-block;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
     
-    #introVideo {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: cover;
+     #introVideo {
+      display: block;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       cursor: pointer;
     }
 
     .intro-overlay {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.35),
-          rgba(0,0,0,0.15) 45%,
-          rgba(0,0,0,0.55)
-        );
+      background: rgba(0, 0, 0, 0.45);
       pointer-events: none;
     }
     
@@ -401,18 +407,20 @@
 </div>
 
 <div id="introVideoWrapper">
-  <video id="introVideo" autoplay muted loop playsinline>
-    <source src="images2/Timeline 4.mp4" type="video/mp4">
-  </video>
-  <div class="intro-overlay"></div>
-
-  <div class="intro-title">
-    <div class="intro-kicker">street camera archive / saint petersburg / 2025-2026</div>
-    <h1>
-      <span>ждите</span>
-      <span>идите</span>
-    </h1>
-    <div class="intro-sub">wait / go</div>
+  <div class="intro-stage">
+    <video id="introVideo" autoplay muted loop playsinline>
+      <source src="images2/Timeline 4.mp4" type="video/mp4">
+    </video>
+    <div class="intro-overlay"></div>
+  
+    <div class="intro-title">
+      <div class="intro-kicker">street camera archive / saint petersburg / 2025-2026</div>
+      <h1>
+        <span>ждите</span>
+        <span>идите</span>
+      </h1>
+      <div class="intro-sub">wait / go</div>
+    </div>
   </div>
 </div>
   
