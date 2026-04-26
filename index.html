@@ -28,20 +28,12 @@
     }
 
     .ui-button::after {
-      content: "";
-      display: block;
-      width: 0;
-      height: 1px;
-      background: white;
-      transition: width 0.2s ease;
+      display: none;
     }
     
     .ui-button:hover {
+      color: white;
       opacity: 1;
-    }
-
-    .ui-button:hover::after {
-      width: 100%;
     }
     
     body.zoom-out {
@@ -245,14 +237,12 @@
       pointer-events: none;
     }
 
-
     .intro-stage {
       position: relative;
       display: inline-block;
       max-width: 100vw;
       max-height: 100vh;
     }
-
     
      #introVideo {
       display: block;
@@ -283,7 +273,7 @@
       padding: clamp(18px, 4vw, 56px);
       padding-left: calc(clamp(18px, 4vw, 56px) + 10px);
     
-      color: red;
+      color: #ff2a1f;
       font-family: Helvetica, Arial, sans-serif;
       pointer-events: none;
     }
