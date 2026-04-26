@@ -184,26 +184,27 @@
     
 
     .fs-zone {
-      position: fixed;
-      bottom: 0;
+      position: absolute;
+      top: 0;
       left: 50%;
+    
       width: clamp(160px, 20vw, 260px);
-      height: 80px; /* зона активации */
+      height: 80px;
       transform: translateX(-50%);
-
+    
       display: flex;
       justify-content: center;
-      align-items: flex-end; 
+      align-items: flex-start;
+    
       pointer-events: auto;
       z-index: 9999;
     }
     
     .fs-hint {
-      margin-bottom: clamp(16px, 4%, 40px);
+      margin-top: clamp(16px, 4%, 40px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      align-self: center;
     }
     
     .fs-zone:hover .fs-hint {
@@ -412,12 +413,6 @@
   
 <body>
 
-<div id="fsZone" class="fs-zone">
-  <div id="fsHint" class="fs-hint ui-button ui">
-    fullscreen
-  </div>
-</div>
-
 <div id="introVideoWrapper">
   <div class="intro-stage">
     <video id="introVideo" autoplay muted loop playsinline>
@@ -445,6 +440,12 @@
     <a href="#" id="next" class="ui-button nav next ui">→</a>
     <a href="#" id="aboutLink" class="ui-button nav about ui">about</a>
     <a href="#" id="toggleSide" class="ui-button nav ui toggle">to back side</a>
+
+      <div id="fsZone" class="fs-zone">
+        <div id="fsHint" class="fs-hint ui-button ui">
+          fullscreen
+        </div>
+      </div>
     </div>
     <div class="timeline">
     <div class="timeline-line"></div>
@@ -1799,7 +1800,9 @@ aboutBox.onclick = () => {
 
   const fsHint = document.getElementById("fsHint");
 
-  fsHint.onclick = () => {
+  fsHint.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     document.documentElement.requestFullscreen();
   };
 
