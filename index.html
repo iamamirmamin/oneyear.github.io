@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amir Mamin</title>
+
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #111;
+      --muted: rgba(17, 17, 17, 0.55);
+      --line: rgba(17, 17, 17, 0.18);
+      --accent: #ff2a1f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    .page {
+      width: min(100%, 1120px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 56px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(48px, 9vh, 120px);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    .name {
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .nav {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .intro {
+      max-width: 780px;
+      align-self: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 8vw, 104px);
+      line-height: 0.95;
+      font-family: "Arial Black", Helvetica, Arial, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .intro p {
+      max-width: 560px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.35;
+    }
+
+    .projects {
+      border-top: 1px solid var(--line);
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: minmax(72px, 0.18fr) 1fr auto;
+      gap: clamp(16px, 3vw, 40px);
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .project-year,
+    .project-meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project-title {
+      font-size: clamp(22px, 3vw, 38px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    @media (max-width: 680px) {
+      .top,
+      .footer {
+        display: block;
+      }
+
+      .nav,
+      .footer div + div {
+        margin-top: 10px;
+      }
+
+      .project {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .project-meta {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="top">
+      <div class="name">Amir Mamin</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="mailto:hello@example.com">email</a>
+        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">instagram</a>
+      </nav>
+    </header>
+
+    <section class="intro" aria-label="Introduction">
+      <h1>works<br>and observations</h1>
+      <p>
+        A small index of projects, images, archives, and things noticed over time.
+      </p>
+    </section>
+
+    <section class="projects" aria-label="Projects">
+      <a class="project" href="wait-go/">
+        <span class="project-year">2026</span>
+        <span class="project-title">wait / go</span>
+        <span class="project-meta">street camera archive</span>
+      </a>
+
+      <a class="project" href="concrete-tbilisi/">
+        <span class="project-year">2025</span>
+        <span class="project-title">concrete tbilisi</span>
+        <span class="project-meta">photo / research</span>
+      </a>
+
+      <a class="project" href="project-three/">
+        <span class="project-year">2024</span>
+        <span class="project-title">another project</span>
+        <span class="project-meta">research / images</span>
+      </a>
+    </section>
+
+    <footer class="footer">
+      <div>Saint Petersburg / elsewhere</div>
+      <div>© 2026</div>
+    </footer>
+  </main>
+</body>
+</html>
