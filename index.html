@@ -1927,11 +1927,38 @@ aboutBox.onclick = () => {
     return closestIndex;
   }
   
-  function moveTimelineToEvent(e) {
+  let timelineDragTimeout = null;
+  let pendingTimelineIndex = null;
+  
+  function moveTimelineToEvent(e, immediate = false) {
     const progress = getTimelineProgressFromEvent(e);
-    index = findClosestIndexByProgress(progress);
-    updateImage();
+    const newIndex = findClosestIndexByProgress(progress);
+  
+    pendingTimelineIndex = newIndex;
+  
+    // двигаем точку сразу, чтобы интерфейс чувствовался живым
+    const timeline = getCurrentTimeline();
+    const currentDate = parseDateOnly(timeline[newIndex].date);
+    const total = timelineEndDate - timelineStartDate;
+    const current = currentDate - timelineStartDate;
+    const clampedProgress = Math.max(0, Math.min(1, total === 0 ? 0 : current / total));
+  
+    timelineDot.style.left = (clampedProgress * 100) + "%";
+  
+    clearTimeout(timelineDragTimeout);
+  
+    if (immediate) {
+      index = pendingTimelineIndex;
+      updateImage();
+      return;
+    }
+  
+    timelineDragTimeout = setTimeout(() => {
+      index = pendingTimelineIndex;
+      updateImage();
+    }, 120);
   }
+
   
   timelineEl.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -1949,7 +1976,14 @@ aboutBox.onclick = () => {
   });
   
   window.addEventListener("mouseup", () => {
+    if (!isDraggingTimeline) return;
+  
     isDraggingTimeline = false;
+  
+    if (pendingTimelineIndex !== null) {
+      index = pendingTimelineIndex;
+      updateImage();
+    }
   });
 
 </script>
