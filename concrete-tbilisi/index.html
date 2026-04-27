@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>concrete tbilisi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #fff;
-      --text: #111;
-      --muted: rgba(17, 17, 17, 0.48);
+      --bg: #efede7;
+      --text: #ff2a1f;
+      --muted: #ff2a1f;
       --line: rgba(17, 17, 17, 0.16);
       --accent: #ff2a1f;
     }
@@ -24,7 +27,7 @@
       overflow: hidden;
       background: var(--bg);
       color: var(--text);
-      font-family: Helvetica, Arial, sans-serif;
+      font-family: "Noto Serif Georgian", Georgia, serif;
     }
 
     a {
@@ -57,8 +60,8 @@
 
     .top,
     .bottom {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: baseline;
       gap: 24px;
       font-size: clamp(12px, 1.2vw, 15px);
@@ -69,7 +72,14 @@
 
     .title {
       color: var(--text);
-      font-weight: 700;
+      font-weight: 600;
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .top > :last-child,
+    .bottom > :last-child {
+      justify-self: end;
     }
 
     .book {
@@ -217,7 +227,7 @@
   <main class="site">
     <header class="top">
       <a href="../">Amir Mamin</a>
-      <div class="title">concrete tbilisi</div>
+      <div class="title">Concrete Tbilisi</div>
       <div></div>
     </header>
 
