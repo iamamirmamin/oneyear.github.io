@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>concrete tbilisi</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #efede7;
+      --bg: #eeeeec;
       --text: #ff2a1f;
       --muted: #ff2a1f;
       --line: rgba(17, 17, 17, 0.16);
@@ -27,7 +24,7 @@
       overflow: hidden;
       background: var(--bg);
       color: var(--text);
-      font-family: "Noto Serif Georgian", Georgia, serif;
+      font-family: Helvetica, Arial, sans-serif;
     }
 
     a {
@@ -72,7 +69,7 @@
 
     .title {
       color: var(--text);
-      font-weight: 600;
+      font-weight: 700;
       text-align: center;
       text-transform: capitalize;
     }
@@ -226,7 +223,7 @@
 <body>
   <main class="site">
     <header class="top">
-      <a href="../">Amir Mamin</a>
+      <a href="../">back</a>
       <div class="title">Concrete Tbilisi</div>
       <div></div>
     </header>
@@ -245,6 +242,7 @@
     </section>
 
     <footer class="bottom">
+      <div></div>
       <div></div>
       <div class="controls">
         <button id="prevText">prev</button>
@@ -459,6 +457,35 @@
       if (e.key === "ArrowRight") nextPage();
       if (e.key === "ArrowLeft") prevPage();
     });
+
+    let scrollAccumulator = 0;
+    let isScrolling = false;
+    const SCROLL_THRESHOLD = 80;
+
+    window.addEventListener("wheel", (e) => {
+      e.preventDefault();
+
+      if (isScrolling) return;
+
+      scrollAccumulator += e.deltaY;
+
+      if (scrollAccumulator > SCROLL_THRESHOLD) {
+        nextPage();
+        lockScroll();
+      } else if (scrollAccumulator < -SCROLL_THRESHOLD) {
+        prevPage();
+        lockScroll();
+      }
+    }, { passive: false });
+
+    function lockScroll() {
+      isScrolling = true;
+      scrollAccumulator = 0;
+
+      setTimeout(() => {
+        isScrolling = false;
+      }, 260);
+    }
 
     window.addEventListener("resize", updateBook);
     updateBook();
