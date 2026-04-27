@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>concrete tbilisi</title>
+
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #111;
+      --muted: rgba(17, 17, 17, 0.48);
+      --line: rgba(17, 17, 17, 0.16);
+      --accent: #ff2a1f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:hover,
+    button:hover {
+      color: var(--accent);
+    }
+
+    button {
+      color: inherit;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .site {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(16px, 3vw, 40px);
+      gap: 18px;
+    }
+
+    .top,
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      font-size: clamp(12px, 1.2vw, 15px);
+      line-height: 1;
+      color: var(--muted);
+      z-index: 20;
+    }
+
+    .title {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .book {
+      position: relative;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spread {
+      width: min(100%, 1280px);
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(14px, 2.5vw, 36px);
+      align-items: center;
+    }
+
+    .page {
+      position: relative;
+      height: 100%;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .empty {
+      max-width: 360px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .hit {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 10;
+    }
+
+    .hit.prev {
+      left: 0;
+      cursor: w-resize;
+    }
+
+    .hit.next {
+      right: 0;
+      cursor: e-resize;
+    }
+
+    .controls {
+      display: flex;
+      gap: 16px;
+      color: var(--text);
+    }
+
+    .counter {
+      min-width: 72px;
+      text-align: right;
+      color: var(--text);
+    }
+
+    .meta {
+      max-width: 520px;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        overflow: hidden;
+      }
+
+      .site {
+        padding: 14px;
+      }
+
+      .spread {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .page.right {
+        display: none;
+      }
+
+      .bottom {
+        align-items: flex-end;
+      }
+
+      .meta {
+        max-width: 220px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="site">
+    <header class="top">
+      <a href="../">Amir Mamin</a>
+      <div class="title">concrete tbilisi</div>
+      <div>2025</div>
+    </header>
+
+    <section class="book" aria-label="Concrete Tbilisi photobook viewer">
+      <button class="hit prev" id="prev" aria-label="Previous spread"></button>
+      <div class="spread" id="spread">
+        <figure class="page left">
+          <img id="leftPage" alt="">
+        </figure>
+        <figure class="page right">
+          <img id="rightPage" alt="">
+        </figure>
+      </div>
+      <button class="hit next" id="next" aria-label="Next spread"></button>
+    </section>
+
+    <footer class="bottom">
+      <div class="meta">photo / research</div>
+      <div class="controls">
+        <button id="prevText">prev</button>
+        <button id="nextText">next</button>
+        <div class="counter" id="counter">00 / 00</div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const photos = [
+      "images/01.jpg",
+      "images/02.jpg",
+      "images/03.jpg",
+      "images/04.jpg",
+      "images/05.jpg",
+      "images/06.jpg"
+    ];
+
+    const leftPage = document.getElementById("leftPage");
+    const rightPage = document.getElementById("rightPage");
+    const counter = document.getElementById("counter");
+    const spread = document.getElementById("spread");
+
+    let index = 0;
+
+    function isSinglePage() {
+      return window.matchMedia("(max-width: 760px)").matches;
+    }
+
+    function clampIndex(value) {
+      return Math.max(0, Math.min(photos.length - 1, value));
+    }
+
+    function updateBook() {
+      if (!photos.length) {
+        spread.innerHTML = '<div class="empty">Add photographs to the images folder and list them in the photos array.</div>';
+        counter.textContent = "00 / 00";
+        return;
+      }
+
+      index = clampIndex(index);
+
+      if (isSinglePage()) {
+        leftPage.src = photos[index];
+        leftPage.alt = "Concrete Tbilisi photograph " + String(index + 1);
+        rightPage.removeAttribute("src");
+        counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
+        preloadAround(index);
+        return;
+      }
+
+      const leftIndex = index % 2 === 0 ? index : index - 1;
+      const rightIndex = leftIndex + 1;
+
+      leftPage.src = photos[leftIndex];
+      leftPage.alt = "Concrete Tbilisi photograph " + String(leftIndex + 1);
+
+      if (photos[rightIndex]) {
+        rightPage.src = photos[rightIndex];
+        rightPage.alt = "Concrete Tbilisi photograph " + String(rightIndex + 1);
+        rightPage.style.visibility = "visible";
+      } else {
+        rightPage.removeAttribute("src");
+        rightPage.alt = "";
+        rightPage.style.visibility = "hidden";
+      }
+
+      index = leftIndex;
+      counter.textContent = String(leftIndex + 1).padStart(2, "0") + "-" + String(Math.min(rightIndex + 1, photos.length)).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
+      preloadAround(leftIndex);
+    }
+
+    function preloadAround(baseIndex) {
+      for (let i = baseIndex - 2; i <= baseIndex + 4; i++) {
+        if (!photos[i]) continue;
+        const img = new Image();
+        img.src = photos[i];
+      }
+    }
+
+    function nextPage() {
+      index += isSinglePage() ? 1 : 2;
+      if (index >= photos.length) index = 0;
+      updateBook();
+    }
+
+    function prevPage() {
+      index -= isSinglePage() ? 1 : 2;
+      if (index < 0) index = Math.max(0, photos.length - (isSinglePage() ? 1 : 2));
+      updateBook();
+    }
+
+    document.getElementById("next").onclick = nextPage;
+    document.getElementById("prev").onclick = prevPage;
+    document.getElementById("nextText").onclick = nextPage;
+    document.getElementById("prevText").onclick = prevPage;
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") nextPage();
+      if (e.key === "ArrowLeft") prevPage();
+    });
+
+    window.addEventListener("resize", updateBook);
+    updateBook();
+  </script>
+</body>
+</html>
