@@ -81,8 +81,8 @@
     }
 
     .spread {
-      width: min(85vw, 1360px);
-      height: min(85vh, 900px);
+      width: min(70vw, 1120px);
+      height: min(70vh, 760px);
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
@@ -96,6 +96,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .page.left {
+      justify-content: flex-end;
+    }
+
+    .page.right {
+      justify-content: flex-start;
+    }
+
+    .spread.is-cover {
+      grid-template-columns: 1fr;
+    }
+
+    .spread.is-cover .page.left {
+      justify-content: center;
+    }
+
+    .spread.is-cover .page.right {
+      display: none;
     }
 
     .page img {
@@ -161,10 +181,14 @@
       }
 
       .spread {
-        width: min(92vw, 560px);
-        height: 82vh;
+        width: min(88vw, 520px);
+        height: 70vh;
         grid-template-columns: 1fr;
         gap: 0;
+      }
+
+      .page.left {
+        justify-content: center;
       }
 
       .page.right {
@@ -338,6 +362,7 @@
       index = clampIndex(index);
 
       if (isSinglePage()) {
+        spread.classList.remove("is-cover");
         leftPage.src = photos[index];
         leftPage.alt = "Concrete Tbilisi photograph " + String(index + 1);
         rightPage.removeAttribute("src");
@@ -346,7 +371,20 @@
         return;
       }
 
-      const leftIndex = index % 2 === 0 ? index : index - 1;
+      if (index === 0) {
+        spread.classList.add("is-cover");
+        leftPage.src = photos[0];
+        leftPage.alt = "Concrete Tbilisi cover";
+        rightPage.removeAttribute("src");
+        rightPage.alt = "";
+        counter.textContent = "01 / " + String(photos.length).padStart(2, "0");
+        preloadAround(0);
+        return;
+      }
+
+      spread.classList.remove("is-cover");
+
+      const leftIndex = index % 2 === 1 ? index : index - 1;
       const rightIndex = leftIndex + 1;
 
       leftPage.src = photos[leftIndex];
@@ -376,14 +414,22 @@
     }
 
     function nextPage() {
-      index += isSinglePage() ? 1 : 2;
+      if (!isSinglePage() && index === 0) {
+        index = 1;
+      } else {
+        index += isSinglePage() ? 1 : 2;
+      }
       if (index >= photos.length) index = 0;
       updateBook();
     }
 
     function prevPage() {
       index -= isSinglePage() ? 1 : 2;
-      if (index < 0) index = Math.max(0, photos.length - (isSinglePage() ? 1 : 2));
+      if (!isSinglePage() && index < 1) {
+        index = 0;
+      } else if (index < 0) {
+        index = photos.length - 1;
+      }
       updateBook();
     }
 
