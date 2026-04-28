@@ -7,7 +7,7 @@
 
   <style>
     :root {
-      --bg: #eeeeec;
+      --bg: #000;
       --text: #ff2a1f;
       --muted: #ff2a1f;
       --line: rgba(17, 17, 17, 0.16);
@@ -25,18 +25,6 @@
       background: var(--bg);
       color: var(--text);
       font-family: Helvetica, Arial, sans-serif;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -40px;
-      background:
-        linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
-        url("images/background.png") center / cover no-repeat;
-      filter: blur(28px);
-      transform: scale(1.04);
-      z-index: -1;
     }
 
     a {
@@ -100,13 +88,87 @@
     }
 
     .spread {
-      width: min(70vw, calc(70vh * 1786 / 1263));
+      position: relative;
+      width: min(86vw, calc(78vh * 1786 / 1263));
       aspect-ratio: 1786 / 1263;
       height: auto;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
       align-items: center;
+      background: #f2f2f0;
+      border-radius: 2px 3px 4px 2px;
+      clip-path: polygon(
+        0.15% 0.2%,
+        99.85% 0%,
+        99.95% 99.55%,
+        0.1% 99.9%
+      );
+      box-shadow:
+        -10px 4px 18px rgba(0, 0, 0, 0.18),
+        12px 8px 24px rgba(0, 0, 0, 0.16),
+        0 2px 2px rgba(255, 255, 255, 0.12),
+        0 28px 80px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+      transform:
+        perspective(1600px)
+        rotateX(0.7deg)
+        rotateY(-0.35deg)
+        rotateZ(-0.12deg);
+      transform-origin: center center;
+    }
+
+    .spread::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      background:
+        radial-gradient(
+          ellipse 90px 78% at 49.4% 46%,
+          rgba(0, 0, 0, 0.15) 0%,
+          rgba(0, 0, 0, 0.10) 34%,
+          rgba(0, 0, 0, 0.04) 66%,
+          rgba(0, 0, 0, 0) 100%
+        ),
+        radial-gradient(
+          ellipse 58px 66% at 50.3% 58%,
+          rgba(255, 255, 255, 0.16) 0%,
+          rgba(255, 255, 255, 0.08) 44%,
+          rgba(255, 255, 255, 0) 100%
+        ),
+        linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0) 43.8%,
+          rgba(0, 0, 0, 0.08) 48.5%,
+          rgba(0, 0, 0, 0.035) 49.8%,
+          rgba(0, 0, 0, 0) 51.4%,
+          rgba(0, 0, 0, 0) 100%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(0, 0, 0, 0) 18%,
+          rgba(0, 0, 0, 0.05) 52%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
+      mix-blend-mode: multiply;
+      opacity: 0.95;
+    }
+
+    .spread::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.18);
+      pointer-events: none;
+      z-index: 5;
     }
 
     .page {
@@ -117,6 +179,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #f2f2f0;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .page.left::before {
+      background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 16%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0) 8%);
+    }
+
+    .page.right::before {
+      background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0) 18%),
+        linear-gradient(to left, rgba(0, 0, 0, 0.045), rgba(0, 0, 0, 0) 8%);
     }
 
     .page.left {
@@ -132,12 +216,12 @@
     }
 
     .spread.is-cover .page.left {
-      grid-column: 1 / -1;
-      justify-content: center;
+      grid-column: 1;
+      justify-content: flex-end;
     }
 
     .spread.is-cover .page.left img {
-      width: 50%;
+      width: 100%;
       height: 100%;
     }
 
@@ -149,9 +233,19 @@
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: fill;
       user-select: none;
       -webkit-user-drag: none;
+    }
+
+    .page.left img {
+      transform: perspective(1200px) rotateY(0.35deg);
+      transform-origin: right center;
+    }
+
+    .page.right img {
+      transform: perspective(1200px) rotateY(-0.25deg);
+      transform-origin: left center;
     }
 
     .empty {
@@ -206,11 +300,16 @@
       }
 
       .spread {
-        width: min(88vw, calc(70vh * 893 / 1263));
+        width: min(88vw, calc(72vh * 893 / 1263));
         aspect-ratio: 893 / 1263;
         height: auto;
         grid-template-columns: 1fr;
         gap: 0;
+      }
+
+      .spread::before,
+      .spread::after {
+        display: none;
       }
 
       .page.left {
