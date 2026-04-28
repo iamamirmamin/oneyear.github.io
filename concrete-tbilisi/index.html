@@ -7,7 +7,7 @@
 
   <style>
     :root {
-      --bg: #000;
+      --bg: #566368;
       --text: #ff2a1f;
       --muted: #ff2a1f;
       --line: rgba(17, 17, 17, 0.16);
@@ -71,7 +71,6 @@
       color: var(--text);
       font-weight: 400;
       text-align: right;
-      text-transform: uppercase;
     }
 
     .top > :last-child,
@@ -351,7 +350,7 @@
     <header class="top">
       <a href="../">back</a>
       <div></div>
-      <div class="title">Concrete Tbilisi</div>
+      <div class="title">concrete tbilisi</div>
     </header>
 
     <section class="book" aria-label="Concrete Tbilisi photobook viewer">
@@ -484,6 +483,7 @@
     const spread = document.getElementById("spread");
 
     let index = 0;
+    const preloadedPhotos = new Set();
 
     function isSinglePage() {
       return window.matchMedia("(max-width: 760px)").matches;
@@ -547,10 +547,18 @@
     }
 
     function preloadAround(baseIndex) {
-      for (let i = baseIndex - 2; i <= baseIndex + 4; i++) {
-        if (!photos[i]) continue;
+      const preloadRange = 8;
+
+      for (let i = baseIndex - preloadRange; i <= baseIndex + preloadRange; i++) {
+        const photoIndex = (i + photos.length) % photos.length;
+        const src = photos[photoIndex];
+
+        if (!src || preloadedPhotos.has(src)) continue;
+
         const img = new Image();
-        img.src = photos[i];
+        img.decoding = "async";
+        img.src = src;
+        preloadedPhotos.add(src);
       }
     }
 
@@ -565,9 +573,13 @@
     }
 
     function prevPage() {
-      index -= isSinglePage() ? 1 : 2;
-      if (index < 0) {
-        index = photos.length - 1;
+      if (!isSinglePage() && index === 1) {
+        index = 0;
+      } else {
+        index -= isSinglePage() ? 1 : 2;
+        if (index < 0) {
+          index = photos.length - 1;
+        }
       }
       updateBook();
     }
