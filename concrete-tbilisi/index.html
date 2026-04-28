@@ -106,6 +106,7 @@
       aspect-ratio: 1786 / 1263;
       height: auto;
       display: grid;
+      --progress: 0; /* 0 → начало, 1 → конец */
       grid-template-columns: 1fr 1fr;
       gap: 0;
       align-items: center;
@@ -181,9 +182,9 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 12px;
       pointer-events: none;
       z-index: 0;
+      transition: width 0.25s ease;
       background:
         linear-gradient(
           to right,
@@ -197,6 +198,7 @@
     }
 
     .page-stack.left-stack {
+      width: calc(12px * (1 - var(--progress)));
       right: 100%;
       clip-path: polygon(
         100% 0,
@@ -208,6 +210,7 @@
     }
 
     .page-stack.right-stack {
+      width: calc(12px * var(--progress));
       left: 100%;
       clip-path: polygon(
         0 0,
@@ -570,6 +573,9 @@
     }
 
     function updateBook() {
+      const progress = index / (photos.length - 1);
+      spread.style.setProperty("--progress", progress);
+      
       if (!photos.length) {
         spread.innerHTML = '<div class="empty">Add photographs to the images folder and list them in the photos array.</div>';
         counter.textContent = "00 / 00";
