@@ -108,6 +108,7 @@
       height: auto;
       display: grid;
       --progress: 0; /* 0 → начало, 1 → конец */
+      --shift: 0px;
       grid-template-columns: 1fr 1fr;
       gap: 0;
       align-items: center;
@@ -123,6 +124,7 @@
         perspective(1600px)
         rotateX(0.7deg)
         rotateY(-0.35deg);
+        translateX(var(--shift));
       transform-origin: center center;
     }
 
@@ -423,12 +425,14 @@
 
     .spread.is-front-cover {
       transform: translateX(25%);
+      --shift: 25%;
       --progress: 0;
     }
     
     /* BACK COVER — книга слева */
     .spread.is-back-cover {
       transform: translateX(-25%);
+      --shift: -25%;
       --progress: 1;
     }
     
