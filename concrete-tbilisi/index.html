@@ -218,10 +218,6 @@
       box-shadow: 10px 0 18px rgba(0, 0, 0, 0.24);
     }
 
-    .spread.is-cover .page-stack {
-      display: none;
-    }
-
     .page {
       position: relative;
       height: 100%;
@@ -397,6 +393,23 @@
         max-width: 220px;
       }
     }
+    /* FRONT COVER — показываем только правую "бумагу" */
+    .spread.is-front-cover .left-stack {
+      display: none;
+    }
+    
+    .spread.is-front-cover .right-stack {
+      display: block;
+    }
+    
+    /* BACK COVER — показываем только левую */
+    .spread.is-back-cover .right-stack {
+      display: none;
+    }
+    
+    .spread.is-back-cover .left-stack {
+      display: block;
+    }
   </style>
 </head>
 
@@ -569,18 +582,45 @@
         return;
       }
 
-      if (index === 0 || index === photos.length - 1) {
-        spread.classList.add("is-cover");
+      if (index === 0) {
+        spread.classList.remove("is-back-cover");
+        spread.classList.add("is-cover", "is-front-cover");
+      
         leftPage.src = photos[index];
-        leftPage.alt = index === 0 ? "Concrete Tbilisi cover" : "Concrete Tbilisi back cover";
+        leftPage.alt = "Concrete Tbilisi cover";
+      
         rightPage.removeAttribute("src");
         rightPage.alt = "";
-        counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
+      
+        counter.textContent =
+          String(index + 1).padStart(2, "0") +
+          " / " +
+          String(photos.length).padStart(2, "0");
+      
+        preloadAround(index);
+        return;
+      }
+      
+      if (index === photos.length - 1) {
+        spread.classList.remove("is-front-cover");
+        spread.classList.add("is-cover", "is-back-cover");
+      
+        leftPage.src = photos[index];
+        leftPage.alt = "Concrete Tbilisi back cover";
+      
+        rightPage.removeAttribute("src");
+        rightPage.alt = "";
+      
+        counter.textContent =
+          String(index + 1).padStart(2, "0") +
+          " / " +
+          String(photos.length).padStart(2, "0");
+      
         preloadAround(index);
         return;
       }
 
-      spread.classList.remove("is-cover");
+      spread.classList.remove("is-cover", "is-front-cover", "is-back-cover");
 
       const leftIndex = index % 2 === 1 ? index : index - 1;
       const rightIndex = leftIndex + 1;
