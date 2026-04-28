@@ -89,6 +89,7 @@
 
     .spread {
       position: relative;
+      z-index: 1;
       width: min(86vw, calc(78vh * 1786 / 1263));
       aspect-ratio: 1786 / 1263;
       height: auto;
@@ -213,19 +214,33 @@
 
     .spread.is-cover {
       grid-template-columns: 1fr 1fr;
+      background: transparent;
+      clip-path: none;
+      box-shadow: none;
+    }
+
+    .spread.is-cover::before,
+    .spread.is-cover::after {
+      display: none;
     }
 
     .spread.is-cover .page.left {
       grid-column: 1;
       justify-content: flex-end;
+      background: transparent;
     }
 
     .spread.is-cover .page.left img {
       width: 100%;
       height: 100%;
+      transform: none;
     }
 
     .spread.is-cover .page.right {
+      display: none;
+    }
+
+    .spread.is-cover .page::before {
       display: none;
     }
 
@@ -497,14 +512,14 @@
         return;
       }
 
-      if (index === 0) {
+      if (index === 0 || index === photos.length - 1) {
         spread.classList.add("is-cover");
-        leftPage.src = photos[0];
-        leftPage.alt = "Concrete Tbilisi cover";
+        leftPage.src = photos[index];
+        leftPage.alt = index === 0 ? "Concrete Tbilisi cover" : "Concrete Tbilisi back cover";
         rightPage.removeAttribute("src");
         rightPage.alt = "";
-        counter.textContent = "01 / " + String(photos.length).padStart(2, "0");
-        preloadAround(0);
+        counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
+        preloadAround(index);
         return;
       }
 
@@ -551,9 +566,7 @@
 
     function prevPage() {
       index -= isSinglePage() ? 1 : 2;
-      if (!isSinglePage() && index < 1) {
-        index = 0;
-      } else if (index < 0) {
+      if (index < 0) {
         index = photos.length - 1;
       }
       updateBook();
