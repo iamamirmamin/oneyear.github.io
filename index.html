@@ -187,4 +187,16 @@
     </footer>
   </main>
 </body>
+
+  const links = document.querySelectorAll('.project');
+
+  links.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+      const href = link.getAttribute('href');
+      const linkTag = document.createElement('link');
+      linkTag.rel = 'prefetch';
+      linkTag.href = href;
+      document.head.appendChild(linkTag);
+    }, { once: true });
+  });
 </html>
