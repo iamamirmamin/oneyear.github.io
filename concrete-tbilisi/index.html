@@ -231,6 +231,18 @@
       overflow: hidden;
     }
 
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+    
+      background: url("images/paper-texture.png") center/cover;
+      mix-blend-mode: multiply;
+      opacity: 0.35;
+    }
+    
     .page::before {
       content: "";
       position: absolute;
@@ -298,6 +310,10 @@
       object-fit: fill;
       user-select: none;
       -webkit-user-drag: none;
+      filter:
+        contrast(0.96)
+        saturate(0.92)
+        brightness(0.98);
     }
 
     .page.left img {
