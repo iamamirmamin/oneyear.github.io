@@ -8,7 +8,7 @@
   <style>
     :root {
       --bg: #fff;
-      --text: #111;
+      --text: #132D77;
       --muted: rgba(17, 17, 17, 0.55);
       --line: rgba(17, 17, 17, 0.18);
       --accent: #ff2a1f;
@@ -179,11 +179,6 @@
         <span class="project-meta">photo / research</span>
       </a>
 
-      <a class="project" href="project-three/">
-        <span class="project-year">2024</span>
-        <span class="project-title">another project</span>
-        <span class="project-meta">research / images</span>
-      </a>
     </section>
 
     <footer class="footer">
@@ -191,5 +186,22 @@
       <div>© 2026</div>
     </footer>
   </main>
+
+  <link rel="preload" as="image" href="wait-go/images2/Timeline 4.mp4">
+  <link rel="preload" as="image" href="concrete-tbilisi/images/background.png">
+  
+  <script>
+    const links = document.querySelectorAll('.project');
+  
+    links.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const href = link.getAttribute('href');
+        const linkTag = document.createElement('link');
+        linkTag.rel = 'prefetch';
+        linkTag.href = href;
+        document.head.appendChild(linkTag);
+      }, { once: true });
+    });
+  </script>
 </body>
 </html>

@@ -32,9 +32,9 @@
       position: fixed;
       inset: -44px;
       background:
-        linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58)),
+        linear-gradient(rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.20)),
         url("images/background.png") center / cover no-repeat;
-      filter: grayscale(1) blur(30px);
+      filter: blur(6px);
       transform: scale(1.05);
       z-index: -1;
     }
@@ -101,26 +101,26 @@
 
     .spread {
       position: relative;
+      transition: transform 0.35s ease;
       z-index: 2;
       width: min(86vw, calc(78vh * 1786 / 1263));
       aspect-ratio: 1786 / 1263;
       height: auto;
       display: grid;
+      --progress: 0; /* 0 → начало, 1 → конец */
+      --shift: 0px;
       grid-template-columns: 1fr 1fr;
       gap: 0;
       align-items: center;
       background: #f2f2f0;
       border-radius: 2px 3px 4px 2px;
-      box-shadow:
-        -10px 4px 18px rgba(0, 0, 0, 0.18),
-        12px 8px 24px rgba(0, 0, 0, 0.16),
-        0 2px 2px rgba(255, 255, 255, 0.12),
-        0 28px 80px rgba(0, 0, 0, 0.85);
+      box-shadow: none;
       overflow: visible;
       transform:
         perspective(1600px)
         rotateX(0.7deg)
         rotateY(-0.35deg);
+        translateX(var(--shift));
       transform-origin: center center;
     }
 
@@ -181,22 +181,22 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 12px;
       pointer-events: none;
       z-index: 0;
+      transition: width 0.25s ease;
       background:
-        linear-gradient(
+        linear-gradient(to right, rgba(0,0,0,0.08), rgba(0,0,0,0)),
+        repeating-linear-gradient(
           to right,
-          #f4f4ef 0 2px,
-          #e7e7e1 2px 4px,
-          #f1f1ec 4px 6px,
-          #ddddd6 6px 8px,
-          #eeeee8 8px 10px,
-          #cfcfc7 10px 12px
+          #f4f4ef 0px,
+          #f4f4ef 1px,
+          #e2e2db 1px,
+          #e2e2db 2px
         );
     }
 
     .page-stack.left-stack {
+      width: calc(24px * var(--progress));
       right: 100%;
       clip-path: polygon(
         100% 0,
@@ -208,6 +208,7 @@
     }
 
     .page-stack.right-stack {
+      width: calc(24px * (1 - var(--progress)));
       left: 100%;
       clip-path: polygon(
         0 0,
@@ -230,6 +231,18 @@
       overflow: hidden;
     }
 
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+    
+      background: url("images/paper-texture.png") center/cover;
+      mix-blend-mode: multiply;
+      opacity: 0.35;
+    }
+    
     .page::before {
       content: "";
       position: absolute;
@@ -297,6 +310,10 @@
       object-fit: fill;
       user-select: none;
       -webkit-user-drag: none;
+      filter:
+        contrast(0.96)
+        saturate(0.92)
+        brightness(0.98);
     }
 
     .page.left img {
@@ -416,6 +433,20 @@
       left: 50%;
       transform: translateX(0);
     }
+
+    .spread.is-front-cover {
+      transform: translateX(25%);
+      --shift: 25%;
+      --progress: 0;
+    }
+    
+    /* BACK COVER — книга слева */
+    .spread.is-back-cover {
+      transform: translateX(25%);
+      --shift: 25%;
+      --progress: 1;
+    }
+    
   </style>
 </head>
 
@@ -424,7 +455,8 @@
     <header class="top">
       <a href="../">back</a>
       <div></div>
-      <div class="title">concrete tbilisi</div>
+      <div class="title">concrete tbilisi<br><br>
+      an unpublished book about modernist<br>and late-socialist architecture</div>
     </header>
 
     <section class="book" aria-label="Concrete Tbilisi photobook viewer">
@@ -570,6 +602,9 @@
     }
 
     function updateBook() {
+      const progress = index / (photos.length - 1);
+      spread.style.setProperty("--progress", progress);
+      
       if (!photos.length) {
         spread.innerHTML = '<div class="empty">Add photographs to the images folder and list them in the photos array.</div>';
         counter.textContent = "00 / 00";
