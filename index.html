@@ -167,13 +167,23 @@
     </section>
 
     <section class="projects" aria-label="Projects">
-      <a class="project" href="wait-go/">
+      <a
+        class="project"
+        href="wait-go/"
+        data-preload-document="wait-go/"
+        data-preload-video="wait-go/images2/Timeline 4.mp4"
+      >
         <span class="project-year">2026</span>
         <span class="project-title">wait / go</span>
         <span class="project-meta">street camera archive</span>
       </a>
 
-      <a class="project" href="concrete-tbilisi/">
+      <a
+        class="project"
+        href="concrete-tbilisi/"
+        data-preload-document="concrete-tbilisi/"
+        data-preload-images="concrete-tbilisi/images/01.png concrete-tbilisi/images/background.png"
+      >
         <span class="project-year">2025</span>
         <span class="project-title">concrete tbilisi</span>
         <span class="project-meta">photo / research</span>
@@ -186,21 +196,66 @@
       <div>© 2026</div>
     </footer>
   </main>
-
-  <link rel="preload" as="image" href="wait-go/images2/Timeline 4.mp4">
-  <link rel="preload" as="image" href="concrete-tbilisi/images/background.png">
-  
   <script>
-    const links = document.querySelectorAll('.project');
-  
-    links.forEach(link => {
-      link.addEventListener('mouseenter', () => {
-        const href = link.getAttribute('href');
-        const linkTag = document.createElement('link');
-        linkTag.rel = 'prefetch';
-        linkTag.href = href;
-        document.head.appendChild(linkTag);
-      }, { once: true });
+    const warmed = new Set();
+
+    function addPrefetch(href) {
+      if (!href || warmed.has("document:" + href)) return;
+
+      const link = document.createElement("link");
+      link.rel = "prefetch";
+      link.href = href;
+      document.head.appendChild(link);
+      warmed.add("document:" + href);
+    }
+
+    function preloadImage(src) {
+      if (!src || warmed.has("image:" + src)) return;
+
+      const img = new Image();
+      img.decoding = "async";
+      img.src = src;
+      warmed.add("image:" + src);
+    }
+
+    function preloadVideo(src) {
+      if (!src || warmed.has("video:" + src)) return;
+
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "video";
+      link.href = src;
+      link.type = "video/mp4";
+      document.head.appendChild(link);
+
+      const video = document.createElement("video");
+      video.preload = "auto";
+      video.muted = true;
+      video.playsInline = true;
+      video.src = src;
+      video.style.display = "none";
+      document.body.appendChild(video);
+      video.load();
+
+      warmed.add("video:" + src);
+    }
+
+    function warmProject(link) {
+      addPrefetch(link.dataset.preloadDocument);
+      preloadVideo(link.dataset.preloadVideo);
+
+      if (link.dataset.preloadImages) {
+        link.dataset.preloadImages
+          .split(/\s+/)
+          .filter(Boolean)
+          .forEach(preloadImage);
+      }
+    }
+
+    document.querySelectorAll(".project").forEach(link => {
+      link.addEventListener("mouseenter", () => warmProject(link), { once: true });
+      link.addEventListener("focus", () => warmProject(link), { once: true });
+      link.addEventListener("pointerdown", () => warmProject(link), { once: true });
     });
   </script>
 </body>
