@@ -89,6 +89,11 @@
       top: clamp(32px, 6%, 56px);
       right: clamp(8px, 2%, 24px);
     }
+
+    .back {
+      top: clamp(32px, 6%, 56px);
+      left: clamp(8px, 2%, 24px);
+    }
     
     .about {
       top: calc(clamp(32px, 6%, 56px) + 28px);
@@ -138,13 +143,41 @@
       -webkit-user-drag: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      pointer-events: auto;
+      pointer-events: none;
       filter: brightness(85%);
+    }
+
+    .image-hit {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 90;
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    .image-hit.prev-hit {
+      left: 0;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M19.5 8.5 12 16l7.5 7.5' fill='none' stroke='%232F98F1' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, w-resize;
+    }
+
+    .image-hit.next-hit {
+      right: 0;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M12.5 8.5 20 16l-7.5 7.5' fill='none' stroke='%232F98F1' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, e-resize;
     }
     
     .ui {
       user-select: none;
       -webkit-user-select: none;
+    }
+
+    body.intro-open .viewer .ui-button,
+    body.intro-open .viewer .fs-zone,
+    body.intro-open .viewer .timeline,
+    body.intro-open .viewer .image-hit {
+      display: none;
     }
     
 
@@ -379,7 +412,7 @@
   </style>  
 </head>
   
-<body>
+<body class="intro-open">
 
 <div id="introVideoWrapper">
   <div class="intro-stage">
@@ -404,9 +437,12 @@
     <div class="image-frame">
     <img id="img">
     <div class="viewer-grain"></div>
+    <button id="imagePrevHit" class="image-hit prev-hit" aria-label="previous image"></button>
+    <button id="imageNextHit" class="image-hit next-hit" aria-label="next image"></button>
       
     <a href="#" id="prev" class="ui-button nav prev ui">←</a>
     <a href="#" id="next" class="ui-button nav next ui">→</a>
+    <a href="../" id="backLink" class="ui-button nav back ui">back</a>
     <a href="#" id="aboutLink" class="ui-button nav about ui">about</a>
     <a href="#" id="toggleSide" class="ui-button nav ui toggle">to back side</a>
 
@@ -1551,6 +1587,7 @@ const backimages = [
   }
   
   let currentMode = "front"; // front | back
+  let isIntroOpen = true;
 
   const PRELOAD_RANGE = 4;
   const preloaded = new Set();
@@ -1644,50 +1681,60 @@ updateImage();
   
 // навигация
 function goNext() {
+  if (!canNavigateViewer()) return;
   index++;
   updateImage();
 }
 
 function goPrev() {
+  if (!canNavigateViewer()) return;
   index--;
   updateImage();
+}
+
+function canNavigateViewer() {
+  return !isIntroOpen;
 }
 
 // кнопки
 document.getElementById("next").onclick = (e) => {
   e.preventDefault();
+  e.stopPropagation();
   goNext();
 };
 
 document.getElementById("prev").onclick = (e) => {
   e.preventDefault();
+  e.stopPropagation();
   goPrev();
 };
 
 // клавиатура
 document.addEventListener("keydown", (e) => {
+  if (!canNavigateViewer()) return;
   if (e.key === "ArrowRight") goNext();
   if (e.key === "ArrowLeft") goPrev();
 });
   
 
-// клик по изображению (левая/правая сторона)
 const imgEl = document.getElementById("img");
 
-imgEl.onclick = (e) => {
-  const rect = imgEl.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
+document.getElementById("imagePrevHit").onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  goPrev();
+};
 
-  if (clickX < rect.width / 2) {
-    goPrev();
-  } else {
-    goNext();
-  }
+document.getElementById("imageNextHit").onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  goNext();
 };
   
 
 const toggleBtn = document.getElementById("toggleSide");
 const aboutBtn = document.getElementById("aboutLink");
+const backBtn = document.getElementById("backLink");
 
 
 toggleBtn.onclick = (e) => {
@@ -1707,6 +1754,7 @@ toggleBtn.onclick = (e) => {
     toggleBtn.textContent = "to front side";
 
     aboutBtn.style.display = "none";
+    backBtn.style.display = "none";
 
   } else {
     currentMode = "front";
@@ -1714,6 +1762,7 @@ toggleBtn.onclick = (e) => {
     toggleBtn.textContent = "to back side";
 
     aboutBtn.style.display = "";
+    backBtn.style.display = "";
   }
 
   // 4. берём НОВЫЙ timeline
@@ -1822,6 +1871,8 @@ aboutBox.onclick = () => {
     introWrapper.classList.add("hidden");
     
     setTimeout(() => {
+      isIntroOpen = false;
+      document.body.classList.remove("intro-open");
       introWrapper.remove(); // полностью убираем слой
     }, 600);
   };
@@ -1833,6 +1884,7 @@ aboutBox.onclick = () => {
   
   window.addEventListener("wheel", (e) => {
     e.preventDefault();
+    if (!canNavigateViewer()) return;
   
     if (isScrolling) return;
   
