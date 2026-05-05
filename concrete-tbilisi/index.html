@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>concrete tbilisi</title>
   <link rel="preload" as="image" href="images/01.png">
+  <link rel="preload" as="image" href="images/02.png">
+  <link rel="preload" as="image" href="images/03.png">
   <link rel="preload" as="image" href="images/background.png">
 
   <style>
@@ -64,7 +66,7 @@
       position: fixed;
       inset: 0;
       display: grid;
-      grid-template-rows: auto 1fr auto;
+      grid-template-rows: 1fr auto;
       padding: clamp(16px, 3vw, 40px);
       gap: 18px;
     }
@@ -79,6 +81,13 @@
       line-height: 1;
       color: var(--muted);
       z-index: 20;
+    }
+
+    .top {
+      position: fixed;
+      top: clamp(16px, 3vw, 40px);
+      left: clamp(16px, 3vw, 40px);
+      right: clamp(16px, 3vw, 40px);
     }
 
     .title {
@@ -105,7 +114,7 @@
       position: relative;
       transition: transform 0.35s ease;
       z-index: 2;
-      width: min(86vw, calc(78vh * 1786 / 1263));
+      width: min(89.5vw, calc(81.1vh * 1786 / 1263));
       aspect-ratio: 1786 / 1263;
       height: auto;
       display: grid;
@@ -119,10 +128,10 @@
       box-shadow: none;
       overflow: visible;
       transform:
+        translateX(var(--shift))
         perspective(1600px)
         rotateX(0.7deg)
         rotateY(-0.35deg);
-        translateX(var(--shift));
       transform-origin: center center;
     }
 
@@ -384,7 +393,7 @@
       }
 
       .spread {
-        width: min(88vw, calc(72vh * 893 / 1263));
+        width: min(91.5vw, calc(74.9vh * 893 / 1263));
         aspect-ratio: 893 / 1263;
         height: auto;
         grid-template-columns: 1fr;
@@ -437,14 +446,12 @@
     }
 
     .spread.is-front-cover {
-      transform: translateX(25%);
       --shift: 25%;
       --progress: 0;
     }
     
     /* BACK COVER — книга слева */
     .spread.is-back-cover {
-      transform: translateX(25%);
       --shift: 25%;
       --progress: 1;
     }
@@ -594,6 +601,8 @@
 
     let index = 0;
     const preloadedPhotos = new Set();
+    const photoCache = new Map();
+    let allPhotosPreloadStarted = false;
 
     function isSinglePage() {
       return window.matchMedia("(max-width: 360px)").matches;
@@ -687,19 +696,59 @@
     }
 
     function preloadAround(baseIndex) {
-      const preloadRange = 8;
+      const preloadRange = 18;
 
       for (let i = baseIndex - preloadRange; i <= baseIndex + preloadRange; i++) {
         const photoIndex = (i + photos.length) % photos.length;
-        const src = photos[photoIndex];
-
-        if (!src || preloadedPhotos.has(src)) continue;
-
-        const img = new Image();
-        img.decoding = "async";
-        img.src = src;
-        preloadedPhotos.add(src);
+        const isNear = Math.abs(i - baseIndex) <= 4;
+        preloadPhoto(photoIndex, isNear);
       }
+    }
+
+    function preloadPhoto(photoIndex, highPriority = false) {
+      const src = photos[photoIndex];
+      if (!src || preloadedPhotos.has(src)) return;
+
+      const img = new Image();
+      img.decoding = "async";
+
+      if ("fetchPriority" in img) {
+        img.fetchPriority = highPriority ? "high" : "low";
+      }
+
+      img.src = src;
+      photoCache.set(src, img);
+      preloadedPhotos.add(src);
+    }
+
+    function preloadAllPhotos() {
+      if (allPhotosPreloadStarted) return;
+
+      allPhotosPreloadStarted = true;
+      let photoIndex = 0;
+
+      function step(deadline) {
+        const hasIdleTime = () => !deadline || deadline.timeRemaining() > 4;
+
+        while (photoIndex < photos.length && hasIdleTime()) {
+          preloadPhoto(photoIndex);
+          photoIndex++;
+        }
+
+        if (photoIndex < photos.length) {
+          scheduleStep();
+        }
+      }
+
+      function scheduleStep() {
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(step, { timeout: 1000 });
+        } else {
+          setTimeout(() => step(), 80);
+        }
+      }
+
+      scheduleStep();
     }
 
     function nextPage() {
@@ -765,6 +814,7 @@
 
     window.addEventListener("resize", updateBook);
     updateBook();
+    preloadAllPhotos();
   </script>
 </body>
 </html>
