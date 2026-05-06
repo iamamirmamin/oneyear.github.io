@@ -173,10 +173,9 @@
       -webkit-user-select: none;
     }
 
-    body.intro-open .viewer .ui-button,
-    body.intro-open .viewer .fs-zone,
-    body.intro-open .viewer .timeline,
-    body.intro-open .viewer .image-hit {
+    body.viewer-controls-hidden .viewer .ui-button,
+    body.viewer-controls-hidden .viewer .fs-zone,
+    body.viewer-controls-hidden .viewer .timeline {
       display: none;
     }
     
@@ -330,7 +329,7 @@
     
       pointer-events: auto;
       cursor: pointer;
-      z-index: 50;
+      z-index: 120;
     }
     
     .timeline-line {
@@ -365,6 +364,11 @@
     }
     
     .timeline-dot:active {
+      cursor: grabbing;
+    }
+
+    .timeline.is-dragging,
+    .timeline.is-dragging .timeline-dot {
       cursor: grabbing;
     }
     
@@ -412,7 +416,7 @@
   </style>  
 </head>
   
-<body class="intro-open">
+<body class="intro-open viewer-controls-hidden">
 
 <div id="introVideoWrapper">
   <div class="intro-stage">
@@ -440,8 +444,6 @@
     <button id="imagePrevHit" class="image-hit prev-hit" aria-label="previous image"></button>
     <button id="imageNextHit" class="image-hit next-hit" aria-label="next image"></button>
       
-    <a href="#" id="prev" class="ui-button nav prev ui">←</a>
-    <a href="#" id="next" class="ui-button nav next ui">→</a>
     <a href="../" id="backLink" class="ui-button nav back ui">back</a>
     <a href="#" id="aboutLink" class="ui-button nav about ui">about</a>
     <a href="#" id="toggleSide" class="ui-button nav ui toggle">to back side</a>
@@ -1696,19 +1698,6 @@ function canNavigateViewer() {
   return !isIntroOpen;
 }
 
-// кнопки
-document.getElementById("next").onclick = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  goNext();
-};
-
-document.getElementById("prev").onclick = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  goPrev();
-};
-
 // клавиатура
 document.addEventListener("keydown", (e) => {
   if (!canNavigateViewer()) return;
@@ -1868,11 +1857,12 @@ aboutBox.onclick = () => {
   
   // по клику скрываем видео
   introWrapper.onclick = () => {
+    document.body.classList.remove("intro-open");
     introWrapper.classList.add("hidden");
     
     setTimeout(() => {
       isIntroOpen = false;
-      document.body.classList.remove("intro-open");
+      document.body.classList.remove("viewer-controls-hidden");
       introWrapper.remove(); // полностью убираем слой
     }, 600);
   };
