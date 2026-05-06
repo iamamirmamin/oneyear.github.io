@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>concrete tbilisi</title>
   <link rel="preload" as="image" href="images/01.png">
-  <link rel="preload" as="image" href="images/02.png">
-  <link rel="preload" as="image" href="images/03.png">
-  <link rel="preload" as="image" href="images/background.png">
 
   <style>
     :root {
@@ -35,12 +32,16 @@
       content: "";
       position: fixed;
       inset: -44px;
-      background:
-        linear-gradient(rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.20)),
-        url("images/background.png") center / cover no-repeat;
+      background: rgba(0, 0, 0, 0.20);
       filter: blur(6px);
       transform: scale(1.05);
       z-index: -1;
+    }
+
+    body.bg-loaded::before {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.20)),
+        url("images/background.png") center / cover no-repeat;
     }
 
     a {
@@ -474,10 +475,10 @@
         <div class="page-stack left-stack" aria-hidden="true"></div>
         <div class="page-stack right-stack" aria-hidden="true"></div>
         <figure class="page left">
-          <img id="leftPage" alt="">
+          <img id="leftPage" fetchpriority="high" alt="">
         </figure>
         <figure class="page right">
-          <img id="rightPage" alt="">
+          <img id="rightPage" fetchpriority="high" alt="">
         </figure>
       </div>
       <button class="hit next" id="next" aria-label="Next spread"></button>
@@ -630,7 +631,7 @@
         leftPage.alt = "Concrete Tbilisi photograph " + String(index + 1);
         rightPage.removeAttribute("src");
         counter.textContent = String(index + 1).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
-        preloadAround(index);
+        schedulePreloadAround(index);
         return;
       }
 
@@ -649,7 +650,7 @@
           " / " +
           String(photos.length).padStart(2, "0");
       
-        preloadAround(index);
+        schedulePreloadAround(index);
         return;
       }
       
@@ -668,7 +669,7 @@
           " / " +
           String(photos.length).padStart(2, "0");
       
-        preloadAround(index);
+        schedulePreloadAround(index);
         return;
       }
 
@@ -692,15 +693,21 @@
 
       index = leftIndex;
       counter.textContent = String(leftIndex + 1).padStart(2, "0") + "-" + String(Math.min(rightIndex + 1, photos.length)).padStart(2, "0") + " / " + String(photos.length).padStart(2, "0");
-      preloadAround(leftIndex);
+      schedulePreloadAround(leftIndex);
+    }
+
+    function schedulePreloadAround(baseIndex) {
+      setTimeout(() => preloadAround(baseIndex), 120);
     }
 
     function preloadAround(baseIndex) {
-      const preloadRange = 18;
+      const preloadRange = 6;
 
       for (let i = baseIndex - preloadRange; i <= baseIndex + preloadRange; i++) {
-        const photoIndex = (i + photos.length) % photos.length;
-        const isNear = Math.abs(i - baseIndex) <= 4;
+        if (i < 0 || i >= photos.length) continue;
+
+        const photoIndex = i;
+        const isNear = Math.abs(i - baseIndex) <= 2;
         preloadPhoto(photoIndex, isNear);
       }
     }
@@ -727,28 +734,37 @@
       allPhotosPreloadStarted = true;
       let photoIndex = 0;
 
-      function step(deadline) {
-        const hasIdleTime = () => !deadline || deadline.timeRemaining() > 4;
+      function step() {
+        preloadPhoto(photoIndex);
+        photoIndex++;
 
-        while (photoIndex < photos.length && hasIdleTime()) {
-          preloadPhoto(photoIndex);
-          photoIndex++;
-        }
-
-        if (photoIndex < photos.length) {
-          scheduleStep();
-        }
+        if (photoIndex < photos.length) scheduleStep();
       }
 
       function scheduleStep() {
         if ("requestIdleCallback" in window) {
-          requestIdleCallback(step, { timeout: 1000 });
+          requestIdleCallback(step, { timeout: 1500 });
         } else {
-          setTimeout(() => step(), 80);
+          setTimeout(step, 180);
         }
       }
 
       scheduleStep();
+    }
+
+    function loadBackgroundImage() {
+      const img = new Image();
+      img.decoding = "async";
+
+      if ("fetchPriority" in img) {
+        img.fetchPriority = "low";
+      }
+
+      img.onload = () => {
+        document.body.classList.add("bg-loaded");
+      };
+
+      img.src = "images/background.png";
     }
 
     function nextPage() {
@@ -814,7 +830,8 @@
 
     window.addEventListener("resize", updateBook);
     updateBook();
-    preloadAllPhotos();
+    setTimeout(loadBackgroundImage, 500);
+    setTimeout(preloadAllPhotos, 4500);
   </script>
 </body>
 </html>
