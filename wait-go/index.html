@@ -173,12 +173,6 @@
       -webkit-user-select: none;
     }
 
-    body.viewer-controls-hidden .viewer .ui-button,
-    body.viewer-controls-hidden .viewer .fs-zone,
-    body.viewer-controls-hidden .viewer .timeline {
-      display: none;
-    }
-    
 
     .fs-zone {
       position: absolute;
@@ -416,7 +410,7 @@
   </style>  
 </head>
   
-<body class="intro-open viewer-controls-hidden">
+<body class="intro-open">
 
 <div id="introVideoWrapper">
   <div class="intro-stage">
@@ -1862,7 +1856,6 @@ aboutBox.onclick = () => {
     
     setTimeout(() => {
       isIntroOpen = false;
-      document.body.classList.remove("viewer-controls-hidden");
       introWrapper.remove(); // полностью убираем слой
     }, 600);
   };
