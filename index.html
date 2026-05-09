@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amir Mamin</title>
 
   <style>
     :root {
-      --bg: #f5f5f1;
-      --text: #111111;
-      --muted: rgba(17, 17, 17, 0.42);
-      --line: rgba(17, 17, 17, 0.08);
-      --accent: #000;
+      --bg: #fff;
+      --text: #132D77;
+      --muted: rgba(17, 17, 17, 0.55);
+      --line: rgba(17, 17, 17, 0.18);
+      --accent: #ff2a1f;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
     body {
       margin: 0;
+      min-height: 100vh;
       background: var(--bg);
       color: var(--text);
       font-family: Helvetica, Arial, sans-serif;
-      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.35;
     }
 
     a {
@@ -36,138 +33,117 @@
       text-decoration: none;
     }
 
+    a:hover {
+      color: var(--accent);
+    }
+
     .page {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
+      width: min(100%, 1120px);
       min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(20px, 3vw, 44px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(36px, 6vh, 80px);
     }
 
     .top {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: clamp(90px, 16vh, 180px);
+      align-items: baseline;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
     }
 
     .name {
-      font-size: 14px;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.01em;
     }
 
     .nav {
       display: flex;
-      gap: 20px;
-      font-size: 14px;
+      gap: 18px;
       color: var(--muted);
-    }
-
-    .nav a {
-      transition: opacity 0.2s ease;
-    }
-
-    .nav a:hover {
-      opacity: 0.35;
+      font-size: 14px;
     }
 
     .intro {
-      max-width: 640px;
-      margin-bottom: clamp(100px, 18vh, 220px);
+      max-width: 780px;
+      align-self: center;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(42px, 8vw, 110px);
-      line-height: 0.88;
-      font-weight: 500;
-      letter-spacing: -0.06em;
+      font-size: clamp(34px, 5.5vw, 72px);
+      line-height: 0.95;
+      font-family: "Arial Black", Helvetica, Arial, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
     }
 
     .intro p {
-      margin-top: 26px;
-      max-width: 420px;
-      font-size: 15px;
-      line-height: 1.45;
+      max-width: 560px;
+      margin: 22px 0 0;
       color: var(--muted);
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.35;
     }
 
     .projects {
-      margin-top: auto;
       border-top: 1px solid var(--line);
     }
 
     .project {
       display: grid;
-      grid-template-columns: 80px 1fr auto;
-      align-items: center;
-      gap: 20px;
-      padding: 18px 0;
+      grid-template-columns: minmax(72px, 0.18fr) 1fr auto;
+      gap: clamp(16px, 3vw, 40px);
+      padding: 15px 0;
       border-bottom: 1px solid var(--line);
-      transition: opacity 0.25s ease;
-    }
-
-    .projects:hover .project {
-      opacity: 0.28;
-    }
-
-    .projects .project:hover {
-      opacity: 1;
+      align-items: baseline;
     }
 
     .project-year,
     .project-meta {
-      font-size: 13px;
       color: var(--muted);
+      font-size: 14px;
     }
 
     .project-title {
-      font-size: clamp(26px, 4vw, 54px);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
-      font-weight: 500;
+      font-size: clamp(19px, 2.2vw, 28px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
 
     .footer {
-      margin-top: 120px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      gap: 24px;
       color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
     }
 
-    @media (max-width: 700px) {
-      .page {
-        padding: 20px;
-      }
-
+    @media (max-width: 680px) {
       .top,
       .footer {
-        flex-direction: column;
-        gap: 12px;
+        display: block;
+      }
+
+      .nav,
+      .footer div + div {
+        margin-top: 10px;
       }
 
       .project {
         grid-template-columns: 1fr;
         gap: 6px;
-        padding: 16px 0;
       }
 
       .project-meta {
         display: none;
-      }
-
-      .project-title {
-        font-size: 36px;
-      }
-
-      .intro {
-        margin-bottom: 100px;
       }
     }
   </style>
@@ -175,32 +151,22 @@
 
 <body>
   <main class="page">
-
     <header class="top">
       <div class="name">Amir Mamin</div>
-
-      <nav class="nav">
+      <nav class="nav" aria-label="Main navigation">
         <a href="mailto:hello@example.com">email</a>
-        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">
-          instagram
-        </a>
+        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">instagram</a>
       </nav>
     </header>
 
-    <section class="intro">
-      <h1>
-        works<br />
-        and archives
-      </h1>
-
+    <section class="intro" aria-label="Introduction">
+      <h1>works<br>and observations</h1>
       <p>
-        a multidisciplinary artist working across graphic media,
-        photography and video.
+        A small index of projects, images, archives, and things noticed over time.
       </p>
     </section>
 
-    <section class="projects">
-
+    <section class="projects" aria-label="Projects">
       <a
         class="project"
         href="wait-go/"
@@ -208,14 +174,8 @@
         data-preload-video="wait-go/images2/Timeline 4.mp4"
       >
         <span class="project-year">2026</span>
-
-        <span class="project-title">
-          wait / go
-        </span>
-
-        <span class="project-meta">
-          street camera archive
-        </span>
+        <span class="project-title">wait / go</span>
+        <span class="project-meta">street camera archive</span>
       </a>
 
       <a
@@ -225,14 +185,8 @@
         data-preload-images="concrete-tbilisi/images/01.png"
       >
         <span class="project-year">2025</span>
-
-        <span class="project-title">
-          concrete tbilisi
-        </span>
-
-        <span class="project-meta">
-          photo / research
-        </span>
+        <span class="project-title">concrete tbilisi</span>
+        <span class="project-meta">photo / research</span>
       </a>
 
     </section>
@@ -241,9 +195,7 @@
       <div>Saint Petersburg / Stockholm</div>
       <div>© 2026</div>
     </footer>
-
   </main>
-
   <script>
     const warmed = new Set();
 
@@ -253,7 +205,6 @@
       const link = document.createElement("link");
       link.rel = "prefetch";
       link.href = href;
-
       document.head.appendChild(link);
       warmed.add("document:" + href);
     }
@@ -264,7 +215,6 @@
       const img = new Image();
       img.decoding = "async";
       img.src = src;
-
       warmed.add("image:" + src);
     }
 
@@ -276,7 +226,6 @@
       link.as = "video";
       link.href = src;
       link.type = "video/mp4";
-
       document.head.appendChild(link);
 
       const video = document.createElement("video");
@@ -285,7 +234,6 @@
       video.playsInline = true;
       video.src = src;
       video.style.display = "none";
-
       document.body.appendChild(video);
       video.load();
 
