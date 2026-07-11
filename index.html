@@ -24,8 +24,9 @@
       background: var(--bg);
       color: var(--text);
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.35;
+      font-size: 13px;
+      line-height: 1.25;
+      letter-spacing: 0;
     }
 
     a {
@@ -38,22 +39,20 @@
     }
 
     .page {
-      width: min(100%, 1120px);
+      width: 100%;
       min-height: 100vh;
-      margin: 0 auto;
-      padding: clamp(20px, 3vw, 44px);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: clamp(44px, 10vh, 120px);
+      padding: clamp(16px, 1.8vw, 28px);
+      position: relative;
     }
 
     .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 24px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 18px;
+      position: fixed;
+      top: clamp(18px, 2vw, 30px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      text-align: center;
+      width: min(460px, calc(100vw - 36px));
     }
 
     .name {
@@ -62,79 +61,189 @@
     }
 
     .bio {
-      max-width: 360px;
-      margin-top: 8px;
+      width: min(370px, 100%);
+      margin: 8px auto 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .nav {
       display: flex;
+      justify-content: center;
       gap: 18px;
       color: var(--muted);
-      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .nav span {
+      display: inline-block;
     }
 
     .projects {
-      align-self: center;
-      border-top: 1px solid var(--line);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, auto);
+      align-content: center;
+      gap: clamp(24px, 5vw, 76px);
+      width: min(760px, calc(100vw - 44px));
+      margin: 0 auto;
+      padding-top: clamp(116px, 17vh, 170px);
+      padding-bottom: clamp(88px, 12vh, 140px);
     }
 
     .project {
       display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: clamp(14px, 3vw, 36px);
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-      align-items: baseline;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      align-content: start;
+      gap: 10px 18px;
+      transition: color 0.2s ease, opacity 0.2s ease;
     }
 
-    .project-year,
-    .project-meta {
+    .project:hover {
+      color: var(--accent);
+    }
+
+    .project-index {
       color: var(--muted);
-      font-size: 13px;
     }
 
     .project-title {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1;
       font-weight: 400;
       letter-spacing: 0;
     }
 
+    .project-preview {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background:
+        linear-gradient(135deg, rgba(17, 17, 17, 0.04), rgba(17, 17, 17, 0.01)),
+        #f3f3f1;
+      overflow: hidden;
+    }
+
+    .project-preview img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      color: transparent;
+      filter: grayscale(0.45) contrast(0.95);
+      opacity: 0.92;
+      transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .project:hover .project-preview img {
+      filter: grayscale(0);
+      opacity: 1;
+      transform: scale(1.01);
+    }
+
+    .project.is-wait {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .project.is-concrete {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
     .footer {
-      display: flex;
-      justify-content: space-between;
+      position: fixed;
+      left: clamp(18px, 2vw, 32px);
+      right: clamp(18px, 2vw, 32px);
+      bottom: clamp(18px, 2vw, 32px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
+      color: var(--text);
+      pointer-events: none;
+    }
+
+    .footer .footer-meta {
+      grid-column: 1;
       color: var(--muted);
-      font-size: 13px;
-      border-top: 1px solid var(--line);
-      padding-top: 14px;
+    }
+
+    .footer .footer-year {
+      grid-column: 2;
+      justify-self: end;
+      color: var(--muted);
     }
 
     @media (max-width: 680px) {
-      .top,
-      .footer {
-        display: block;
+      .top {
+        position: static;
+        transform: none;
+        text-align: left;
       }
 
-      .nav,
-      .footer div + div {
-        margin-top: 10px;
+      .nav {
+        justify-content: flex-start;
       }
 
       .bio {
         max-width: 280px;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .projects {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        width: 100%;
+        gap: 28px;
+        padding: 72px 0 120px;
+      }
+
+      .project.is-wait,
+      .project.is-concrete {
+        grid-column: auto;
+        grid-row: auto;
       }
 
       .project {
-        grid-template-columns: 1fr;
-        gap: 6px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px 18px;
+        padding: 0;
+        border-top: 0;
       }
 
-      .project-meta {
-        display: none;
+      .project-title {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .project-index {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .project-preview {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .footer {
+        position: static;
+        display: block;
+        margin-top: 40px;
+      }
+
+      .footer .footer-meta,
+      .footer .footer-year {
+        display: block;
+        text-align: left;
+        margin-top: 6px;
       }
     }
   </style>
@@ -146,43 +255,47 @@
       <div>
         <div class="name">Amir Mamin</div>
         <div class="bio">
-          a multidisciplinary artist working across graphic media, photography and video.
+          a multidisciplinary artist working across graphic media, photography and video
         </div>
       </div>
       <nav class="nav" aria-label="Main navigation">
-        <a href="mailto:hello@example.com">email</a>
-        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">instagram</a>
+        <span>about</span>
+        <span>contact</span>
       </nav>
     </header>
 
-    <section class="projects" aria-label="Projects">
+    <section class="projects" id="projects" aria-label="Projects">
       <a
-        class="project"
+        class="project is-wait"
         href="wait-go/"
         data-preload-document="wait-go/"
         data-preload-video="wait-go/images2/Timeline 4.mp4"
       >
-        <span class="project-year">2026</span>
         <span class="project-title">wait / go</span>
-        <span class="project-meta">street camera archive</span>
+        <span class="project-index">2025-26</span>
+        <span class="project-preview" aria-hidden="true">
+          <img src="wait-go/images2/2025-01-12_1.jpg" loading="lazy" decoding="async" alt="">
+        </span>
       </a>
 
       <a
-        class="project"
+        class="project is-concrete"
         href="concrete-tbilisi/"
         data-preload-document="concrete-tbilisi/"
         data-preload-images="concrete-tbilisi/images/01.png"
       >
-        <span class="project-year">2025</span>
         <span class="project-title">concrete tbilisi</span>
-        <span class="project-meta">photo / research</span>
+        <span class="project-index">2025</span>
+        <span class="project-preview" aria-hidden="true">
+          <img src="concrete-tbilisi/images/01.png" loading="lazy" decoding="async" alt="">
+        </span>
       </a>
 
     </section>
 
     <footer class="footer">
-      <div>Saint Petersburg / Stockholm</div>
-      <div>© 2026</div>
+      <div class="footer-meta">Saint Petersburg / Stockholm</div>
+      <div class="footer-year">© 2026</div>
     </footer>
   </main>
   <script>
