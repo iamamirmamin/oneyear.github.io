@@ -15,7 +15,7 @@
     }
 
     .ui-button {
-      color: #2F98F1;/ff2a1f/;
+      color: #2F98F1;
       text-decoration: none;
       border: none;
       background: none;
@@ -1540,7 +1540,6 @@ const backimages = [
   function buildTimeline(images) {
     const map = new Map();
   
-    // группируем по дням
     images.forEach(file => {
       const date = file.split("_")[0];
   
@@ -1554,7 +1553,7 @@ const backimages = [
     const result = [];
   
     Array.from(map.keys())
-      .sort() // сортируем даты
+      .sort()
       .forEach(date => {
         map.get(date).forEach(file => {
           result.push({ file, date });
@@ -1582,7 +1581,7 @@ const backimages = [
     return currentMode === "front" ? frontTimeline : backTimeline;
   }
   
-  let currentMode = "front"; // front | back
+  let currentMode = "front";
   let isIntroOpen = true;
 
   const PRELOAD_RANGE = 4;
@@ -1621,16 +1620,13 @@ const backimages = [
   
 const params = new URLSearchParams(window.location.search);
 
-// текущий индекс
 let indexParam = parseInt(params.get("image"));
 let index = isNaN(indexParam) ? null : indexParam - 1;
   
-// если не задан → показываем "сегодня"
 if (index === null) {
   index = getClosestIndexByDate();
 }
 
-// обновление изображения
 function updateImage() {
 
   const currentTimeline = getCurrentTimeline();
@@ -1644,7 +1640,6 @@ function updateImage() {
   const item = currentImages[index];
   const filename = item.file;
 
-  // ставим src ОДИН раз
   imgEl.src = currentMode === "front"
   ? "images2/" + filename
   : "backimages/" + filename;
@@ -1653,7 +1648,6 @@ function updateImage() {
     imgEl.style.opacity = 1;
   });
 
-  // расширенный preload вокруг текущего индекса
   const basePath = currentMode === "front" ? "images2/" : "backimages/";
   const length = currentTimeline.length;
   
@@ -1672,10 +1666,8 @@ function updateImage() {
   updateTimeline();
 }
   
-  // старт
 updateImage();
   
-// навигация
 function goNext() {
   if (!canNavigateViewer()) return;
   index++;
@@ -1692,7 +1684,6 @@ function canNavigateViewer() {
   return !isIntroOpen;
 }
 
-// клавиатура
 document.addEventListener("keydown", (e) => {
   if (!canNavigateViewer()) return;
   if (e.key === "ArrowRight") goNext();
@@ -1724,13 +1715,10 @@ toggleBtn.onclick = (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  // 1. берём текущий timeline
   const currentTimeline = getCurrentTimeline();
 
-  // 2. берём текущий день (это главное!)
   const currentDate = currentTimeline[index].date;
 
-  // 3. переключаем режим
   if (currentMode === "front") {
     preloaded.clear();
     currentMode = "back";
@@ -1748,10 +1736,8 @@ toggleBtn.onclick = (e) => {
     backBtn.style.display = "";
   }
 
-  // 4. берём НОВЫЙ timeline
   const newTimeline = getCurrentTimeline();
 
-  // 5. ищем тот же день в новом timeline
   const newIndex = newTimeline.findIndex(item => item.date === currentDate);
 
   index = newIndex !== -1
@@ -1761,7 +1747,6 @@ toggleBtn.onclick = (e) => {
   updateImage();
 };
 
-// защита
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("dragstart", e => e.preventDefault());
   
@@ -1797,7 +1782,6 @@ aboutBtn.onclick = (e) => {
   document.body.classList.add("about-open");
 };
   
-// закрытие
 aboutBox.onclick = () => {
   aboutBox.style.display = "none";
   document.body.classList.remove("about-open");
@@ -1812,12 +1796,10 @@ aboutBox.onclick = () => {
     document.documentElement.requestFullscreen();
   };
 
-  // показываем на старте
   setTimeout(() => {
     fsHint.classList.add("auto-show");
   }, 500);
   
-  // скрываем через несколько секунд
   setTimeout(() => {
     fsHint.classList.remove("auto-show");
   }, 4000);
@@ -1849,21 +1831,20 @@ aboutBox.onclick = () => {
   
   const introWrapper = document.getElementById("introVideoWrapper");
   
-  // по клику скрываем видео
   introWrapper.onclick = () => {
     document.body.classList.remove("intro-open");
     introWrapper.classList.add("hidden");
     
     setTimeout(() => {
       isIntroOpen = false;
-      introWrapper.remove(); // полностью убираем слой
+      introWrapper.remove();
     }, 600);
   };
 
   let scrollAccumulator = 0;
   let isScrolling = false;
   
-  const SCROLL_THRESHOLD = 80; // чувствительность (подберём)
+  const SCROLL_THRESHOLD = 80;
   
   window.addEventListener("wheel", (e) => {
     e.preventDefault();
@@ -1889,7 +1870,7 @@ aboutBox.onclick = () => {
   
     setTimeout(() => {
       isScrolling = false;
-    }, 200); // время "шага"
+    }, 200);
   }
 
   function updateTimeline() {
@@ -1955,7 +1936,6 @@ aboutBox.onclick = () => {
   
     pendingTimelineIndex = newIndex;
   
-    // двигаем точку сразу, чтобы интерфейс чувствовался живым
     const timeline = getCurrentTimeline();
     const currentDate = parseDateOnly(timeline[newIndex].date);
     const total = timelineEndDate - timelineStartDate;
