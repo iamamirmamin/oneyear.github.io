@@ -83,7 +83,7 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: repeat(3, auto);
+      grid-template-rows: repeat(4, auto);
       align-content: center;
       gap: clamp(24px, 5vw, 76px);
       width: min(760px, calc(100vw - 44px));
@@ -148,16 +148,25 @@
     .project.is-wait {
       grid-column: 2;
       grid-row: 2;
+      order: 2;
     }
 
     .project.is-concrete {
       grid-column: 1;
       grid-row: 3;
+      order: 3;
     }
 
     .project.is-end {
       grid-column: 1;
       grid-row: 1;
+      order: 1;
+    }
+
+    .project.is-clouds {
+      grid-column: 2;
+      grid-row: 4;
+      order: 4;
     }
 
     .footer {
@@ -211,7 +220,8 @@
 
       .project.is-wait,
       .project.is-concrete,
-      .project.is-end {
+      .project.is-end,
+      .project.is-clouds {
         grid-column: auto;
         grid-row: auto;
       }
@@ -307,6 +317,19 @@
         <span class="project-index">2026-now</span>
         <span class="project-preview" aria-hidden="true">
           <img src="the-end/00001.jpg" loading="lazy" decoding="async" alt="">
+        </span>
+      </a>
+
+      <a
+        class="project is-clouds"
+        href="above-the-clouds/"
+        data-preload-document="above-the-clouds/"
+        data-preload-images="above-the-clouds/1.jpg above-the-clouds/2.jpg"
+      >
+        <span class="project-title">above the clouds</span>
+        <span class="project-index">2022</span>
+        <span class="project-preview" aria-hidden="true">
+          <img src="above-the-clouds/1.jpg" loading="lazy" decoding="async" alt="">
         </span>
       </a>
 
