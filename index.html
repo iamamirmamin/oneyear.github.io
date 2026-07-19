@@ -80,6 +80,13 @@
       gap: 18px;
       color: var(--muted);
       margin-top: 12px;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    body.is-scrolled .nav {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
     }
 
     .nav span {
