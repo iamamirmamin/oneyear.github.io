@@ -65,6 +65,13 @@
       margin: 8px auto 0;
       color: var(--muted);
       line-height: 1.3;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    body.is-scrolled .bio {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
     }
 
     .nav {
@@ -342,6 +349,13 @@
   </main>
   <script>
     const warmed = new Set();
+
+    function updateScrollState() {
+      document.body.classList.toggle("is-scrolled", window.scrollY > 24);
+    }
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
 
     function addPrefetch(href) {
       if (!href || warmed.has("document:" + href)) return;
