@@ -148,13 +148,11 @@
       height: 100%;
       object-fit: cover;
       color: transparent;
-      filter: grayscale(0.45) contrast(0.95);
       opacity: 0.92;
-      transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     .project:hover .project-preview img {
-      filter: grayscale(0);
       opacity: 1;
       transform: scale(1.01);
     }
