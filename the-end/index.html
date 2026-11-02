@@ -10,7 +10,7 @@
     :root {
       --bg: #fff;
       --text: #ff2a1f;
-      --muted: rgba(255, 42, 31, 0.62);
+      --muted: #ff2a1f;
     }
 
     * {
@@ -24,8 +24,8 @@
       background: var(--bg);
       color: var(--text);
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 13px;
-      line-height: 1.25;
+      font-size: clamp(12px, 1.2vw, 15px);
+      line-height: 1;
     }
 
     a {
@@ -35,7 +35,7 @@
 
     a:hover,
     button:hover {
-      color: #111;
+      color: var(--text);
     }
 
     button {
@@ -67,8 +67,7 @@
       bottom: clamp(16px, 2vw, 30px);
     }
 
-    .top a,
-    .bottom button {
+    .top a {
       pointer-events: auto;
     }
 
@@ -133,10 +132,6 @@
     }
 
     @media (max-width: 680px) {
-      body {
-        font-size: 12px;
-      }
-
       .top,
       .bottom {
         grid-template-columns: 1fr auto;
@@ -156,6 +151,12 @@
 
       .viewer {
         padding: 92px 16px 82px;
+      }
+
+      .counter {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: left;
       }
     }
   </style>
