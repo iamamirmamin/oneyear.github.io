@@ -11,7 +11,6 @@
       --bg: #566368;
       --text: #ff2a1f;
       --muted: #ff2a1f;
-      --line: rgba(17, 17, 17, 0.16);
       --accent: #ff2a1f;
     }
 
@@ -92,12 +91,29 @@
     }
 
     .title {
+      grid-column: 2;
       color: var(--text);
       font-weight: 400;
+      text-align: center;
+    }
+
+    .year-meta {
+      grid-column: 3;
+      justify-self: end;
+      max-width: min(290px, 25vw);
       text-align: right;
     }
 
-    .top > :last-child,
+    .year,
+    .description {
+      color: var(--muted);
+    }
+
+    .description {
+      margin-top: 10px;
+      line-height: 1.3;
+    }
+
     .bottom > :last-child {
       justify-self: end;
     }
@@ -376,10 +392,6 @@
       color: var(--text);
     }
 
-    .meta {
-      max-width: 520px;
-    }
-
     @media (max-width: 360px) {
       body {
         overflow: hidden;
@@ -418,8 +430,27 @@
         align-items: flex-end;
       }
 
-      .meta {
-        max-width: 220px;
+    }
+
+    @media (max-width: 680px) {
+      .top {
+        grid-template-columns: 1fr auto;
+      }
+
+      .title {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin-top: 8px;
+        text-align: left;
+      }
+
+      .year-meta {
+        grid-column: 2;
+        max-width: min(180px, 56vw);
+      }
+
+      .description {
+        margin-top: 8px;
       }
     }
     .spread.is-front-cover .left-stack {
@@ -460,9 +491,11 @@
   <main class="site">
     <header class="top">
       <a href="../">back</a>
-      <div></div>
-      <div class="title">concrete tbilisi<br><br>
-      a photobook about modernist<br>and late-socialist architecture</div>
+      <div class="title">concrete tbilisi</div>
+      <div class="year-meta">
+        <div class="year">2025</div>
+        <div class="description">an unpublished photobook about modernist<br>and late-socialist architecture</div>
+      </div>
     </header>
 
     <section class="book" aria-label="Concrete Tbilisi photobook viewer">
