@@ -10,7 +10,7 @@
     :root {
       --bg: #fff;
       --text: #ff2a1f;
-      --muted: rgba(255, 42, 31, 0.62);
+      --muted: #ff2a1f;
     }
 
     * {
@@ -35,7 +35,7 @@
 
     a:hover,
     button:hover {
-      color: #111;
+      color: var(--text);
     }
 
     button {
@@ -80,7 +80,7 @@
       grid-column: 3;
       justify-self: end;
       max-width: min(290px, 25vw);
-      text-align: left;
+      text-align: right;
     }
 
     .year {

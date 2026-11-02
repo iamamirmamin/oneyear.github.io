@@ -10,7 +10,6 @@
       --bg: #fff;
       --text: #111;
       --muted: rgba(17, 17, 17, 0.52);
-      --line: rgba(17, 17, 17, 0.14);
       --accent: #ff2a1f;
     }
 
@@ -58,6 +57,7 @@
     .name {
       font-weight: 400;
       letter-spacing: 0;
+      transition: opacity 0.22s ease, transform 0.22s ease;
     }
 
     .bio {
@@ -68,29 +68,11 @@
       transition: opacity 0.22s ease, transform 0.22s ease;
     }
 
+    body.is-scrolled .name,
     body.is-scrolled .bio {
       opacity: 0;
       transform: translateY(-4px);
       pointer-events: none;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      color: var(--muted);
-      margin-top: 12px;
-      transition: opacity 0.22s ease, transform 0.22s ease;
-    }
-
-    body.is-scrolled .nav {
-      opacity: 0;
-      transform: translateY(-4px);
-      pointer-events: none;
-    }
-
-    .nav span {
-      display: inline-block;
     }
 
     .projects {
@@ -211,10 +193,6 @@
         text-align: left;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
       .bio {
         max-width: 280px;
         margin-left: 0;
@@ -286,10 +264,6 @@
           a multidisciplinary artist working across graphic media, photography and video
         </div>
       </div>
-      <nav class="nav" aria-label="Main navigation">
-        <span>about</span>
-        <span>contact</span>
-      </nav>
     </header>
 
     <section class="projects" id="projects" aria-label="Projects">
@@ -354,6 +328,7 @@
   </main>
   <script>
     const warmed = new Set();
+    const scrollPositionKey = "portfolio-scroll-position";
 
     function updateScrollState() {
       document.body.classList.toggle("is-scrolled", window.scrollY > 24);
@@ -361,6 +336,30 @@
 
     updateScrollState();
     window.addEventListener("scroll", updateScrollState, { passive: true });
+
+    function restoreScrollPosition() {
+      try {
+        const savedPosition = sessionStorage.getItem(scrollPositionKey);
+        if (savedPosition === null) return;
+
+        sessionStorage.removeItem(scrollPositionKey);
+        requestAnimationFrame(() => {
+          window.scrollTo(0, Number(savedPosition));
+        });
+      } catch {
+        return;
+      }
+    }
+
+    function saveScrollPosition() {
+      try {
+        sessionStorage.setItem(scrollPositionKey, String(window.scrollY));
+      } catch {
+        return;
+      }
+    }
+
+    restoreScrollPosition();
 
     function addPrefetch(href) {
       if (!href || warmed.has("document:" + href)) return;
@@ -419,6 +418,7 @@
       link.addEventListener("mouseenter", () => warmProject(link), { once: true });
       link.addEventListener("focus", () => warmProject(link), { once: true });
       link.addEventListener("pointerdown", () => warmProject(link), { once: true });
+      link.addEventListener("click", saveScrollPosition);
     });
   </script>
 </body>
